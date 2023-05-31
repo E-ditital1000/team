@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+<div class="container">
+    <div class="row">
+        <!-- Blog entries-->
+        <div class="col-lg-8">
+            {% if user.is_authenticated %}
+            {% for post in posts %}
+            <!-- Featured blog post-->
+            <div class="card mb-4">
+                <a href="#!"><img class="card-img-top" src="{{ post.image.url }}" alt="..."></a>
+                <div class="card-body">
+                    <div class="small text-muted">{{ post.created_on }}</div>
+                    <h2 class="card-title">{{ post.title }}</h2>
+                    <p class="card-text">{{ post.body|truncatewords:20 }}</p>
+                    <a class="btn btn-primary" href="{% url 'blog_detail' post.slug %}">Read more →</a>
+                    <div>Posted on {{ post.created_on }} by {{ post.writer }}</div>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+  
+
+{% endblock %}
+</div>
+</div>

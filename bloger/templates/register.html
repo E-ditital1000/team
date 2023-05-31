@@ -1,0 +1,158 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.container {
+  border: 2px solid #dedede;
+  background-color:none;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  color:white;
+}
+
+.darker {
+  border-color: #ccc;
+  background-color: #ddd;
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.container img {
+  max-width: 60px;
+  width: 50%;
+  margin-right: 20px;
+  border-radius: 50%;
+}
+
+.container img.right {
+  float: right;
+  margin-left: 20px;
+  margin-right:0;
+}
+
+.time-right {
+  float: right;
+  color: #aaa;
+}
+
+.time-left {
+  float: left;
+  color: #999;
+}
+
+   .window{
+      background-color: rgb(255, 255, 255);
+      border-radius: 10px;
+      box-shadow: 5px gainsboro;
+      color:black
+    }
+    body{
+      background:rgb(255, 255, 255);
+    }
+    input[type=text], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
+    input[type=email], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
+    input[type=password], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    }
+
+    input[type=submit] {
+    width: 100%;
+    background-color:#0d2090;
+    color: rgb(255, 255, 255);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    font-size: 20px;
+    letter-spacing: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+    background-color: #e95d0d;
+    }
+    form img{
+      border:solid orangered 6px;
+      float:none;
+      width: 100%;
+      margin-left:200px;
+      max-width: fit-content;
+      border-radius: 50%;
+
+    }
+
+    div {
+    border-radius: 5px;
+    background-color:none;
+    padding: 20px;
+    }
+    h3{
+      color:red;
+    }
+    </style>
+    </head>
+    <body>
+  <div class="container">  
+  <div class="window">
+  <img src="{% static 'assets/yr.png' %}" width="100px">
+  {% for message in messages %}
+  <h1>{{message}}</h1>
+  {% endfor %}
+    <form id="POST-form" method="POST" action="register">
+        {% csrf_token %}
+      <br><br><br><br>
+      <br><br>
+      <p>Username:</p>
+      <input type="text" name="username"/>
+      <p>Email:</p>
+       <input type="email" name="email"/>
+       <p>Password:</p>
+       <input type="password" name="password"/>
+       <p>Repeat Password:</p>
+       <input type="password" name="password2"><br>
+    <input type="submit" value="Submit"/>
+    </form>
+</div>
+</div>
+  
+</form>
+</body>
+</html>
+
+
