@@ -52,63 +52,111 @@
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Add a box shadow */
     transition: background-color 0.3s ease; /* Add transitions */
 }
-  /* Custom CSS for responsive navbar */
-  .navbar-brand img {
-        width: 40px;
-        height: auto;
-    }
-    
-    @media (max-width: 991.98px) {
-        /* Styles for small screens */
-        .navbar-toggler {
-            display: block;
-        }
-        
-        .navbar-toggler-icon {
-            background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" fill="%23ffffff">%3Cpath stroke="%23ffffff" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path>%3C/svg>');
-        }
-        
-        .navbar-collapse {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            z-index: 100;
-            display: none;
-        }
-        
-        .navbar-toggler[aria-expanded="true"] {
-            background-color: #f8f9fa;
-        }
-        
-        .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
-            transform: rotate(90deg);
-        }
-        
-        .navbar-collapse.show {
-            display: block;
-        }
-        
-        .navbar-nav {
-            margin-top: 10px;
-        }
-        
-        .nav-link {
-            display: block;
-            padding: 5px 10px;
-            color: #212529;
-            text-decoration: none;
-        }
-        
-        .nav-link.active {
-            background-color: #dee2e6;
-        }
-    }
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  background-color: #333;
+  padding: 10px;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline-block;
+  float:left;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+}
+
+nav ul li a:hover {
+  background-color: #555;
+}
+
+#blog-post-form {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+#blog-post-form h2 {
+  margin-bottom: 20px;
+}
+
+#blog-post-form input[type="text"],
+#blog-post-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#blog-post-form button[type="submit"] {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#blog-post-form button[type="submit"]:hover {
+  background-color: #0056b3;
+}
 
 
+    /* Custom CSS for cards and footer */
+    .card {
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: 0.5rem;
+    }
+
+    .card-header {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    .list-unstyled {
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .list-unstyled li {
+        padding: 0.5rem 0;
+    }
+
+    .text-decoration-none {
+        color: #212529;
+        text-decoration: none;
+    }
+
+    footer {
+        padding: 1.5rem 0;
+    }
+
+    footer p {
+        margin: 0;
+    }
 
         </style>
     </head>
@@ -116,33 +164,17 @@
         <!-- Responsive navbar-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="#!">
-                    <img src="{% static 'images/edj.png' %}" style="width: 40px; height: auto" alt="Logo">
-                    E-digital Network
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <a class="navbar-brand" href="#!"><img src="{% static 'images/edj.png' %}" style="width:40px; height:auto">E-digital Network</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#!">About</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                         {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'create_blog_post' %}">Post</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'create_blog_post' %}">Post</a></li>
+                        <li class="nav-item"><a class="nav-link" href="logout">Logout</a></li>
                         {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Login or Signup</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="login">Login or Signup</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -163,54 +195,61 @@
         
         <!-- Footer-->
         {% endblock %}
-                <!-- Side widgets-->
-                <div class="col-lg-4">
+                
+                      
+                            <div class="card mb-4">
+                                <div class="col-lg-4">
                     
-                        <div class="card-header">Search</div>
-                        <div class="card-body">
-                            <form id="search-form" method="GET" action="{% url 'search_results' %}">
-                                <div class="input-group">
-                                    <input class="form-control" type="text" name="query" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
-                                    <button class="btn btn-primary" id="button-search" type="submit">Go!</button>
-                                </div>
-                            </form>
-                        </div>
-                    
-                    
-                    <!-- Categories widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Categories</div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">Web Design</a></li>
-                                        <li><a href="#!">HTML</a></li>
-                                        <li><a href="#!">Freebies</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-sm-6">
-                                    <ul class="list-unstyled mb-0">
-                                        <li><a href="#!">JavaScript</a></li>
-                                        <li><a href="#!">CSS</a></li>
-                                        <li><a href="#!">Tutorials</a></li>
-                                    </ul>
+                                    <div class="card-header">Search</div>
+                                        <div class="card-body">
+                                            <form id="search-form" method="GET" action="{% url 'search_results' %}">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="query" placeholder="Enter search term..." aria-label="Enter search term..." aria-describedby="button-search" />
+                                                    <button class="btn btn-primary" id="button-search" type="submit">Go!</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                <div class="card-header">Categories</div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <ul class="list-unstyled mb-0">
+                                                <li><a href="#!" class="text-decoration-none">Web Design</a></li>
+                                                <li><a href="#!" class="text-decoration-none">HTML</a></li>
+                                                <li><a href="#!" class="text-decoration-none">Freebies</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <ul class="list-unstyled mb-0">
+                                                <li><a href="#!" class="text-decoration-none">JavaScript</a></li>
+                                                <li><a href="#!" class="text-decoration-none">CSS</a></li>
+                                                <li><a href="#!" class="text-decoration-none">Tutorials</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- Side widget-->
-                    <div class="card mb-4">
-                        <div class="card-header">Side Widget</div>
-                        <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; E-digital Network 2023</p></div>
-        </footer>
+                            
+                            <!-- Side widget-->
+                            <div class="card mb-4">
+                                <div class="card-header">Side Widget</div>
+                                <div class="card-body">
+                                    You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!
+                                </div>
+                            </div>
+                            
+                            </div>
+                            </div>
+                            </div>
+                            
+                            <!-- Footer-->
+                            <footer class="py-5 bg-dark">
+                                <div class="container">
+                                    <p class="m-0 text-center text-white">Copyright &copy; E-digital Network 2023</p>
+                                </div>
+                            </footer>
+                    
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
