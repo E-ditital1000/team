@@ -11,7 +11,7 @@
         <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
-        <link href="{% static 'cssla/styles.css' %}" rel="stylesheet" />
+
         <style>
  #boon {
     /* Background properties */
@@ -118,6 +118,64 @@ nav ul li a:hover {
 #blog-post-form button[type="submit"]:hover {
   background-color: #0056b3;
 }
+
+
+
+ /* Custom CSS for responsive navbar */
+ .navbar-brand img {
+        width: 40px;
+        height: auto;
+    }
+    
+    @media (max-width: 991.98px) {
+        /* Styles for small screens */
+        .navbar-collapse {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            display: none;
+        }
+        
+        .navbar-toggler {
+            display: block;
+        }
+        
+        .navbar-toggler-icon {
+            background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" fill="%23ffffff">%3Cpath stroke="%23ffffff" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path>%3C/svg>');
+        }
+        
+        .navbar-toggler[aria-expanded="true"] {
+            background-color: #f8f9fa;
+        }
+        
+        .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+            transform: rotate(90deg);
+        }
+        
+        .navbar-collapse.show {
+            display: block;
+        }
+        
+        .navbar-nav {
+            margin-top: 10px;
+        }
+        
+        .nav-link {
+            display: block;
+            padding: 5px 10px;
+            color: #212529;
+            text-decoration: none;
+        }
+        
+        .nav-link.active {
+            background-color: #dee2e6;
+        }
+    }
         </style>
     </head>
     <body>
