@@ -33,16 +33,22 @@ ALLOWED_HOSTS = ['ebog.vercel.app']
 # Application definition
 
 INSTALLED_APPS = [
-    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
     'cloudinary',
     'bloger',
 ]
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dhjk7yqhd',
+    'API_KEY': '631711346737842',
+    'API_SECRET': 'GPNuxhykDt1UMo0q4aVHlmVgs1k'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -136,11 +142,7 @@ STATICFILES_DIRS = [BASE_DIR/'static']
 MEDIA_URL = '/mdeia/'
 MEDIA_ROOT = BASE_DIR/'media'
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dhjk7yqhd',
-    'API_KEY': '631711346737842',
-    'API_SECRET': 'GPNuxhykDt1UMo0q4aVHlmVgs1k'
-}
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
