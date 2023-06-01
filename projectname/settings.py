@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-import os 
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$v79hsag()wa5o#x#^yahn2exx)#18cd7q!f^4^647(^k4jgca'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['ebog.vercel.app']
 
@@ -32,13 +33,16 @@ ALLOWED_HOSTS = ['ebog.vercel.app']
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
     'bloger',
+    
 ]
 
 MIDDLEWARE = [
@@ -81,16 +85,17 @@ WSGI_APPLICATION = 'projectname.wsgi.application'
 #        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
 #}
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': '7IVHYuKPI5ifom2PL7mk',
-        'HOST': 'containers-us-west-104.railway.app',
-        'PORT': '6838',
-    }
-}
+     'default': {
+         'ENGINE': 'django.db.backends.postgresql',
+         'NAME': 'railway',
+         'USER': 'postgres',
+         'PASSWORD': '7IVHYuKPI5ifom2PL7mk',
+         'HOST': 'containers-us-west-104.railway.app',
+         'PORT': '6838',
+     }
+ }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -128,10 +133,18 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR/'static']
+STATICFILES_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/mdeia/'
 MEDIA_ROOT = BASE_DIR/'media'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dhjk7yqhd',
+    'API_KEY': '631711346737842',
+    'API_SECRET': 'GPNuxhykDt1UMo0q4aVHlmVgs1k'
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

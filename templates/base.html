@@ -11,11 +11,21 @@
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet" />
 
     <style>
         #boon {
-          background-color: black;
+            /* Background properties */
+            background-image: url('static/assets/second_bg.jpg');
+            background-size: cover;
+            /* or contain, repeat, etc. */
+            background-position: center center;
+            /* or top left, bottom right, etc. */
+            background-repeat: no-repeat;
+            /* or repeat-x, repeat-y, etc. */
+            background-color: #001933;
+
+            /* Box model properties */
             width: 100%;
             /* Adjust the width as needed */
             height: 300px;
@@ -34,7 +44,32 @@
             /* Converts text to uppercase */
             animation: text-animation 1s infinite alternate;
             /* Applies animation */
-   
+
+
+
+            @keyframes text-animation {
+                0% {
+                    transform: scale(1);
+                    /* Initial state of the animation */
+                }
+
+                100% {
+                    transform: scale(1.2);
+                    /* Final state of the animation */
+                }
+            }
+
+            /* Border properties */
+            border: 1px solid #000;
+            /* Set the border styles */
+            border-radius: 0;
+            /* Add rounded corners */
+
+            /* Other properties */
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            /* Add a box shadow */
+            transition: background-color 0.3s ease;
+            /* Add transitions */
         }
 
         body {
@@ -58,14 +93,12 @@
 
         nav ul li {
             display: inline-block;
-            
         }
 
         nav ul li a {
             color: #fff;
             text-decoration: none;
             padding: 10px;
-            float: right;
         }
 
         nav ul li a:hover {
@@ -105,61 +138,6 @@
         #blog-post-form button[type="submit"]:hover {
             background-color: #0056b3;
         }
-
-
-        /* Custom CSS for cards and footer */
-        .card {
-            border: 1px solid rgba(0, 0, 0, 0.125);
-            border-radius: 0.5rem;
-        }
-
-        .card-header {
-            background-color: #f8f9fa;
-            font-weight: bold;
-        }
-
-        .card-body {
-            padding: 1.25rem;
-        }
-
-        .list-unstyled {
-            padding-left: 0;
-            list-style: none;
-        }
-
-        .list-unstyled li {
-            padding: 0.5rem 0;
-        }
-
-        .text-decoration-none {
-            color: #212529;
-            text-decoration: none;
-        }
-
-        footer {
-            padding: 1.5rem 0;
-            width: 100%;
-        }
-
-        footer p {
-            margin: 0;
-        }
-
-        .sidebar {
-            float: right;
-        }
-
-        @media (max-width: 767px) {
-            .row {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .col-md-4,
-            .col-lg-3 {
-                width: 100%;
-            }
-        }
     </style>
 </head>
 
@@ -167,11 +145,11 @@
     <!-- Responsive navbar-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <button class="navbar-toggler" id="navbar-toggler" type="button" data-bs-toggle="collapse"
-  data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-  aria-label="Toggle navigation">
-  <span class="navbar-toggler-icon"></span>
-</button>
+            <a class="navbar-brand" href="#!"><img src="{% static 'assets/edj.png' %}"
+                    style="width:40px; height:auto">E-digital Network</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
@@ -200,7 +178,9 @@
     {% block content %}
 
 
+    <!-- Footer-->
     {% endblock %}
+    <!-- Side widgets-->
     <div class="col-lg-4">
 
         <div class="card-header">Search</div>
@@ -213,91 +193,49 @@
                 </div>
             </form>
         </div>
-    </div>
 
-    <div class="card mb-4">
-        <div class="row">
-  
-            <div class="col-md-4 col-lg-3">
-                <div class="sidebar">
-                    <!-- Sidebar content -->
-                    <div class="card mb-4">
-                        <div class="card-header">Categories</div>
-                        <div class="card-body">
-                            <ul class="list-unstyled">
-                                <li><a href="#!" class="text-decoration-none">Web Design</a></li>
-                                <li><a href="#!" class="text-decoration-none">HTML</a></li>
-                                <li><a href="#!" class="text-decoration-none">Freebies</a></li>
-                                <li><a href="#!" class="text-decoration-none">JavaScript</a></li>
-                                <li><a href="#!" class="text-decoration-none">CSS</a></li>
-                                <li><a href="#!" class="text-decoration-none">Tutorials</a></li>
-                            </ul>
-                        </div>
+
+        <!-- Categories widget-->
+        <div class="card mb-4">
+            <div class="card-header">Categories</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="#!">Web Design</a></li>
+                            <li><a href="#!">HTML</a></li>
+                            <li><a href="#!">Freebies</a></li>
+                        </ul>
                     </div>
-                    <!-- Sidebar widget -->
-                    <div class="card mb-4">
-                        <div class="card-header">Side Widget</div>
-                        <div class="card-body">
-                            You can put anything you want inside of these side widgets. They are easy to use, and
-                            feature the Bootstrap 5 card component!
-                        </div>
+                    <div class="col-sm-6">
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="#!">JavaScript</a></li>
+                            <li><a href="#!">CSS</a></li>
+                            <li><a href="#!">Tutorials</a></li>
+                        </ul>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-8 col-lg-9">
-                <div class="main-content">
-                    <!-- Main content -->
-                    <!-- Your main content goes here -->
                 </div>
             </div>
         </div>
+        <!-- Side widget-->
+        <div class="card mb-4">
+            <div class="card-header">Side Widget</div>
+            <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and
+                feature the Bootstrap 5 card component!</div>
+        </div>
+    </div>
+    </div>
+    </div>
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; E-digital Network 2023</p>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
 
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container">
-                <p class="m-0 text-center text-white">Copyright &copy; E-digital Network 2023</p>
-            </div>
-        </footer>
-
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js">
-            var slideshows = document.querySelectorAll('[data-component="slideshow"]');
-
-            // Apply to all slideshows that you define with the markup wrote
-            slideshows.forEach(initSlideShow);
-
-            function initSlideShow(slideshow) {
-
-                var slides = document.querySelectorAll(`#${slideshow.id} [role="list"] .slide`); // Get an array of slides
-
-                var index = 0, time = 5000;
-                slides[index].classList.add('active');
-
-                setInterval(() => {
-                    slides[index].classList.remove('active');
-
-                    //Go over each slide incrementing the index
-                    index++;
-
-                    // If you go over all slides, restart the index to show the first slide and start again
-                    if (index === slides.length) index = 0;
-
-                    slides[index].classList.add('active');
-
-                }, time);
-            }
-            
-  const navbarToggler = document.getElementById('navbar-toggler');
-  const navbarCollapse = document.getElementById('navbarSupportedContent');
-
-  navbarToggler.addEventListener('click', function () {
-    // Toggle the "show" class of the collapse element
-    navbarCollapse.classList.toggle('show');
-  });
-
-        </script>
 </body>
 
 </html>
