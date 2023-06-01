@@ -31,17 +31,27 @@ def register(request):
     else:
         return render(request, 'register.html')
 
+from cloudinary_storage.forms import CloudinaryFileField
+
 def create_blog_post(request):
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
             blog_post = form.save(commit=False)
             blog_post.writer = request.user
+            image_field = form.cleaned_data['image']
+            
+            # Check if the image field contains a Cloudinary file
+            if isinstance(image_field, CloudinaryFileField):
+                # Assign the Cloudinary file URL to the image field
+                blog_post.image = image_field.url
+            
             blog_post.save()
             return redirect('blog_detail', slug=blog_post.slug)
     else:
         form = BlogPostForm()
     return render(request, 'create_blog_post.html', {'form': form})
+
 
 
 def search_results(request):

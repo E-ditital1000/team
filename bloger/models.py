@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary_storage.models import CloudinaryField
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -9,8 +10,10 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+
+
 class Blog_Post(models.Model):
-    image = models.ImageField(upload_to='img')
+    image = CloudinaryField(folder='img')
     title = models.CharField(max_length=200)
     body = models.TextField()
     slug = models.SlugField()
@@ -19,6 +22,7 @@ class Blog_Post(models.Model):
 
     def __str__(self):
         return self.title
+
 
 class Comment(models.Model):
     commenter = models.CharField(max_length=50)
