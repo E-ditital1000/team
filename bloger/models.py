@@ -10,6 +10,7 @@ class UserProfile(models.Model):
         return self.user.username
 
 class Blog_Post(models.Model):
+    image = models.ImageField(upload_to='image')
     title = models.CharField(max_length=200)
     body = models.TextField()
     slug = models.SlugField()
