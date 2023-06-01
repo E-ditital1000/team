@@ -21,4 +21,4 @@ class UserProfileForm(forms.ModelForm):
 class BlogPostForm(forms.ModelForm):
     class Meta:
         model = Blog_Post
-        fields = ['image', 'title', 'body', 'slug']
+        fields = ['title', 'body', 'slug']
