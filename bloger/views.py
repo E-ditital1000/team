@@ -5,6 +5,7 @@ from django.contrib import messages
 from .models import Blog_Post
 from .forms import CommentForm
 from .forms import BlogPostForm
+from cloudinary_storage.forms import CloudinaryFileField
 # Create your views here.
 
 def register(request):
@@ -31,7 +32,7 @@ def register(request):
     else:
         return render(request, 'register.html')
 
-from cloudinary_storage.forms import CloudinaryFileField
+
 
 def create_blog_post(request):
     if request.method == 'POST':
