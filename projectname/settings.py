@@ -40,9 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Cloudinary',
+    'cloudinary',
     'bloger',
-    
 ]
 
 MIDDLEWARE = [
@@ -133,7 +132,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR/'static']
-STATICFILES_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+#STATICFILES_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = '/mdeia/'
 MEDIA_ROOT = BASE_DIR/'media'
 
