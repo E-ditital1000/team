@@ -48,7 +48,7 @@
                         <!-- Comment form-->
                         {% for comment in comments %}
                         <div class="d-flex">
-                            <div class="flex-shrink-0"><img src="{% static 'images/default.png' %}" style="width:40px; height:auto" alt="..." /></div>
+                           <!-- <div class="flex-shrink-0"><img src="{% static 'images/default.png' %}" style="width:40px; height:auto" alt="..." /></div>-->
                             <div class="ms-3">
                                 <div class="fw-bold">{{ comment.commenter }}</div>
                                 {{ comment.body }}
