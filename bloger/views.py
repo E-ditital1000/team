@@ -32,8 +32,25 @@ def register(request):
             return redirect('register')
     else:
         return render(request, 'register.html')
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import BlogPostForm
+
+@login_required
+def create_blog_post(request):
+    if request.method == 'POST':
+        form = BlogPostForm(request.POST)
+        if form.is_valid():
+            blog_post = form.save(commit=False)
+            blog_post.writer = request.user
+            blog_post.save()
+            return redirect('blog_detail', slug=blog_post.slug)
+    else:
+        form = BlogPostForm()
+    return render(request, 'create_blog_post.html', {'form': form})
 
 
+@login_required
 def edit_blog_post(request, slug):
     blog_post = get_object_or_404(Blog_Post, slug=slug)
     if blog_post.writer != request.user:
@@ -46,6 +63,16 @@ def edit_blog_post(request, slug):
     else:
         form = BlogPostForm(instance=blog_post)
     return render(request, 'edit_blog_post.html', {'form': form, 'blog_post': blog_post})
+
+@login_required
+def delete_blog_post(request, slug):
+    blog_post = get_object_or_404(Blog_Post, slug=slug)
+    if blog_post.writer != request.user:
+        return redirect('blog_detail', slug=slug)
+    if request.method == 'POST':
+        blog_post.delete()
+        return redirect('index')
+    return redirect('blog_detail', slug=slug)
 
 def search_results(request):
     query = request.GET.get('query')
