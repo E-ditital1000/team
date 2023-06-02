@@ -49,6 +49,8 @@ def create_blog_post(request):
         form = BlogPostForm()
     return render(request, 'create_blog_post.html', {'form': form})
 
+def about(request):
+    return render(request, 'about.html')
 
 @login_required
 def edit_blog_post(request, slug):
