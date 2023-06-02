@@ -7,6 +7,7 @@ from .forms import CommentForm
 from .forms import BlogPostForm
 from django.shortcuts import render, redirect, get_object_or_404
 
+
 # Create your views here.
 
 def register(request):
@@ -51,6 +52,8 @@ def create_blog_post(request):
 
 def about(request):
     return render(request, 'about.html')
+
+
 
 @login_required
 def edit_blog_post(request, slug):
