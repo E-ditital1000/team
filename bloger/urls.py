@@ -9,6 +9,8 @@ urlpatterns = [
     path('logout', views.logout, name="logout"),
     path('logout', views.logout, name="logout"),
     path('<str:slug>', views.blog_detail_view, name = 'blog_detail'),
+    path('edit/<slug:slug>/', views.edit_blog_post, name='edit_blog_post'),
+    path('delete/<slug:slug>/', views.delete_blog_post, name='delete_blog_post'),
     path('search/', views.search_results, name='search_results'),
     path('create/', views.create_blog_post, name='create_blog_post'),
 ]
