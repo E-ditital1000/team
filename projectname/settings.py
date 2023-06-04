@@ -48,8 +48,13 @@ INSTALLED_APPS = [
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dhjk7yqhd',
     'API_KEY': '631711346737842',
-    'API_SECRET': 'GPNuxhykDt1UMo0q4aVHlmVgs1k'
+    'API_SECRET': 'GPNuxhykDt1UMo0q4aVHlmVgs1k',
+    'UPLOAD_OPTIONS': {
+        'resource_type': 'auto',
+        'invalidate': True,
+    },
 }
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
