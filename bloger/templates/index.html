@@ -13,6 +13,9 @@
         <div class="card-body">
           <div class="small text-muted">{{ post.created_on }}</div>
           <h2 class="card-title">{{ post.title }}</h2>
+          {% if post.image %}
+          <img src="{{ post.image.url }}" alt="Blog Image" class="img-fluid">
+          {% endif %}
           <p class="card-text">{{ post.body|truncatewords:20 }}</p>
           <a class="btn btn-primary" href="{% url 'blog_detail' post.slug %}">Read more →</a>
           <div>Posted on {{ post.created_on }} by {{ post.writer }}</div>

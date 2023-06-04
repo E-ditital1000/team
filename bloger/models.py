@@ -10,6 +10,7 @@ class UserProfile(models.Model):
         return self.user.username
 
 class Blog_Post(models.Model):
+    image = models.ImageField(upload_to='blog_images', default='null')
     title = models.CharField(max_length=200)
     body = models.TextField()
     slug = models.SlugField()
@@ -22,6 +23,7 @@ class Blog_Post(models.Model):
 class Comment(models.Model):
     commenter = models.CharField(max_length=50)
     body = models.TextField()
+    image = models.ImageField(upload_to='comment_images', default='null')
     post = models.ForeignKey(Blog_Post, on_delete=models.CASCADE, related_name='comments')
 
     def __str__(self):
