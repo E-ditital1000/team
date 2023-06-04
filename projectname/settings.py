@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'bloger',
 ]
 
-STATICFILES_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dhjk7yqhd',
@@ -139,6 +139,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),
+STATICFILES_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build' 'static')
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR/'media'
