@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
 from pathlib import Path
 import os
+#from cloudinary import storage
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$v79hsag()wa5o#x#^yahn2exx)#18cd7q!f^4^647(^k4jgca'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['ebog.vercel.app', '.now.sh', '127.0.0.1', 'localhost']
 
@@ -33,17 +34,17 @@ ALLOWED_HOSTS = ['ebog.vercel.app', '.now.sh', '127.0.0.1', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'cloudinary',  # Add Cloudinary before 'bloger'
+    'django.contrib.staticfiles', 
     'bloger',
 ]
 
-
+STATICFILES_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dhjk7yqhd',
@@ -144,8 +145,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),
-STATICFILES_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build' 'static')
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles' 'static')
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR/'media'
 
