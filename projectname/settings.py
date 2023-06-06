@@ -34,7 +34,6 @@ ALLOWED_HOSTS = ['ebog.vercel.app', '.now.sh', '127.0.0.1', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
-    'cloudinary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,17 +43,17 @@ INSTALLED_APPS = [
     'bloger',
 ]
 
-STATICFILES_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dhjk7yqhd',
-    'API_KEY': '631711346737842',
-    'API_SECRET': 'GPNuxhykDt1UMo0q4aVHlmVgs1k',
-    'UPLOAD_OPTIONS': {
-        'resource_type': 'auto',
-        'invalidate': True,
-    },
-}
+#STATICFILES_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+#
+#CLOUDINARY_STORAGE = {
+#    'CLOUD_NAME': 'dhjk7yqhd',
+#    'API_KEY': '631711346737842',
+#    'API_SECRET': 'GPNuxhykDt1UMo0q4aVHlmVgs1k',
+#    'UPLOAD_OPTIONS': {
+#        'resource_type': 'auto',
+#        'invalidate': True,
+#    },
+#}
 
 
 MIDDLEWARE = [
