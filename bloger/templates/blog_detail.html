@@ -2,90 +2,214 @@
 {% extends 'base.html' %}
 {% load static %}
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
     <title>ELVIS-BLOG</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico'%}" />
-    <!-- Core theme CSS (includes Bootstrap)-->
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-XXXXXX"></script>
+    <style>
+        .social-sharing {
+    margin-top: 20px;
+}
 
+.social-sharing .btn {
+    margin-right: 10px;
+    display: inline-block;
+}
 
+.social-sharing .btn i {
+    margin-right: 5px;
+}
+
+    </style>
 </head>
-
 <body>
 
-
-    {% block content %}
-
+{% block content %}
+<!-- News With Sidebar Start -->
+<div class="container-fluid">
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
-                <!-- Post content-->
-                <article>
-                    <!-- Post header-->
-                    <header class="mb-4">
-                        <!-- Post title-->
-
-                        <!-- Post meta content-->
-                        <div class="text-muted fst-italic mb-2">Posted on {{post.created_on}} by {{post.writer}}</div>
-                        <!-- Post categories-->
-
-                    </header>
-                    <!-- Preview image figure-->
-                    <img src="{{ post.image.url }}" alt="Blog Image" class="img-fluid">
-                    <!-- Post content-->
-                    <section class="mb-5">
-                        <p class="fs-5 mb-4" style="margin-bottom: 10px;">{{ post.body }}</p>
-                      </section>
-                </article>
-                <!-- Comments section-->
-                <section class="mb-5">
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <!-- Comment form-->
-                            {% for comment in comments %}
-                            <div class="d-flex">
-
-                                <div class="ms-3">
-                                    <div class="fw-bold">{{ comment.commenter }}</div>
-                                    {{ comment.body }}
-                                </div>
-                            </div>
-                            {% empty %}
-                            <p>No comments yet.</p>
-                            {% endfor %}
-                            <form id="blog-post-form" class="mb-4" method="post">
-                                <h2>Add a Comment</h2>
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <label for="{{ form.commenter.id_for_label }}"
-                                        style="border-radius: 20px; padding:10px;">Commenter</label>
-                                    {{ form.commenter }}
-                                </div>
-                                <div class="form-group">
-                                    <label for="{{ form.body.id_for_label }}">Body</label>
-                                    {{ form.body }}
-                                </div>
-                                <button class="btn btn-primary" type="submit">Submit</button>
-                            </form>
-
-
-
-
-
-
+                <!-- News Detail Start -->
+                <div class="position-relative mb-3">
+                    {% if post.image %}
+                    <img class="img-fluid w-100" src="{{ post.image.url }}" style="object-fit: cover;">
+                    {% endif %}
+                    <div class="bg-white border border-top-0 p-4">
+                        <div class="mb-3">
+                            {% if post.category %}
+                            <a class="badge badge-primary text-uppercase font-weight-semi-bold p-2 mr-2" href="">{{ post.category.name }}</a>
+                            {% endif %}
+                            <a class="text-body" href="">{{ post.created_on|date:"M d, Y" }}</a>
                         </div>
+                        <h1 class="mb-3 text-secondary text-uppercase font-weight-bold">{{ post.title }}</h1>
+                        <p>{{ post.body }}</p>
                     </div>
+                    <div class="d-flex justify-content-between bg-white border border-top-0 p-4">
+                        <div class="d-flex align-items-center">
+                            {% if post.writer.userprofile.profile_picture %}
+                            <img class="rounded-circle mr-2" src="{{ post.writer.userprofile.profile_picture.url }}" width="25" height="25" alt="Profile Picture">
+                            {% else %}
+                            <img class="rounded-circle mr-2" src="{% static 'img/user.png' %}" width="25" height="25" alt="Default Profile Picture">
+                            {% endif %}
+                            <span>{{ post.writer.username }}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="ml-3"><i class="far fa-eye mr-2"></i>{{ post.views }}</span>
+                            <span class="ml-3"><i class="far fa-comment mr-2"></i>{{ post.comments.count }}</span>
+                        </div>                        
+                    </div>
+                </div>
+                <!-- News Detail End -->
+
+                <!-- Comment List Start -->
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">{{ post.comments.count }} Comments</h4>
+                    </div>
+                    <div class="bg-white border border-top-0 p-4">
+                        {% for comment in comments %}
+                        <div class="media mb-4">
+                            {% if comment.commenter.userprofile.profile_picture %}
+                            <img src="{{ comment.commenter.userprofile.profile_picture.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                            {% else %}
+                            <img src="{% static 'img/user.jpg' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                            {% endif %}
+                            <div class="media-body">
+                                <h6><a class="text-secondary font-weight-bold" href="#">{{ comment.commenter }}</a> <small><i>{{ comment.created_on|date:"M d, Y" }}</i></small></h6>
+                                <p>{{ comment.body }}</p>
+                                <button class="btn btn-sm btn-outline-secondary reply-btn" data-id="{{ comment.id }}">Reply</button>
+                                {% for reply in comment.replies.all %}
+                                <div class="media mt-4">
+                                    {% if reply.commenter.userprofile.profile_picture %}
+                                    <img src="{{ reply.commenter.userprofile.profile_picture.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                    {% else %}
+                                    <img src="{% static 'img/pro.png' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                    {% endif %}
+                                    <div class="media-body">
+                                        <h6><a class="text-secondary font-weight-bold" href="#">{{ reply.commenter }}</a> <small><i>{{ reply.created_on|date:"M d, Y" }}</i></small></h6>
+                                        <p>{{ reply.body }}</p>
+                                        <button class="btn btn-sm btn-outline-secondary reply-btn" data-id="{{ reply.id }}">Reply</button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p>No comments yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Comment List End -->
+
+                <!-- Comment Form Start -->
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">Leave a comment</h4>
+                    </div>
+                    <div class="bg-white border border-top-0 p-4">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ comment_form.as_p }}
+                            <input type="hidden" name="parent_id" id="parent_id" value="">
+                            <div class="form-group mb-0">
+                                <button type="submit" class="btn btn-primary font-weight-semi-bold py-2 px-3">Leave a comment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Comment Form End -->
             </div>
 
-            {% endblock %}
-
+            <div class="col-lg-4">
+                <!-- Social Follow Start -->
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">Follow Us</h4>
+                    </div>
+                    <div class="bg-white border border-top-0 p-3">
+                        <a href="#" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #39569E;">
+                            <i class="fab fa-facebook-f text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Fans</span>
+                        </a>
+                        <a href="#" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #52AAF4;">
+                            <i class="fab fa-twitter text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                        <a href="#" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #0185AE;">
+                            <i class="fab fa-linkedin-in text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Connects</span>
+                        </a>
+                        <a href="#" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #C8359D;">
+                            <i class="fab fa-instagram text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                        <a href="#" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #DC472E;">
+                            <i class="fab fa-youtube text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Subscribers</span>
+                        </a>
+                        <a href="#" class="d-block w-100 text-white text-decoration-none" style="background: #055570;">
+                            <i class="fab fa-vimeo-v text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Social Follow End -->
+            </div>
         </div>
     </div>
-</body>
+</div>
+<!-- News With Sidebar End -->
 
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const replyButtons = document.querySelectorAll('.reply-btn');
+        replyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const parentId = this.getAttribute('data-id');
+                document.getElementById('parent_id').value = parentId;
+                document.getElementById('message').focus();
+            });
+        });
+    });
+</script>
+
+    <script>
+
+document.addEventListener("DOMContentLoaded", function() {
+    const likeBtn = document.getElementById("like-btn");
+
+    if (likeBtn) {
+        likeBtn.addEventListener("click", function() {
+            const postId = this.getAttribute("data-post-id");
+            const likeForm = document.getElementById("like-form");
+
+            fetch(`/like/${postId}/`, {
+                method: "POST",
+                body: new FormData(likeForm),
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("like-count").textContent = `${data.total_likes} Likes`;
+                this.textContent = data.is_liked ? "Unlike" : "Like";
+            });
+        });
+    }
+});
+
+    </script>
+    {% endblock %}
+    
+
+
+    <script src="{% static 'js/jquery.min.js' %}"></script> <!-- Make sure jQuery is included -->
+
+
+</body>
 </html>

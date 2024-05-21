@@ -1,0 +1,5 @@
+{% if request.COOKIES.my_cookie %}
+    <p>Cookie Value: {{ request.COOKIES.my_cookie }}</p>
+{% else %}
+    <p>No cookie found.</p>
+{% endif %}

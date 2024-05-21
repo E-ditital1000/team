@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Custom styles for form elements */
+.form-control {
+    width: 100%;       /* Ensures full width */
+    border-radius: 5px; /* Optional: for rounded corners */
+    border: 1px solid #ced4da; /* Optional: adds a border */
+}
+
+/* Additional styling for the form */
+.needs-validation {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensuring that the button is full-width */
+.btn-primary {
+    width: 100%;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Style modifications for hover state of the button */
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Card for Edit Profile Form -->
+            <div class="card shadow-sm p-4">
+                <h2 class="card-title mb-4">Edit Profile</h2>
+                <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    {{ form.as_p }} <!-- This will render fields as paragraphs -->
+                    <button type="submit" class="btn btn-primary mt-3">Save changes</button>
+                </form>
+            </div>
+        </div>
+
+    <!-- Side Widgets -->
+    <div class="col-lg-4">
+        <!-- Search Widget -->
+        <div class="card mb-4">
+            <div class="card-header">Search</div>
+            <div class="card-body">
+                <form id="search-form" method="GET" action="{% url 'search_results' %}">
+                    <div class="input-group">
+                        <input class="form-control" type="text" name="query" placeholder="Enter search term..."
+                               aria-label="Enter search term..." aria-describedby="button-search" />
+                        <button class="btn btn-primary" id="button-search" type="submit">Go!</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- User Profile Widget -->
+        <div class="card mb-4">
+            <div class="card-header">Your Profile</div>
+            <div class="card-body text-center">
+                {% if user.is_authenticated %}
+                    <img src="{{ user.userprofile.profile_picture.url }}" class="img-fluid rounded-circle mb-3" alt="Profile Picture">
+                    <h5>{{ user.username }}</h5>
+                    <p>{{ user.userprofile.bio }}</p>
+                    <a href="{% url 'profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+                {% else %}
+                    <p><a href="{% url 'login' %}">Login</a> to see your profile</p>
+                {% endif %}
+            </div>
+        </div>
+          <!-- Categories widget-->
+  <div class="card mb-4">
+    <div class="card-header">Categories</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-6">
+          <ul class="list-unstyled mb-0">
+            <li><a href="#!">Technology</a></li>
+            <li><a href="#!">Science</a></li>
+            <li><a href="#!">Art</a></li>
+          </ul>
+        </div>
+        <div class="col-sm-6">
+          <ul class="list-unstyled mb-0">
+            <li><a href="#!">Business</a></li>
+            <li><a href="#!">Health</a></li>
+            <li><a href="#!">Sports</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Side widget-->
+  <div class="card mb-4">
+    <div class="card-header">Interesting Content</div>
+    <div class="card-body">
+      Feel free to explore these interesting articles and resources:
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <a href="#!">10 Amazing Facts About the Universe</a>
+      </li>
+      <li class="list-group-item">
+        <a href="#!">How to Improve Your Productivity</a>
+      </li>
+      <li class="list-group-item">
+        <a href="#!">Tips for Healthy Living</a>
+      </li>
+      <li class="list-group-item">
+        <div class="embed-responsive embed-responsive-16by9">
+          <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/pt_HTeisNG0?controls=0"></iframe>
+        </div>
+      </li>
+    </ul>
+  </div>
+  </div>
+</div>
+{% endblock %}

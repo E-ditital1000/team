@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- Header -->
+<header class="bg-dark text-white text-center py-5">
+    <div class="container">
+     
+        <h1 class="display-4">Abraham E. Bedell</h1>
+        <p class="lead">IT Support Specialist & Web Developer</p>
+        <div class="social-links mt-3">
+            <a href="#" class="text-white mx-2"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-white mx-2"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-white mx-2"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-white mx-2"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+</header>
+
+<!-- About Section -->
+<section id="about" class="py-5">
+    <div class="container">
+        <div class="section-title text-center mb-5">
+            <h2>About Me</h2>
+            <p>Ability to multitask and quickly adapt to new environments, effective problem solver with good interpersonal skills, and proficient in computer programming, graphic design, and networking.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 text-center">
+                <img src="{% static 'img/port.jpg' %}" alt="Profile Image" class="img-fluid rounded-circle mb-3">
+            </div>
+            <div class="col-lg-8">
+                <h3>IT Support Specialist & Web Developer</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><strong>Phone:</strong> 0778187295 / 0888880929</li>
+                            <li><strong>Email:</strong> techelvis7@gmail.com</li>
+                            <li><strong>Freelance:</strong> Available</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><strong>Location:</strong> Barnesville Dry Rice Market, Montserrado County, Liberia</li>
+                            <li><strong>Nationality:</strong> Liberian</li>
+                        </ul>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+<section id="skills" class="bg-light py-5">
+    <div class="container">
+        <div class="section-title text-center mb-5">
+            <h2>Skills</h2>
+            <p>Comprehensive skills in Web Development, Graphic Design, and IT Support.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-6" style="color: black;">
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: 100%;">HTML</div>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: 90%;">CSS</div>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: 75%;">JavaScript</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: 80%;">PHP</div>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: 90%;">WordPress/CMS</div>
+                </div>
+                <div class="progress mb-3">
+                    <div class="progress-bar" role="progressbar" style="width: 55%;">Photoshop</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Portfolio Section -->
+<section id="portfolio" class="py-5">
+    <div class="container">
+        <div class="section-title text-center mb-5">
+            <h2>Portfolio</h2>
+            <p>Some of my recent works in Web Development, Graphic Design, and IT Support.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-4 portfolio-item">
+                <img src="{% static 'img/crm-reasons.jpg' %}" alt="Portfolio Image" class="img-fluid">
+                <div class="portfolio-overlay"><a href="#">CUSTOMER RELATED MANAGEMENT</a></div>
+            </div>
+            <div class="col-md-4 portfolio-item">
+                <img src="{% static 'img/Header.jpg' %}" alt="Portfolio Image" class="img-fluid">
+                <div class="portfolio-overlay"><a href="jobnet360.com">JOB BOARD</a></div>
+            </div>
+            <div class="col-md-4 portfolio-item">
+                <img src="{% static 'img/online.jpg' %}" alt="Portfolio Image" class="img-fluid">
+                <div class="portfolio-overlay"><a href="#">ONLINE SHOP</a></div>
+            </div>
+            <!-- Add more portfolio items as needed -->
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="bg-light py-5">
+    <div class="container">
+        <div class="section-title text-center mb-5">
+            <h2>Contact Me</h2>
+            <p>Feel free to get in touch with me to discuss potential projects or opportunities.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="info">
+                    <div class="address mb-3">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h4>Location:</h4>
+                        <p>Barnesville Dry Rice Market, Montserrado County, Liberia</p>
+                    </div>
+                    <div class="email mb-3">
+                        <i class="fas fa-envelope"></i>
+                        <h4>Email:</h4>
+                        <p>techelvis7@gmail.com</p>
+                    </div>
+                    <div class="phone mb-3">
+                        <i class="fas fa-phone-alt"></i>
+                        <h4>Call:</h4>
+                        <p>+231-778187295</p>
+                    </div>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.49303859512!2d-10.741470225462121!3d6.330104925381462!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xf09f9c504ee2c69%3A0x9f3384473675f3c8!2sBarnesville%20Junction!5e0!3m2!1sen!2s!4v1716039280717!5m2!1sen!2s"  frameborder="0" style="border:0; width: 100%; height: 290px;" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <form action="#" method="post" role="form" class="php-email-form">
+                  {% csrf_token %}
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="name">Your Name</label>
+                            <input type="text" name="name" class="form-control" id="name" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="email">Your Email</label>
+                            <input type="email" class="form-control" name="email" id="email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" class="form-control" name="subject" id="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea class="form-control" name="message" rows="5" required></textarea>
+                    </div>
+                    <div class="text-center"><button type="submit">Send Message</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+<script>
+  document.getElementById('contact-form').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form submission
+      document.getElementById('form-message').innerHTML = '<div class="alert alert-danger">Our form is down currently, please use the contacts above.</div>';
+  });
+</script>
