@@ -437,7 +437,14 @@ Design by <a href="https://htmlcodex.com">E-DIGITAL NETWORK</a></p>
 
 <script src="{% static 'lib/easing/easing.min.js' %}"></script>
 <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
-
+<script>
+    document.querySelectorAll('.reply-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('parent_id').value = this.getAttribute('data-id');
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+    });
+    </script>
 <!-- Template Javascript -->
 <script src="{% static 'js/main.js' %}"></script>
 <script>

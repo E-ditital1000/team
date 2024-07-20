@@ -232,7 +232,6 @@ def category_detail_view(request, slug):
     return render(request, 'category_detail.html', {'category': category, 'posts': posts})
 
 
-
 @login_required(login_url='login/')
 def blog_detail_view(request, slug):
     post = get_object_or_404(Blog_Post, slug=slug)
@@ -241,9 +240,10 @@ def blog_detail_view(request, slug):
     # Fetch recent posts from the last 10 days
     now = timezone.now()
     date_from = now - timedelta(days=10)
-    recent_posts = Blog_Post.objects.filter(created_on__gte=date_from).order_by('-created_on')[:3]  # Adjust number as needed
+    recent_posts = Blog_Post.objects.filter(created_on__gte=date_from).order_by('-created_on')[:3]
 
-    comments = post.comments.filter(parent__isnull=True)
+    comments = post.comments.filter(parent__isnull=True).prefetch_related('replies')
+    
     if request.method == 'POST':
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
@@ -261,7 +261,7 @@ def blog_detail_view(request, slug):
         'post': post,
         'comments': comments,
         'comment_form': comment_form,
-        'recent_posts': recent_posts  # Add this to pass recent posts to the template
+        'recent_posts': recent_posts
     })
 
 def about(request):
