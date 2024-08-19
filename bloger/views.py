@@ -17,6 +17,7 @@ from datetime import timedelta
 from .models import Blog_Post, Comment, Category
 from .forms import CommentForm
 import logging
+from django.views.decorators.http import require_POST
 
 class ProfileEditView(UpdateView):
     model = UserProfile
@@ -27,6 +28,9 @@ class ProfileEditView(UpdateView):
     def get_object(self):
         return self.request.user.userprofile
     
+def about(request):
+    return render(request, 'about.html')
+
 @login_required
 def edit_profile(request):
     try:
@@ -89,9 +93,6 @@ def register(request):
 from django.db import IntegrityError, transaction
 
 
-# Get an instance of a logger
-logger = logging.getLogger(__name__)
-
 def create_blog_post(request):
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
@@ -107,12 +108,19 @@ def create_blog_post(request):
                 messages.success(request, 'Blog post created successfully.')
                 return redirect('index')  # Assuming 'index' is your correct redirect destination
             except IntegrityError as e:
-                logger.error(f"Error creating post due to IntegrityError: {e}")
-                # Handle the rare case of slug collision caused by race conditions
+                logger.error(f"IntegrityError while creating post: {post.title} by user {request.user.username}. Error: {e}")
+                # Handle slug collision by regenerating slug
                 post.slug = None  # Reset slug to trigger regeneration
-                form.save(commit=False)
-                form.save_m2m()
-                messages.error(request, 'An unexpected error occurred. The post has been saved with adjustments.')
+                try:
+                    with transaction.atomic():
+                        post.save()
+                        form.save_m2m()
+                    messages.success(request, 'Blog post created successfully with an adjusted slug.')
+                    logger.info(f"Post {post.title} created with adjusted slug {post.slug}.")
+                    return redirect('index')
+                except IntegrityError as e:
+                    logger.critical(f"Failed to create post {post.title} even after adjusting slug: {e}")
+                    messages.error(request, 'Failed to create the blog post due to a critical error.')
         else:
             messages.error(request, 'Please correct the error below.')
     else:
@@ -120,31 +128,31 @@ def create_blog_post(request):
 
     return render(request, 'create_blog_post.html', {'form': form})
 
-
 @login_required
+@require_POST
 def like_post(request):
-    logger.info('like_post view called')
-    if request.method == 'POST' and request.is_ajax():
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         post_id = request.POST.get('post_id')
-        logger.info(f'Post ID: {post_id}')
+        print(f"Received post_id: {post_id}")
         post = get_object_or_404(Blog_Post, id=post_id)
-        is_liked = request.user in post.likes.all()
+        user = request.user
+        print(f"User: {user.username} is liking post {post.title}")
 
-        if is_liked:
-            post.likes.remove(request.user)
-            logger.info('Removed like')
+        if post.likes.filter(id=user.id).exists():
+            post.likes.remove(user)
+            liked = False
+            print(f"Post {post.title} unliked by {user.username}")
         else:
-            post.likes.add(request.user)
-            logger.info('Added like')
+            post.likes.add(user)
+            liked = True
+            print(f"Post {post.title} liked by {user.username}")
 
         return JsonResponse({
+            'liked': liked,
             'total_likes': post.total_likes(),
-            'liked': not is_liked,
             'post_id': post_id
         })
-    else:
-        logger.error('Invalid request method or not AJAX')
-        return JsonResponse({'error': 'This is not a POST request'}, status=400)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 logger = logging.getLogger(__name__)
 
@@ -235,7 +243,9 @@ def category_detail_view(request, slug):
 @login_required(login_url='login/')
 def blog_detail_view(request, slug):
     post = get_object_or_404(Blog_Post, slug=slug)
-    post.increment_view_count()  # Increment the view count when the blog detail page is viewed
+    
+    # Increment the view count only if it's a new view for this user
+    new_view = post.increment_view_count(request.user)
 
     # Fetch recent posts from the last 10 days
     now = timezone.now()
@@ -249,6 +259,7 @@ def blog_detail_view(request, slug):
         if comment_form.is_valid():
             new_comment = comment_form.save(commit=False)
             new_comment.post = post
+            new_comment.commenter = request.user  # Set the commenter to the current user
             parent_id = request.POST.get('parent_id')
             if parent_id:
                 new_comment.parent = Comment.objects.get(id=parent_id)
@@ -261,12 +272,10 @@ def blog_detail_view(request, slug):
         'post': post,
         'comments': comments,
         'comment_form': comment_form,
-        'recent_posts': recent_posts
+        'recent_posts': recent_posts,
+        'user': request.user,
+        'new_view': new_view,  # Added this to indicate if it's a new view
     })
-
-def about(request):
-    return render(request, 'about.html')
-
 
 
 

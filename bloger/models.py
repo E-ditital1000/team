@@ -54,6 +54,13 @@ class Blog_Post(models.Model):
     views = models.IntegerField(default=0)
     category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)  # ForeignKey to Category
 
+    def increment_view_count(self, user):
+        view, created = PostView.objects.get_or_create(user=user, post=self)
+        if created:
+            self.views += 1
+            self.save(update_fields=['views'])
+        return created
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
@@ -70,9 +77,17 @@ class Blog_Post(models.Model):
     def total_likes(self):
         return self.likes.count()
 
-    def increment_view_count(self):
-        self.views += 1
-        self.save(update_fields=['views'])
+class PostView(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
+    post = models.ForeignKey(Blog_Post, on_delete=models.CASCADE, db_index=True)
+    viewed_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'post')
+        indexes = [
+            models.Index(fields=['user', 'post']),
+        ]
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Blog_Post, on_delete=models.CASCADE, related_name='comments')

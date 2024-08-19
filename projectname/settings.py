@@ -80,24 +80,24 @@ WSGI_APPLICATION = 'projectname.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 # Uncomment the PostgreSQL configuration and comment out the SQLite configuration
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'railway',
-#        'USER': 'postgres',
-#        'PASSWORD': 'gEWBahNbUAHKHCZZyIkcSkLpSbeCBvxN',
-#        'HOST': 'viaduct.proxy.rlwy.net',
-#        'PORT': '55588',
-#    }
-#}
-
-# Comment out the SQLite configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'LmlRogGSpJBFnWvvfVrbqwHQHnjrKNlO',
+        'HOST': 'autorack.proxy.rlwy.net',
+        'PORT': '20935',
     }
 }
+
+# Comment out the SQLite configuration
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

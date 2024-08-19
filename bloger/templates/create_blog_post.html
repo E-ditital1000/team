@@ -1,47 +1,86 @@
 {% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Create Blog Post | ELVIS-BLOG</title>
-    <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-</head>
-<body>
-    {% block content %}
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Create a Blog Post</h2>
-                    </div>
-                    <div class="card-body">
-                        <form id="blog-post-form" method="POST" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            {{ form.non_field_errors }}
-                            {% for field in form %}
+{% block title %}Create Blog Post | ELVIS-BLOG{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.css">
+<style>
+    .custom-file-input:lang(en)::after {
+        content: "Select file";
+    }
+    .custom-file-input:lang(en)::before {
+        content: "Browse";
+    }
+    .trix-content {
+        min-height: 200px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Create a Blog Post</h2>
+                </div>
+                <div class="card-body">
+                    <form id="blog-post-form" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        
+                        {% for field in form %}
                             <div class="mb-3">
-                                {{ field.errors }}
-                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ field.errors }}
+                                    </div>
+                                {% endif %}
+                                <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+                                {% if field.name == 'content' %}
+                                    <div class="trix-content">
+                                        {{ field }}
+                                    </div>
+                                {% elif field.name == 'image' %}
+                                    <div class="custom-file">
+                                        {{ field }}
+                                        <label class="custom-file-label" for="{{ field.id_for_label }}">Choose file</label>
+                                    </div>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
                                 {% if field.help_text %}
-                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
                                 {% endif %}
                             </div>
-                            {% endfor %}
-                            <button type="submit" class="btn btn-primary">Create Post</button>
-                        </form>
-                    </div>
+                        {% endfor %}
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Create Post</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    {% endblock %}
-</body>
-</html>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Update file input label with selected filename
+        $('.custom-file-input').on('change', function() {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+    });
+</script>
+{% endblock %}
