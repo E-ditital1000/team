@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'bloger',
     'cloudinary',
     'cloudinary_storage',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 # Cloudinary configuration
@@ -43,6 +45,8 @@ CLOUDINARY_STORAGE = {
         'invalidate': True,
     },
 }
+
+
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
@@ -85,9 +89,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': 'LmlRogGSpJBFnWvvfVrbqwHQHnjrKNlO',
+        'PASSWORD': 'atAUXOCydBRYRvgEfiBWuKXxkVeAuVtd',
         'HOST': 'autorack.proxy.rlwy.net',
-        'PORT': '20935',
+        'PORT': '32405',
     }
 }
 
@@ -137,6 +141,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+        'removePlugins': 'stylesheetparser',
+        'allowedContent': True,
+        'extraAllowedContent': 'iframe[*];span[*];img[*]{*}(*);table[*]{*}(*);td[*]{*}(*);th[*]{*}(*);',
+    },
+}
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

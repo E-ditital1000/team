@@ -1,82 +1,285 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
 <div class="container mt-4">
     <div class="row">
         <!-- Main Content -->
         <div class="col-lg-8 mb-4">
-            <!-- Edit Profile Card -->
-            <div class="card shadow-sm p-4">
-                <h2 class="card-title mb-4">Edit Profile</h2>
-                <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-                    {% csrf_token %}
-                    
-                    <!-- Profile Picture -->
-                    <div class="form-group text-center">
-                        {% if user.userprofile.profile_picture %}
-                            <img src="{{ user.userprofile.profile_picture.url }}" class="img-fluid rounded-circle mb-3" alt="Profile Picture" style="width: 150px; height: 150px;">
-                        {% else %}
-                            <img src="{% static 'img/default_profile.png' %}" class="img-fluid rounded-circle mb-3" alt="Default Profile Picture" style="width: 150px; height: 150px;">
-                        {% endif %}
-                        <label class="btn btn-outline-secondary mt-2">
-                            Change Picture <input type="file" name="profile_picture" hidden>
-                        </label>
-                    </div>
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h2 class="card-title mb-0">{% trans "Edit Profile" %}</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
 
-                    <!-- Form Fields -->
-                    <div class="form-row">
-                        <div class="col-md-6 mb-3">
-                            <label for="first_name">First Name</label>
-                            {{ form.first_name }}
-                            <div class="invalid-feedback">
-                                Please provide a valid first name.
+                        <!-- Cover Photo Section -->
+                        <div class="form-group text-center mb-4">
+                            <div class="cover-photo-container mb-3">
+                                {% if user.profile.cover_photo %}
+                                    <img src="{{ user.profile.cover_photo.url }}" 
+                                         class="img-fluid mb-3"
+                                         alt="Cover Photo"
+                                         style="width: 100%; height: 200px; object-fit: cover;">
+                                {% else %}
+                                    <img src="{% static 'defaults/default_cover.jpg' %}" 
+                                         class="img-fluid mb-3"
+                                         alt="Default Cover Photo"
+                                         style="width: 100%; height: 200px; object-fit: cover;">
+                                {% endif %}
+                            </div>
+                            <div class="mt-2">
+                                <label class="btn btn-outline-primary">
+                                    {% trans "Change Cover Photo" %}
+                                    {{ form.cover_photo }}
+                                </label>
+                                {% if form.cover_photo.errors %}
+                                    <div class="invalid-feedback d-block" role="alert">
+                                        {{ form.cover_photo.errors }}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="last_name">Last Name</label>
-                            {{ form.last_name }}
-                            <div class="invalid-feedback">
-                                Please provide a valid last name.
+
+                        <!-- Profile Picture Section -->
+                        <div class="form-group text-center mb-4">
+                            <div class="profile-picture-container">
+                                {% if user.profile.profile_picture %}
+                                    <img src="{{ user.profile.profile_picture.url }}" 
+                                         class="img-fluid rounded-circle mb-3" 
+                                         alt="Profile Picture" 
+                                         style="width: 150px; height: 150px; object-fit: cover;">
+                                {% else %}
+                                    <img src="{% static 'defaults/default_profile.png' %}" 
+                                         class="img-fluid rounded-circle mb-3" 
+                                         alt="Default Profile Picture" 
+                                         style="width: 150px; height: 150px; object-fit: cover;">
+                                {% endif %}
+                            </div>
+                            <div class="mt-2">
+                                <label class="btn btn-outline-primary">
+                                    {% trans "Change Picture" %}
+                                    {{ form.profile_picture }}
+                                </label>
+                                {% if form.profile_picture.errors %}
+                                    <div class="invalid-feedback d-block" role="alert">
+                                        {{ form.profile_picture.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Basic Information -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">{% trans "Basic Information" %}</h5>
+                            </div>
+                            <div class="card-body">
+                                <!-- Bio -->
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.bio.id_for_label }}">{% trans "Bio" %}</label>
+                                    {{ form.bio }}
+                                    <small class="form-text text-muted">{{ form.bio.help_text }}</small>
+                                    {% if form.bio.errors %}
+                                        <div class="invalid-feedback d-block" role="alert">
+                                            {{ form.bio.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Career -->
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.career.id_for_label }}">{% trans "Career" %}</label>
+                                    {{ form.career }}
+                                    <small class="form-text text-muted">{{ form.career.help_text }}</small>
+                                    {% if form.career.errors %}
+                                        <div class="invalid-feedback d-block" role="alert">
+                                            {{ form.career.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Location -->
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.location.id_for_label }}">{% trans "Location" %}</label>
+                                    {{ form.location }}
+                                    <small class="form-text text-muted">{{ form.location.help_text }}</small>
+                                    {% if form.location.errors %}
+                                        <div class="invalid-feedback d-block" role="alert">
+                                            {{ form.location.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Nationality -->
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.nationality.id_for_label }}">{% trans "Nationality" %}</label>
+                                    {{ form.nationality }}
+                                    {% if form.nationality.errors %}
+                                        <div class="invalid-feedback d-block" role="alert">
+                                            {{ form.nationality.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Birthday -->
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.birthday.id_for_label }}">{% trans "Birthday" %}</label>
+                                    {{ form.birthday }}
+                                    <small class="form-text text-muted">{{ form.birthday.help_text }}</small>
+                                    {% if form.birthday.errors %}
+                                        <div class="invalid-feedback d-block" role="alert">
+                                            {{ form.birthday.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- LinkedIn -->
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.linkedin.id_for_label }}">{% trans "LinkedIn Profile" %}</label>
+                                    {{ form.linkedin }}
+                                    <small class="form-text text-muted">{{ form.linkedin.help_text }}</small>
+                                    {% if form.linkedin.errors %}
+                                        <div class="invalid-feedback d-block" role="alert">
+                                            {{ form.linkedin.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Website -->
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.website.id_for_label }}">{% trans "Website" %}</label>
+                                    {{ form.website }}
+                                    <small class="form-text text-muted">{{ form.website.help_text }}</small>
+                                    {% if form.website.errors %}
+                                        <div class="invalid-feedback d-block" role="alert">
+                                            {{ form.website.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                       <!-- Professional Information -->
+                       <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">{% trans "Professional Information" %}</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Education -->
+                            <div class="form-group mb-3">
+                                <label for="{{ form.education.id_for_label }}">{% trans "Education" %}</label>
+                                {{ form.education }}
+                                <small class="form-text text-muted">{{ form.education.help_text }}</small>
+                                {% if form.education.errors %}
+                                    <div class="invalid-feedback d-block" role="alert">
+                                        {{ form.education.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Skills -->
+                            <div class="form-group mb-3">
+                                <label for="{{ form.skills.id_for_label }}">{% trans "Skills" %}</label>
+                                {{ form.skills }}
+                                <small class="form-text text-muted">{{ form.skills.help_text }}</small>
+                                {% if form.skills.errors %}
+                                    <div class="invalid-feedback d-block" role="alert">
+                                        {{ form.skills.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Projects -->
+                            <div class="form-group mb-3">
+                                <label for="{{ form.projects.id_for_label }}">{% trans "Projects" %}</label>
+                                {{ form.projects }}
+                                <small class="form-text text-muted">{{ form.projects.help_text }}</small>
+                                {% if form.projects.errors %}
+                                    <div class="invalid-feedback d-block" role="alert">
+                                        {{ form.projects.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Recommendations -->
+                            <div class="form-group mb-3">
+                                <label for="{{ form.recommendations.id_for_label }}">{% trans "Recommendations" %}</label>
+                                {{ form.recommendations }}
+                                <small class="form-text text-muted">{{ form.recommendations.help_text }}</small>
+                                {% if form.recommendations.errors %}
+                                    <div class="invalid-feedback d-block" role="alert">
+                                        {{ form.recommendations.errors }}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="bio">Bio</label>
-                        {{ form.bio }}
-                        <div class="invalid-feedback">
-                            Please provide a valid bio.
-                        </div>
-                    </div>
 
-                    <!-- Save Button -->
-                    <button type="submit" class="btn btn-primary btn-block mt-4">Save Changes</button>
-                </form>
+
+
+                        <!-- Submit Button -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                {% trans "Save Changes" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-
+        
         <!-- Sidebar -->
         <div class="col-lg-4">
             {% block sidebar %}
-            <!-- The sidebar content will be inserted here from the base template -->
+                <!-- Sidebar content here -->
             {% endblock %}
         </div>
     </div>
 </div>
 {% endblock %}
 
-<!-- Custom JavaScript for Bootstrap Form Validation -->
+{% block extra_js %}
 <script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
+
+import axios from 'axios';
+
+const form = document.querySelector('#user-profile-form');
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const jsonData = {};
+  for (const [key, value] of formData.entries()) {
+    if (value) {
+      try {
+        jsonData[key] = JSON.parse(value);
+      } catch {
+        jsonData[key] = value;
+      }
+    }
+  }
+
+  try {
+    await axios.post('/profile/update/', jsonData);
+    // Handle successful update
+    console.log('Profile updated successfully!');
+  } catch (error) {
+    // Handle errors
+    console.error('Error updating profile:', error);
+  }
+});
+
+    // Form validation
+    (function() {
         'use strict';
-        window.addEventListener('load', function () {
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        window.addEventListener('load', function() {
             var forms = document.getElementsByClassName('needs-validation');
-            // Loop over them and prevent submission
-            var validation = Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', function (event) {
+            Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
                     if (form.checkValidity() === false) {
                         event.preventDefault();
                         event.stopPropagation();
@@ -86,4 +289,36 @@
             });
         }, false);
     })();
+
+ // Preview profile picture before upload
+ document.querySelector('input[name="profile_picture"]').addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.querySelector('.profile-picture-container img').src = e.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+document.querySelector('input[name="cover_photo"]').addEventListener('change', function(e) {
+    if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.querySelector('.cover-photo-container img').src = e.target.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    }
+});
+
+document.querySelector('input[name="profile_picture"]').addEventListener('change', function(e) {
+    if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.querySelector('.profile-picture-container img').src = e.target.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    }
+});
 </script>
+{% endblock %}

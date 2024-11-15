@@ -22,6 +22,38 @@
     margin-right: 5px;
 }
 
+.messages {
+    margin: 1rem 0;
+}
+
+.alert {
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.errorlist {
+    color: #dc3545;
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+
+#cancelReply {
+    margin-left: 0.5rem;
+}
+
+.media {
+    position: relative;
+}
+
+.media:target {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
     </style>
 </head>
 <body>
@@ -89,7 +121,7 @@
                 <div class="media mt-4">
                     {% if user.is_authenticated %}
                         {% if user.userprofile.profile_picture %}
-                        <img src="{{ user.userprofile.profile_picture.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                        <img src="{{ post.commenter.profile.profile_picture.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                         {% else %}
                         <img src="{% static 'img/pro.png' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                         {% endif %}
@@ -118,7 +150,7 @@
                         <h4 class="m-0 text-uppercase font-weight-bold">Leave a comment</h4>
                     </div>
                     <div class="bg-white border border-top-0 p-4">
-                        <form method="post">
+                        <form method="post" action="{% url 'comment_post' post.slug %}">
                             {% csrf_token %}
                             {{ comment_form.as_p }}
                             <input type="hidden" name="parent_id" id="parent_id" value="">
@@ -133,37 +165,24 @@
 
             <div class="col-lg-4">
                 <!-- Social Follow Start -->
-                <div class="mb-3">
-                    <div class="section-title mb-0">
-                        <h4 class="m-0 text-uppercase font-weight-bold">Follow Us</h4>
-                    </div>
-                    <div class="bg-white border border-top-0 p-3">
-                        <a href="#" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #39569E;">
-                            <i class="fab fa-facebook-f text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                            <span class="font-weight-medium">12,345 Fans</span>
-                        </a>
-                        <a href="#" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #52AAF4;">
-                            <i class="fab fa-twitter text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                            <span class="font-weight-medium">12,345 Followers</span>
-                        </a>
-                        <a href="#" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #0185AE;">
-                            <i class="fab fa-linkedin-in text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                            <span class="font-weight-medium">12,345 Connects</span>
-                        </a>
-                        <a href="#" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #C8359D;">
-                            <i class="fab fa-instagram text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                            <span class="font-weight-medium">12,345 Followers</span>
-                        </a>
-                        <a href="#" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #DC472E;">
-                            <i class="fab fa-youtube text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                            <span class="font-weight-medium">12,345 Subscribers</span>
-                        </a>
-                        <a href="#" class="d-block w-100 text-white text-decoration-none" style="background: #055570;">
-                            <i class="fab fa-vimeo-v text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                            <span class="font-weight-medium">12,345 Followers</span>
-                        </a>
-                    </div>
-                </div>
+                <!-- Sidebar Start -->
+          
+                <!-- Popular Posts Start -->
+                <div class="mb-4">
+                    <h4 class="text-uppercase font-weight-bold mb-3">Popular Posts</h4>
+                   
+                        {% for post in popular_posts %}
+                        <div class="d-flex align-items-center mb-3">
+                            {% if post.image %}
+                            <img class="img-fluid rounded-circle mr-3" src="{{ post.image.url }}" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ post.title }}">
+                            {% else %}
+                            <img class="img-fluid rounded-circle mr-3" src="{% static 'img/default-post.jpg' %}" style="width: 40px; height: 40px; object-fit: cover;" alt="Default popular post image">
+                            {% endif %}
+                            <a href="{{ post.get_absolute_url }}" class="h6 m-0 text-secondary">{{ post.title|truncatewords:6|default:"No Title Available" }}</a>
+                        </div>
+                        {% endfor %}
+              </div>
+            <!-- Sidebar End -->
                 <!-- Social Follow End -->
             </div>
         </div>

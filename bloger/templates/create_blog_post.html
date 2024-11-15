@@ -1,68 +1,166 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Create Blog Post | ELVIS-BLOG{% endblock %}
+{% block title %}
+    {% if form.instance.pk %}Edit{% else %}Create{% endif %} Blog Post | ELVIS-BLOG
+{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.css">
-<style>
-    .custom-file-input:lang(en)::after {
-        content: "Select file";
-    }
-    .custom-file-input:lang(en)::before {
-        content: "Browse";
-    }
-    .trix-content {
-        min-height: 200px;
-    }
-</style>
+{{ form.media }}  {# This loads CKEditor's CSS and JS #}
+    <style>
+        .image-preview {
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 0.25rem;
+            display: none;
+        }
+
+        .image-preview-wrapper {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert {
+            margin-bottom: 1rem;
+        }
+
+        .required-field::after {
+            content: "*";
+            color: red;
+            margin-left: 4px;
+        }
+
+        /* Custom styling for file input */
+        .custom-file-upload {
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            width: 100%;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #e9ecef;
+        }
+
+        /* CKEditor specific styles */
+        .django-ckeditor-widget {
+            width: 100% !important;
+        }
+    </style>
+    
 {% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0">Create a Blog Post</h2>
+        <div class="col-lg-10">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white py-3">
+                    <h2 class="mb-0">
+                        {% if form.instance.pk %}Edit{% else %}Create{% endif %} Blog Post
+                    </h2>
                 </div>
                 <div class="card-body">
                     <form id="blog-post-form" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
+                        
                         {% if form.non_field_errors %}
                             <div class="alert alert-danger">
                                 {{ form.non_field_errors }}
                             </div>
                         {% endif %}
-                        
-                        {% for field in form %}
-                            <div class="mb-3">
-                                {% if field.errors %}
-                                    <div class="alert alert-danger">
-                                        {{ field.errors }}
-                                    </div>
-                                {% endif %}
-                                <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
-                                {% if field.name == 'content' %}
-                                    <div class="trix-content">
-                                        {{ field }}
-                                    </div>
-                                {% elif field.name == 'image' %}
-                                    <div class="custom-file">
-                                        {{ field }}
-                                        <label class="custom-file-label" for="{{ field.id_for_label }}">Choose file</label>
-                                    </div>
-                                {% else %}
-                                    {{ field }}
-                                {% endif %}
-                                {% if field.help_text %}
-                                    <small class="form-text text-muted">{{ field.help_text }}</small>
-                                {% endif %}
+
+                        <!-- Title Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.title.id_for_label }}" class="form-label required-field">
+                                {{ form.title.label }}
+                            </label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {{ form.title.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Subtitle Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.subtitle.id_for_label }}" class="form-label">
+                                {{ form.subtitle.label }}
+                            </label>
+                            {{ form.subtitle }}
+                        </div>
+
+                        <!-- Category Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.category.id_for_label }}" class="form-label required-field">
+                                {{ form.category.label }}
+                            </label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {{ form.category.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Body Field with CKEditor -->
+                        <div class="mb-4">
+                            <label for="{{ form.body.id_for_label }}" class="form-label required-field">Content</label>
+                            {{ form.body }}
+                            {% if form.body.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {{ form.body.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Image Upload Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.image.id_for_label }}" class="form-label">
+                                Featured Image
+                            </label>
+                            <label class="custom-file-upload">
+                                {{ form.image }}
+                                <i class="fas fa-cloud-upload-alt"></i> Choose Image
+                            </label>
+                            <div class="image-preview-wrapper">
+                                <img id="image-preview" class="img-fluid image-preview" src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}" alt="Image Preview">
                             </div>
-                        {% endfor %}
-                        
+                        </div>
+
+                        <!-- Tags Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.tags.id_for_label }}" class="form-label">
+                                {{ form.tags.label }}
+                            </label>
+                            {{ form.tags }}
+                            <small class="form-text text-muted">
+                                Enter tags separated by commas (e.g., technology, programming, web)
+                            </small>
+                        </div>
+
+                        <!-- Status Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.status.id_for_label }}" class="form-label required-field">
+                                {{ form.status.label }}
+                            </label>
+                            {{ form.status }}
+                        </div>
+
+                        <!-- Submit Button -->
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">Create Post</button>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                {% if form.instance.pk %}Update{% else %}Create{% endif %} Post
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -73,13 +171,25 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-        // Update file input label with selected filename
-        $('.custom-file-input').on('change', function() {
-            let fileName = $(this).val().split('\\').pop();
-            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        // Initialize image preview if there's an existing image
+        if (document.getElementById('image-preview').src) {
+            document.getElementById('image-preview').style.display = 'block';
+        }
+
+        // Image preview functionality
+        document.getElementById('id_image').addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('image-preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
         });
     });
 </script>

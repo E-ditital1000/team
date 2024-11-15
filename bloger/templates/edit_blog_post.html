@@ -7,7 +7,14 @@
     <div class="col-lg-8">
       <div class="card shadow">
         <div class="card-body">
-          <h2 class="card-title">Edit Blog Post</h2>
+          <h2 class="card-title">Edit Blog Post: {{ post.title }}</h2>
+
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+              {{ form.non_field_errors }}
+          </div>
+          {% endif %}
+
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
@@ -20,7 +27,18 @@
               {{ field.errors }}
             </div>
             {% endfor %}
+
+            {% if post.image %}
+            <div class="mb-3">
+              <label>Current Featured Image</label>
+              <div>
+                  <img src="{{ post.image.url }}" alt="Current Image" class="img-fluid" style="max-width: 100%; height: auto;">
+              </div>
+            </div>
+            {% endif %}
+
             <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'post_detail' slug=post.slug %}" class="btn btn-secondary ms-2">Cancel</a>
           </form>
         </div>
       </div>

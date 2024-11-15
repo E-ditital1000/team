@@ -1,0 +1,30 @@
+<!-- templates/blog/draft_posts.html -->
+{% extends 'base.html' %}
+
+{% block title %}My Draft Posts{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Draft Posts</h2>
+
+    {% if drafts %}
+        <div class="list-group">
+            {% for draft in drafts %}
+                <div class="list-group-item">
+                    <h4>{{ draft.title }}</h4>
+                    <p>{{ draft.subtitle }}</p>
+                    <small>Created on: {{ draft.created_on|date:"M d, Y" }}</small>
+
+                    <div class="mt-2">
+                        <a href="{% url 'edit_blog_post' draft.slug %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'post_detail' draft.slug %}" class="btn btn-sm btn-primary">Preview</a>
+                        
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have no draft posts.</p>
+    {% endif %}
+</div>
+{% endblock %}
