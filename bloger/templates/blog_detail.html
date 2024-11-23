@@ -82,8 +82,8 @@
                     </div>
                     <div class="d-flex justify-content-between bg-white border border-top-0 p-4">
                         <div class="d-flex align-items-center">
-                            {% if post.writer.userprofile.profile_picture %}
-                            <img class="rounded-circle mr-2" src="{{ post.writer.userprofile.profile_picture.url }}" width="25" height="25" alt="Profile Picture">
+                            {% if post.writer.profile.profile_picture %}
+                            <img class="rounded-circle mr-2" src="{{ post.writer.profile.profile_picture.url }}" width="25" height="25" alt="{{ post.writer.username }}">
                             {% else %}
                             <img class="rounded-circle mr-2" src="{% static 'img/user.png' %}" width="25" height="25" alt="Default Profile Picture">
                             {% endif %}
@@ -106,9 +106,9 @@
                         <div class="media mb-4">
                             <!-- Check if the user is authenticated and show their profile picture -->
                             {% if comment.commenter.profile.profile_picture %}
-                            <img src="{{ comment.commenter.profile.profile_picture.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                            <img class="rounded-circle mr-2" src="{{ comment.commenter.profile.profile_picture.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;" height="auto-fit">
                             {% else %}
-                            <img src="{% static 'img/user.jpg' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                            <img src="{% static 'img/user.jpg' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;" height="auto-fit">
                             {% endif %}
                             <div class="media-body">
                                 <h6><a class="text-secondary font-weight-bold" href="#">{{ comment.commenter }}</a> <small><i>{{ comment.created_on|date:"M d, Y" }}</i></small></h6>
@@ -119,7 +119,7 @@
                                 <div class="media mt-4">
                                     <!-- Check if the reply user has a profile picture -->
                                     {% if reply.commenter.profile.profile_picture %}
-                                    <img src="{{ reply.commenter.profile.profile_picture.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                    <img class="rounded-circle mr-2" src="{{ reply.commenter.profile.profile_picture.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                                     {% else %}
                                     <img src="{% static 'img/user.jpg' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                                     {% endif %}
