@@ -99,6 +99,12 @@ class UserProfile(models.Model):
         default=list,
         help_text=_("Professional recommendations")
     )
+    work_experience = models.JSONField(
+        null=True,
+        blank=True,
+        default=list,
+        help_text=_("List of work experiences (e.g., job titles, companies, and dates)")
+    )
 
     last_active = models.DateTimeField(auto_now=True)
 
@@ -150,10 +156,14 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
-
+    
 
     def get_absolute_url(self):
         return reverse('profile_detail', kwargs={'username': self.user.username})
+    
+    @property
+    def like_count(self):
+        return self.likes.count()
 
 
 
@@ -296,10 +306,11 @@ class BlogPost(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     published_on = models.DateTimeField(null=True, blank=True)
     likes = models.ManyToManyField(
-        User,
-        related_name='blog_post_likes',
-        blank=True
+    User,
+    related_name='blog_post_likes',
+    blank=True
     )
+
     views = models.PositiveIntegerField(default=0)
     category = models.ForeignKey(
         Category,

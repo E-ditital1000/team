@@ -44,7 +44,8 @@ class UserProfileForm(forms.ModelForm):
             'education',
             'skills',
             'projects',
-            'recommendations'
+            'recommendations',
+            'work_experience'
         ]
         widgets = {
             'bio': forms.Textarea(attrs={
@@ -106,7 +107,7 @@ class UserProfileForm(forms.ModelForm):
         }
         help_texts = {
             'education': _('Example format: [{"degree": "Bachelor\'s", "institution": "University", "start_year": 2020, "end_year": 2024}]'),
-            'skills': _('Example format: [{"name": "Python Programming", "level": "Advanced"}]'),
+            'skills': _('Example format: ["name", "Python Programming", "level": "Advanced"]'),
             'projects': _('Example format: [{"title": "Project Name", "description": "Project details", "url": "https://project-url.com", "status": "In progress"}]'),
             'recommendations': _('Example format: [{"recommender_name": "John Doe", "relationship": "Supervisor", "recommendation": "Strongly recommended"}]'),
             'website': _('Enter the full URL of your personal website or portfolio'),

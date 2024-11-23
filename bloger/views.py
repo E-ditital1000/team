@@ -85,36 +85,49 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Count
 
+from django.db.models import Count, Q
+
 class ProfileDetailView(DetailView):
     model = UserProfile
     template_name = 'profile.html'
     context_object_name = 'profile'
-    
+
     def get_object(self, queryset=None):
+        # Renaming annotations to avoid conflict with properties in UserProfile model
         return get_object_or_404(
-            UserProfile.objects.select_related('user')
-            .annotate(
-                post_count=Count('user__blog_posts'),
+            UserProfile.objects.select_related('user').annotate(
+                post_count_annotated=Count('user__blog_posts', filter=Q(user__blog_posts__status='published')),
+                like_count_annotated=Count('likes'),
+                follower_count_annotated=Count('followers')
             ),
             user__username=self.kwargs.get('username')
         )
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         profile = self.get_object()
         user = self.request.user
-        
+
+        # Check if authenticated user is following or liking the profile
         if user.is_authenticated:
             context['is_following'] = profile.is_followed_by(user)
             context['is_liked'] = profile.is_liked_by(user)
-            
-        context['total_followers'] = profile.follower_count
+
+        # Use the annotated counts in context, not the properties
+        context['total_followers'] = profile.follower_count_annotated
         context['total_following'] = profile.following_count
-        context['total_likes'] = profile.like_count
-        context['post_count'] = profile.post_count
+        context['total_likes'] = profile.like_count_annotated
+        context['post_count'] = profile.post_count_annotated
+
+        # Get posts for the profile's user (published only)
+        context['posts'] = BlogPost.objects.filter(writer=profile.user, status='published').order_by('-created_on')
+
+        # Check if the user is viewing their own profile
         context['is_own_profile'] = user == profile.user
-        
+
         return context
+
+
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
     model = UserProfile
@@ -492,40 +505,45 @@ class DraftPostListView(View):
         }
         return render(request, self.template_name, context)
 
+def toggle_like(self, user):
+    """Add or remove a like for the post from a user."""
+    if user in self.likes.all():
+        self.likes.remove(user)
+        liked = False
+    else:
+        self.likes.add(user)
+        liked = True
+    self.save()
+    return liked
+
+
 @login_required
 @require_POST
 def like_post(request):
-    if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        raise Http404
-        
     post_id = request.POST.get('post_id')
     if not post_id:
         return JsonResponse({'error': 'Post ID required'}, status=400)
-        
+
     try:
         post = BlogPost.objects.get(id=post_id)
         user = request.user
+
+        # Toggle the like status
+        liked = post.toggle_like(user)
         
-        if post.likes.filter(id=user.id).exists():
-            post.likes.remove(user)
-            liked = False
-        else:
-            post.likes.add(user)
-            liked = True
-            
         return JsonResponse({
             'liked': liked,
-            'total_likes': post.total_likes(),
+            'total_likes': post.total_likes(),  # Use the total_likes method to get the updated count
             'post_id': post_id
         })
     except BlogPost.DoesNotExist:
         return JsonResponse({'error': 'Post not found'}, status=404)
-    except Exception as e:
-        logger.error(f"Error in like_post: {str(e)}")
-        return JsonResponse({'error': 'Server error'}, status=500)
 
-@login_required
-@require_http_methods(["POST"])  # Only allow POST requests for comments
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+
+@login_required(login_url='/login/')
+@require_http_methods(["POST"])
 def comment_post(request, slug):
     post = get_object_or_404(BlogPost, slug=slug)
     
@@ -550,8 +568,9 @@ def comment_post(request, slug):
             messages.success(request, 'Comment added successfully.')
         else:
             messages.error(request, 'Please correct the errors below.')
-            
+
     return redirect('blog_detail', slug=slug)
+
 
 @require_http_methods(["GET"])
 def post_detail_view(request, slug):
@@ -648,7 +667,7 @@ def category_detail_view(request, slug):
 def register(request):
     if request.user.is_authenticated:
         return redirect('index')
-        
+    
     if request.method == 'POST':
         username = request.POST.get('username')
         email = request.POST.get('email')
@@ -658,17 +677,17 @@ def register(request):
         if password != password2:
             messages.error(request, 'Passwords do not match.')
             return redirect('register')
+        
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username is already taken.')
+            return redirect('register')
             
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email is already registered.')
+            return redirect('register')
+        
         try:
             with transaction.atomic():
-                if User.objects.filter(username=username).exists():
-                    messages.error(request, 'Username is already taken.')
-                    return redirect('register')
-                    
-                if User.objects.filter(email=email).exists():
-                    messages.error(request, 'Email is already registered.')
-                    return redirect('register')
-                    
                 user = User.objects.create_user(
                     username=username,
                     email=email,
@@ -680,8 +699,9 @@ def register(request):
         except Exception as e:
             logger.error(f"Registration error: {str(e)}")
             messages.error(request, 'An error occurred during registration.')
-            
+    
     return render(request, 'register.html')
+
 
 @require_http_methods(["GET", "POST"])
 def login(request):
@@ -699,8 +719,10 @@ def login(request):
             return redirect(next_url)
         else:
             messages.error(request, 'Invalid username or password.')
-            
+            logger.warning(f"Failed login attempt for username: {username}")
+    
     return render(request, 'login.html')
+
 
 @login_required
 def logout(request):
