@@ -1,0 +1,129 @@
+/* Base styles for CKEditor 5 container */
+.django_ckeditor_5 {
+    width: 100%;
+    min-height: 400px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+/* Custom styles to ensure CKEditor works well with Bootstrap */
+.ck.ck-editor {
+    width: 100% !important;
+    margin-bottom: 1rem;
+}
+
+.ck-editor__editable {
+    min-height: 400px !important;
+    max-height: 800px !important;
+    overflow-y: auto;
+}
+
+.ck-editor__editable_inline {
+    padding: 0 1rem !important;
+    border: 1px solid #ced4da !important;
+}
+
+/* Fix potential conflicts with Bootstrap */
+.ck.ck-reset, 
+.ck.ck-reset_all, 
+.ck.ck-reset_all * {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    text-decoration: none;
+    vertical-align: middle;
+    box-sizing: border-box;
+    width: auto;
+    height: auto;
+}
+
+/* Ensure toolbar is visible and properly styled */
+.ck.ck-toolbar {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem 0.25rem 0 0;
+    background: #f8f9fa;
+    padding: 0.25rem;
+}
+
+.ck.ck-toolbar > .ck-toolbar__items {
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ck.ck-toolbar .ck-button {
+    padding: 0.5rem;
+    min-width: auto;
+}
+
+/* Style for focused editor */
+.ck.ck-editor__editable:not(.ck-editor__nested-editable).ck-focused {
+    border-color: #80bdff !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+/* Table styles */
+.ck-content table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    height: auto;
+    border: 1px solid hsl(0, 0%, 85%);
+}
+
+.ck-content table td,
+.ck-content table th {
+    border: 1px solid hsl(0, 0%, 85%);
+    padding: 0.5rem;
+}
+
+/* Image styles */
+.ck-content .image {
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.ck-content .image img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Image styles variations */
+.ck-content .image-style-align-left {
+    float: left;
+    margin-right: 1.5em;
+    max-width: 50%;
+}
+
+.ck-content .image-style-align-right {
+    float: right;
+    margin-left: 1.5em;
+    max-width: 50%;
+}
+
+.ck-content .image-style-align-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Quote styling */
+.ck-content blockquote {
+    border-left: 5px solid #ced4da;
+    padding-left: 1.5rem;
+    margin-left: 0;
+    font-style: italic;
+}
+
+/* List styling */
+.ck-content ul,
+.ck-content ol {
+    padding-left: 2rem;
+}
+
+/* Fix content overflow */
+.ck-content {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}

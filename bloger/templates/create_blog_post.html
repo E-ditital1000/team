@@ -6,27 +6,36 @@
 {% endblock %}
 
 {% block extra_css %}
-{{ form.media }}  {# This loads CKEditor's CSS and JS #}
+    <!-- CKEditor CSS - Must be included in the header -->
+    <link rel="stylesheet" href="{% static 'django_ckeditor_5/dist/styles.css' %}">
+    
     <style>
+        /* Image Preview Styles */
         .image-preview {
-            max-height: 200px;
+            max-height: 300px;
             margin-top: 10px;
             border-radius: 0.25rem;
             display: none;
+            object-fit: cover;
         }
 
         .image-preview-wrapper {
             margin-top: 1rem;
             text-align: center;
+            position: relative;
         }
 
+        .remove-image-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+
+        /* Form Styles */
         .form-label {
             font-weight: 600;
             margin-bottom: 0.5rem;
-        }
-
-        .alert {
-            margin-bottom: 1rem;
         }
 
         .required-field::after {
@@ -35,27 +44,166 @@
             margin-left: 4px;
         }
 
-        /* Custom styling for file input */
-        .custom-file-upload {
-            display: inline-block;
-            padding: 6px 12px;
+        .tag-badge {
+            margin-right: 5px;
+            margin-bottom: 5px;
             cursor: pointer;
-            background-color: #f8f9fa;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
+        }
+
+        /* CKEditor Specific Styles - Ensure proper display */
+        .ck-editor__editable {
+            min-height: 400px !important;
+            max-height: 800px !important;
+        }
+        
+        .ck-editor__editable_inline {
+            padding: 0 2rem !important;
+        }
+
+        .ck.ck-editor {
+            width: 100% !important;
+            margin-bottom: 1rem;
+        }
+
+        .django_ckeditor_5 {
+            width: 100% !important;
+        }
+
+        /* Custom file input styling */
+        .custom-file {
+            position: relative;
+            display: inline-block;
             width: 100%;
         }
 
-        .custom-file-upload:hover {
-            background-color: #e9ecef;
+        .custom-file-input {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: calc(1.5em + 0.75rem + 2px);
+            margin: 0;
+            opacity: 0;
         }
 
-        /* CKEditor specific styles */
-        .django-ckeditor-widget {
-            width: 100% !important;
+        .custom-file-label {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1;
+            height: calc(1.5em + 0.75rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+        }
+        
+        /* Fix for CKEditor in Bootstrap environment */
+        .ck.ck-reset, .ck.ck-reset_all, .ck.ck-reset_all * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            text-decoration: none;
+            vertical-align: middle;
+            box-sizing: border-box;
+            width: auto;
+            height: auto;
+        }
+        
+        /* Error messages */
+        .error-list {
+            color: #dc3545;
+            padding-left: 1.25rem;
+            margin-top: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Debug information */
+        .debug-info {
+            font-family: monospace;
+            font-size: 12px;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        /* Editor toolbar hint */
+        .editor-toolbar-hint {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 0.25rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .editor-toolbar-hint ul {
+            padding-left: 1.5rem;
+            margin-bottom: 0;
+        }
+        
+        .editor-toolbar-hint li {
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Video Embed Section */
+        .video-embed-section {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 1.25rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .video-embed-preview {
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .video-preview-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin-bottom: 1rem;
+        }
+        
+        .video-preview-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        .embed-code-display {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+            padding: 0.75rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            word-break: break-all;
         }
     </style>
-    
 {% endblock %}
 
 {% block content %}
@@ -69,6 +217,28 @@
                     </h2>
                 </div>
                 <div class="card-body">
+                    <!-- Error messages display -->
+                    {% if messages %}
+                    <div class="messages mb-4">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Editor Hint Box -->
+                    <div class="editor-toolbar-hint mb-4">
+                        <h6 class="mb-2"><i class="fas fa-lightbulb"></i> Editor Tips:</h6>
+                        <ul>
+                            <li>Use the <strong>Video Embed</strong> section below to add YouTube or other video content</li>
+                            <li>Format your text with headings, bold, italic, and lists from the toolbar</li>
+                            <li>Use the image upload to add a featured image to your post</li>
+                            <li>Add relevant tags to help readers find your content</li>
+                        </ul>
+                    </div>
+                
                     <form id="blog-post-form" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         
@@ -79,7 +249,7 @@
                         {% endif %}
 
                         <!-- Title Field -->
-                        <div class="mb-4">
+                        <div class="form-group">
                             <label for="{{ form.title.id_for_label }}" class="form-label required-field">
                                 {{ form.title.label }}
                             </label>
@@ -89,10 +259,13 @@
                                     {{ form.title.errors }}
                                 </div>
                             {% endif %}
+                            <small class="form-text text-muted">
+                                Minimum 5 characters required
+                            </small>
                         </div>
 
                         <!-- Subtitle Field -->
-                        <div class="mb-4">
+                        <div class="form-group">
                             <label for="{{ form.subtitle.id_for_label }}" class="form-label">
                                 {{ form.subtitle.label }}
                             </label>
@@ -100,7 +273,7 @@
                         </div>
 
                         <!-- Category Field -->
-                        <div class="mb-4">
+                        <div class="form-group">
                             <label for="{{ form.category.id_for_label }}" class="form-label required-field">
                                 {{ form.category.label }}
                             </label>
@@ -113,47 +286,111 @@
                         </div>
 
                         <!-- Body Field with CKEditor -->
-                        <div class="mb-4">
+                        <div class="form-group">
                             <label for="{{ form.body.id_for_label }}" class="form-label required-field">Content</label>
-                            {{ form.body }}
+                            <div class="ckeditor-container">
+                                {{ form.body }}
+                            </div>
                             {% if form.body.errors %}
                                 <div class="alert alert-danger mt-2">
                                     {{ form.body.errors }}
                                 </div>
                             {% endif %}
+                            <small class="form-text text-muted">
+                                Minimum 100 characters required
+                            </small>
+                        </div>
+                        
+                        <!-- Video Embed Section (Backup for CKEditor) -->
+                        <div class="video-embed-section">
+                            <h5><i class="fas fa-video"></i> Add Video</h5>
+                            <p class="text-muted">If you want to include a video in your post, paste the URL here:</p>
+                            
+                            <div class="input-group mb-3">
+                                <input type="text" id="video-url" class="form-control" 
+                                       placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="preview-video-btn">Preview</button>
+                                </div>
+                            </div>
+                            
+                            <div class="video-embed-preview" id="video-preview-section">
+                                <div class="video-preview-container" id="video-container">
+                                    <!-- Video iframe will be inserted here -->
+                                </div>
+                                
+                                <p>Video embed code:</p>
+                                <div class="embed-code-display" id="embed-code-display"></div>
+                                
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary" id="add-to-content-btn">
+                                        <i class="fas fa-plus-circle"></i> Add to Content
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary ml-2" id="cancel-video-btn">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Hidden field to store video embeds -->
+                            <input type="hidden" name="video_embeds" id="video-embeds-input">
                         </div>
 
                         <!-- Image Upload Field -->
-                        <div class="mb-4">
+                        <div class="form-group">
                             <label for="{{ form.image.id_for_label }}" class="form-label">
                                 Featured Image
                             </label>
-                            <label class="custom-file-upload">
+                            <div class="custom-file">
                                 {{ form.image }}
-                                <i class="fas fa-cloud-upload-alt"></i> Choose Image
-                            </label>
+                                <label class="custom-file-label" for="id_image">
+                                    <i class="fas fa-cloud-upload-alt"></i> 
+                                    Choose Image
+                                </label>
+                            </div>
                             <div class="image-preview-wrapper">
-                                <img id="image-preview" class="img-fluid image-preview" src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}" alt="Image Preview">
+                                {% if form.instance.image %}
+                                    <button type="button" class="btn btn-danger btn-sm remove-image-btn" id="remove-image">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                {% endif %}
+                                <img id="image-preview" 
+                                     class="img-fluid image-preview" 
+                                     src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}" 
+                                     alt="Image Preview">
                             </div>
                         </div>
 
                         <!-- Tags Field -->
-                        <div class="mb-4">
+                        <div class="form-group">
                             <label for="{{ form.tags.id_for_label }}" class="form-label">
                                 {{ form.tags.label }}
                             </label>
                             {{ form.tags }}
+                            {% if form.tags.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {{ form.tags.errors }}
+                                </div>
+                            {% endif %}
                             <small class="form-text text-muted">
                                 Enter tags separated by commas (e.g., technology, programming, web)
                             </small>
+                            <div id="tag-suggestions" class="mt-2">
+                                <!-- Tag suggestions will be dynamically added here -->
+                            </div>
                         </div>
 
                         <!-- Status Field -->
-                        <div class="mb-4">
+                        <div class="form-group">
                             <label for="{{ form.status.id_for_label }}" class="form-label required-field">
                                 {{ form.status.label }}
                             </label>
                             {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {{ form.status.errors }}
+                                </div>
+                            {% endif %}
                         </div>
 
                         <!-- Submit Button -->
@@ -171,26 +408,287 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        // Initialize image preview if there's an existing image
-        if (document.getElementById('image-preview').src) {
-            document.getElementById('image-preview').style.display = 'block';
-        }
-
-        // Image preview functionality
-        document.getElementById('id_image').addEventListener('change', function(e) {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById('image-preview');
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
+    <!-- CKEditor JS - Must be included at the end of body -->
+    <script src="{% static 'django_ckeditor_5/dist/bundle.js' %}"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Initialize variables
+            const imageInput = document.getElementById('id_image');
+            const imagePreview = document.getElementById('image-preview');
+            const removeImageBtn = document.getElementById('remove-image');
+            const tagsInput = document.getElementById('id_tags');
+            const bodyInput = document.getElementById('id_body');
+            
+            // Video embedding variables
+            const videoUrlInput = document.getElementById('video-url');
+            const previewVideoBtn = document.getElementById('preview-video-btn');
+            const videoPreviewSection = document.getElementById('video-preview-section');
+            const videoContainer = document.getElementById('video-container');
+            const embedCodeDisplay = document.getElementById('embed-code-display');
+            const addToContentBtn = document.getElementById('add-to-content-btn');
+            const cancelVideoBtn = document.getElementById('cancel-video-btn');
+            const videoEmbedsInput = document.getElementById('video-embeds-input');
+            
+            // Array to store video embeds
+            let videoEmbeds = [];
+            
+            // Video URL parsing functions
+            function getYoutubeVideoId(url) {
+                const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[7].length === 11) ? match[7] : false;
+            }
+            
+            function getVimeoVideoId(url) {
+                const regExp = /(?:vimeo)\.com.*(?:videos|video|channels|)\/([\d]+)/i;
+                const match = url.match(regExp);
+                return match ? match[1] : false;
+            }
+            
+            // Generate embed code based on video URL
+            function generateEmbedCode(url) {
+                let embedCode = '';
+                let videoId;
+                
+                // YouTube
+                if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                    videoId = getYoutubeVideoId(url);
+                    if (videoId) {
+                        embedCode = `<div class="video-container"><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+                    }
                 }
-                reader.readAsDataURL(file);
+                // Vimeo
+                else if (url.includes('vimeo.com')) {
+                    videoId = getVimeoVideoId(url);
+                    if (videoId) {
+                        embedCode = `<div class="video-container"><iframe src="https://player.vimeo.com/video/${videoId}" width="560" height="315" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`;
+                    }
+                }
+                // Other video services could be added here
+                
+                return embedCode;
+            }
+            
+            // Preview video function
+            function previewVideo() {
+                const url = videoUrlInput.value.trim();
+                if (!url) {
+                    alert('Please enter a valid video URL');
+                    return;
+                }
+                
+                const embedCode = generateEmbedCode(url);
+                if (!embedCode) {
+                    alert('Could not generate embed code from this URL. Please ensure it is a valid YouTube or Vimeo URL.');
+                    return;
+                }
+                
+                videoContainer.innerHTML = embedCode;
+                embedCodeDisplay.textContent = embedCode;
+                videoPreviewSection.style.display = 'block';
+            }
+            
+            // Add video to content
+            function addVideoToContent() {
+                const embedCode = embedCodeDisplay.textContent;
+                if (!embedCode) return;
+                
+                // If CKEditor is working, try to insert it there
+                const ckEditorElement = document.querySelector('.ck-editor__editable');
+                if (ckEditorElement) {
+                    try {
+                        // This is a workaround since we can't directly access CKEditor instance
+                        // In a real implementation, you might want to use the CKEditor API
+                        const currentContent = bodyInput.value || '';
+                        bodyInput.value = currentContent + '\n\n' + embedCode + '\n\n';
+                        console.log('Added video to CKEditor content');
+                    } catch (e) {
+                        console.error('Failed to add to CKEditor:', e);
+                    }
+                } else {
+                    // Fallback: Store embed codes in a hidden field
+                    videoEmbeds.push(embedCode);
+                    videoEmbedsInput.value = JSON.stringify(videoEmbeds);
+                    console.log('Added video to hidden field');
+                }
+                
+                // Clear the preview
+                videoUrlInput.value = '';
+                videoPreviewSection.style.display = 'none';
+                
+                alert('Video has been added to your post content!');
+            }
+            
+            // Cancel video preview
+            function cancelVideoPreview() {
+                videoUrlInput.value = '';
+                videoPreviewSection.style.display = 'none';
+                videoContainer.innerHTML = '';
+                embedCodeDisplay.textContent = '';
+            }
+            
+            // Setup video embed event listeners
+            if (previewVideoBtn) {
+                previewVideoBtn.addEventListener('click', previewVideo);
+            }
+            
+            if (addToContentBtn) {
+                addToContentBtn.addEventListener('click', addVideoToContent);
+            }
+            
+            if (cancelVideoBtn) {
+                cancelVideoBtn.addEventListener('click', cancelVideoPreview);
+            }
+            
+            // Debug helper - log what CKEditor elements are found
+            console.log('CKEditor elements found:', document.querySelectorAll('.django_ckeditor_5').length);
+            
+            // Initialize CKEditor (this is a fallback in case automatic initialization fails)
+            document.querySelectorAll('.django_ckeditor_5').forEach(editorElement => {
+                console.log('Found CKEditor element:', editorElement.id);
+                
+                // Check if CKEditor is already initialized on this element
+                if (!editorElement.classList.contains('ck-editor-initialized')) {
+                    console.log('Initializing CKEditor on element:', editorElement.id);
+                    try {
+                        // This is a simplified placeholder - the actual CKEditor5 initialization
+                        // is handled by the bundle.js script
+                        editorElement.classList.add('ck-editor-initialized');
+                    } catch (error) {
+                        console.error('CKEditor initialization error:', error);
+                    }
+                }
+            });
+            
+            // Wait for CKEditor to be fully initialized
+            const checkCKEditorReady = setInterval(() => {
+                if (document.querySelector('.ck-editor__main')) {
+                    clearInterval(checkCKEditorReady);
+                    console.log('CKEditor initialized successfully');
+                }
+            }, 100);
+            
+            // Timeout after 5 seconds to prevent infinite checking
+            setTimeout(() => {
+                clearInterval(checkCKEditorReady);
+            }, 5000);
+
+            // Image preview functionality
+            if (imageInput) {
+                imageInput.addEventListener('change', function(e) {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            imagePreview.src = e.target.result;
+                            imagePreview.style.display = 'block';
+                            if (removeImageBtn) {
+                                removeImageBtn.style.display = 'block';
+                            }
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Remove image functionality
+            if (removeImageBtn) {
+                removeImageBtn.addEventListener('click', () => {
+                    imagePreview.src = '';
+                    imagePreview.style.display = 'none';
+                    imageInput.value = '';
+                    removeImageBtn.style.display = 'none';
+                    
+                    // Add a hidden input to indicate image removal on the server
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'remove_image';
+                    hiddenInput.value = 'true';
+                    document.getElementById('blog-post-form').appendChild(hiddenInput);
+                });
+            }
+
+            // Tag suggestions functionality
+            if (tagsInput) {
+                tagsInput.addEventListener('input', function(e) {
+                    const tagSuggestions = document.getElementById('tag-suggestions');
+                    const currentInput = this.value.split(',').map(tag => tag.trim());
+                    const lastTag = currentInput[currentInput.length - 1].toLowerCase();
+
+                    // Popular tags suggestions
+                    const suggestions = ['technology', 'programming', 'web', 'design', 'ai', 
+                                        'machine learning', 'development', 'tutorial', 'guide',
+                                        'youtube', 'video', 'media', 'social media'];
+                    const filteredSuggestions = suggestions
+                        .filter(suggestion => 
+                            suggestion.toLowerCase().includes(lastTag) && 
+                            !currentInput.includes(suggestion)
+                        )
+                        .slice(0, 3);
+
+                    tagSuggestions.innerHTML = filteredSuggestions.length 
+                        ? filteredSuggestions.map(tag => 
+                            `<span class="badge bg-secondary tag-badge" onclick="addTag('${tag}')">${tag}</span>`
+                        ).join('')
+                        : '';
+                });
+            }
+
+            // Function to add a suggested tag
+            window.addTag = function(tag) {
+                const currentTags = tagsInput.value.split(',').map(t => t.trim()).filter(t => t !== '');
+                if (!currentTags.includes(tag)) {
+                    if (currentTags.length > 0 && currentTags[currentTags.length - 1] !== '') {
+                        tagsInput.value = currentTags.join(', ') + ', ' + tag;
+                    } else if (currentTags.length > 0) {
+                        // Replace empty last element
+                        currentTags[currentTags.length - 1] = tag;
+                        tagsInput.value = currentTags.join(', ');
+                    } else {
+                        tagsInput.value = tag;
+                    }
+                }
+            };
+
+            // Initialize image preview if there's an existing image
+            if (imagePreview && imagePreview.src && !imagePreview.src.endsWith('#')) {
+                imagePreview.style.display = 'block';
+                if (removeImageBtn) {
+                    removeImageBtn.style.display = 'block';
+                }
+            }
+
+            // Update custom file input label
+            if (imageInput) {
+                imageInput.addEventListener('change', function() {
+                    const fileName = this.files[0]?.name || 'Choose Image';
+                    const label = this.nextElementSibling;
+                    if (label) {
+                        label.textContent = fileName;
+                    }
+                });
+            }
+            
+            // Form validation check
+            const form = document.getElementById('blog-post-form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Look for CKEditor content to validate
+                    const ckEditorElement = document.querySelector('.ck-editor__editable');
+                    if (ckEditorElement) {
+                        const content = ckEditorElement.innerHTML;
+                        console.log('CKEditor content length:', content.length);
+                        
+                        // Simple validation
+                        if (content.length < 100) {
+                            console.warn('Content may be too short');
+                        }
+                    } else {
+                        console.warn('CKEditor element not found when validating');
+                    }
+                });
             }
         });
-    });
-</script>
+    </script>
 {% endblock %}

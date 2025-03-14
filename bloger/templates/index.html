@@ -1,5 +1,7 @@
+<!--index.html-->
 {% extends 'base.html' %}
 {% load static %}
+{% csrf_token %}
 
 {% block content %}
 <!-- Featured News Section Start -->
@@ -30,77 +32,258 @@
     </div>
 </div>
 <!-- Featured News Section End -->
-
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <div class="container-fluid">
     <div class="container">
         <div class="row">
-    <!-- Main Content Column Start -->
-<div class="col-lg-8">
-    <!-- Latest News Section Start -->
-    <div class="section-title">
-        <h4 class="m-0 text-uppercase font-weight-bold">Latest News</h4>
-    </div>
-    <div class="row">
-        {% for post in posts %}
-        <div class="col-lg-6">
-            <div class="position-relative mb-3">
-                <!-- Post Image -->
-                {% if post.image %}
-                <img class="img-fluid w-100" src="{{ post.image.url }}" style="object-fit: cover;" alt="{{ post.title }}">
-                {% else %}
-                <img class="img-fluid w-100" src="{% static 'img/default-featured.jpg' %}" style="object-fit: cover;" alt="Default post image">
-                {% endif %}
+            <!-- Main Content Column Start -->
+            <div class="col-lg-8">
+                         <!-- Latest News Section Start -->
+                         <div class="section-title">
+                            <h4 class="m-0 text-uppercase font-weight-bold">Latest News</h4>
+                        </div>
+                        <div class="row">
+                            {% for post in posts %}
+                            <div class="col-lg-6">
+                                <div class="position-relative mb-3">
+                                    <!-- Post Image -->
+                                    {% if post.image %}
+                                    <img class="img-fluid w-100" src="{{ post.image.url }}" style="object-fit: cover; height: 200px;" alt="{{ post.title }}">
+                                    {% else %}
+                                    <img class="img-fluid w-100" src="{% static 'img/default-featured.jpg' %}" style="object-fit: cover; height: 200px;" alt="Default post image">
+                                    {% endif %}
+                                    
+                                    <!-- Post Content -->
+                                    <div class="bg-white border border-top-0 p-4">
+                                        <div class="mb-2">
+                                            <a class="text-body" href="{{ post.get_absolute_url }}">
+                                                <small>{{ post.created_on|date:"F j, Y" }}</small>
+                                            </a>
+                                            <span class="text-secondary mx-2">|</span>
+                                            <a class="text-body" href="{{ post.category.get_absolute_url }}">
+                                                <small>{{ post.category.name }}</small>
+                                            </a>
+                                        </div>
+                                        <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="{{ post.get_absolute_url }}">
+                                            {{ post.title|default:"Untitled Post" }}
+                                        </a>
+                                        <p class="m-0">
+                                            {{ post.body|truncatewords:20|default:"No content available." }}
+                                        </p>
+                                    </div>
+                            
+                                    <!-- Post Footer with Like and Share Buttons -->
+                                    <div class="bg-white border border-top-0 p-3">
+                                        <!-- Author and Stats Row -->
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="d-flex align-items-center">
+                                                {% if post.writer.profile.profile_picture %}
+                                                <img class="rounded-circle mr-2" src="{{ post.writer.profile.profile_picture.url }}" width="25" height="25" alt="{{ post.writer.username }}">
+                                                {% else %}
+                                                <img class="rounded-circle mr-2" src="{% static 'img/user.png' %}" width="25" height="25" alt="Default Profile Picture">
+                                                {% endif %}
+                                
+                                                <a href="{% url 'profile_detail' username=post.writer.username %}" class="text-dark">
+                                                    <small>{{ post.writer.username }}</small>
+                                                </a>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <span class="ml-3"><i class="far fa-eye mr-1"></i>{{ post.views }}</span>
+                                                <span class="ml-3"><i class="far fa-comment mr-1"></i>{{ post.comments.count }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Like and Share buttons -->
+                                        <div class="d-flex justify-content-between border-top pt-2">
+                                            <!-- Like Button -->
+                                            <button class="btn btn-sm {% if request.user in post.likes.all %}btn-primary{% else %}btn-outline-primary{% endif %} like-btn" 
+                                                    data-post-id="{{ post.id }}" 
+                                                    type="button">
+                                                <i class="{% if request.user in post.likes.all %}fas{% else %}far{% endif %} fa-heart mr-1"></i>
+                                                <span class="like-count">{{ post.likes.count }}</span>
+                                            </button>
+                                            
+                                            <!-- Share Dropdown -->
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="shareDropdown{{ post.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fas fa-share-alt mr-1"></i> Share
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="shareDropdown{{ post.id }}">
+                                                    <a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}" target="_blank">
+                                                        <i class="fab fa-facebook-f mr-2 text-primary"></i>Facebook
+                                                    </a>
+                                                    <a class="dropdown-item" href="https://twitter.com/intent/tweet?url={{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}&text={{ post.title }}" target="_blank">
+                                                        <i class="fab fa-twitter mr-2 text-info"></i>Twitter
+                                                    </a>
+                                                    <a class="dropdown-item" href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}&title={{ post.title }}" target="_blank">
+                                                        <i class="fab fa-linkedin mr-2 text-primary"></i>LinkedIn
+                                                    </a>
+                                                    <a class="dropdown-item" href="mailto:?subject={{ post.title }}&body=Check out this article: {{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}">
+                                                        <i class="fas fa-envelope mr-2 text-secondary"></i>Email
+                                                    </a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item copy-link" href="javascript:void(0);" data-url="{{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}">
+                                                        <i class="fas fa-link mr-2 text-dark"></i>Copy Link
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <!-- Latest News Section End -->
                 
-                <!-- Post Content -->
-                <div class="bg-white border border-top-0 p-4">
-                    <div class="mb-2">
-                        <a class="text-body" href="{{ post.get_absolute_url }}">
-                            <small>{{ post.created_on|date:"F j, Y" }}</small>
-                        </a>
-                        <span class="text-secondary mx-2">|</span>
-                        <a class="text-body" href="{{ post.category.get_absolute_url }}">
-                            <small>{{ post.category.name }}</small>
-                        </a>
+                <!-- Shop Products Section Start -->
+                <div class="section-title mt-5">
+                    <h4 class="m-0 text-uppercase font-weight-bold">Featured Products</h4>
+                </div>
+                <div class="bg-white border p-4 mb-4">
+                    <div class="row">
+                        {% for product in featured_products|slice:":6" %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card product-card h-100 border-0 shadow-sm">
+                                <div class="position-relative overflow-hidden" style="height: 160px;">
+                                    {% if product.image %}
+                                    <img src="{{ product.image.url }}" class="card-img-top h-100 w-100" style="object-fit: cover;" alt="{{ product.name }}">
+                                    {% else %}
+                                    <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                                        <i class="fas fa-box fa-3x text-secondary"></i>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if product.discount_price %}
+                                    <div class="position-absolute top-0 start-0 bg-primary text-white px-2 py-1 m-2 rounded">
+                                        Sale!
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="card-body p-3">
+                                    <a href="{% url 'shop:product_detail' product.slug %}" class="card-title h6 text-decoration-none text-dark d-block mb-2">{{ product.name|truncatechars:40 }}</a>
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <div>
+                                            {% if product.discount_price %}
+                                            <span class="text-primary fw-bold">${{ product.discount_price }}</span>
+                                            <small class="text-muted text-decoration-line-through ms-2">${{ product.price }}</small>
+                                            {% else %}
+                                            <span class="text-primary fw-bold">${{ product.price }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="small text-muted">
+                                            {% if product.stock > 0 %}<i class="fas fa-check-circle text-success me-1"></i> In Stock{% else %}<i class="fas fa-times-circle text-danger me-1"></i> Out of Stock{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent border-top-0 p-3">
+                                    <div class="d-grid">
+                                        <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-sm btn-outline-primary">View Product</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12 text-center py-5">
+                            <i class="fas fa-store fa-3x text-secondary mb-3"></i>
+                            <h5>No Products Available</h5>
+                            <p class="text-muted">Check back later for exciting products!</p>
+                        </div>
+                        {% endfor %}
                     </div>
-                    <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="{{ post.get_absolute_url }}">
-                        {{ post.title|default:"Untitled Post" }}
-                    </a>
-                    <p class="m-0">
-                        {{ post.body|truncatewords:20|default:"No content available." }}
-                    </p>
-                   
                     
-                </div>
-
-                <!-- Post Footer -->
-                <div class="d-flex justify-content-between bg-white border border-top-0 p-4">
-                    <div class="d-flex align-items-center">
-                        {% if post.writer.profile.profile_picture %}
-                        <img class="rounded-circle mr-2" src="{{ post.writer.profile.profile_picture.url }}" width="25" height="25" alt="{{ post.writer.username }}">
-                        {% else %}
-                        <img class="rounded-circle mr-2" src="{% static 'img/user.png' %}" width="25" height="25" alt="Default Profile Picture">
-                        {% endif %}
-        
-                        <a href="{% url 'profile_detail' username=post.writer.username %}">
-                            <small>{{ post.writer.username }}</small>
-                        </a>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <span class="ml-3"><i class="far fa-eye mr-2"></i>{{ post.views }}</span>
-                        <span class="ml-3"><i class="far fa-comment mr-2"></i>{{ post.comments.count }}</span>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'shop:product_list' %}" class="btn btn-primary">Browse All Products <i class="fas fa-arrow-right ml-2"></i></a>
                     </div>
                 </div>
+                <!-- Shop Products Section End -->
             </div>
-        </div>
-        {% endfor %}
-    </div>
-    <!-- Latest News Section End -->
-</div>
-<!-- Main Content Column End -->
-
+            <!-- Main Content Column End -->
 
             <!-- Sidebar Start -->
             <div class="col-lg-4">
+                {% if user.is_authenticated %}
+                <!-- User Profile Card Start -->
+                <div class="card mb-4 border rounded shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="d-flex align-items-center p-3 border-bottom">
+                            {% if user.profile.profile_picture %}
+                            <img src="{{ user.profile.profile_picture.url }}" class="rounded-circle mr-3" style="width: 50px; height: 50px; object-fit: cover;" alt="{{ user.username }}">
+                            {% else %}
+                            <img src="{% static 'img/user.png' %}" class="rounded-circle mr-3" style="width: 50px; height: 50px; object-fit: cover;" alt="Default Profile Picture">
+                            {% endif %}
+                            <div>
+                                <h5 class="mb-0">{{ user.get_full_name|default:user.username }}</h5>
+                                <p class="small text-muted mb-0">{{ user.profile.career|default:"" }}</p>
+                            </div>
+                        </div>
+                        <div class="d-flex border-bottom">
+                            <div class="flex-fill p-3 text-center border-right">
+                                <h6 class="mb-0">{{ user.blog_posts.count }}</h6>
+                                <small class="text-muted">Posts</small>
+                            </div>
+                            <div class="flex-fill p-3 text-center border-right">
+                                <h6 class="mb-0">{{ user.profile.follower_count }}</h6>
+                                <small class="text-muted">Followers</small>
+                            </div>
+                            <div class="flex-fill p-3 text-center">
+                                <h6 class="mb-0">{{ user.following.count }}</h6>
+                                <small class="text-muted">Following</small>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <a href="{% url 'profile_detail' username=user.username %}" class="btn btn-primary btn-sm d-block">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- User Profile Card End -->
+                
+                <!-- User's Followers Start -->
+                <div class="card mb-4 border rounded shadow-sm">
+                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Your Followers</h5>
+                        <a href="{% url 'profile_detail' username=user.username %}" class="small">View All</a>
+                    </div>
+                    <div class="card-body p-0">
+                        {% if user.profile.followers.all %}
+                        <ul class="list-group list-group-flush">
+                            {% for follower in user.profile.followers.all|slice:":5" %}
+                            <li class="list-group-item d-flex align-items-center px-3 py-2">
+                                <div class="position-relative">
+                                    {% if follower.profile.profile_picture %}
+                                    <img src="{{ follower.profile.profile_picture.url }}" class="rounded-circle mr-3" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ follower.username }}">
+                                    {% else %}
+                                    <img src="{% static 'img/user.png' %}" class="rounded-circle mr-3" style="width: 40px; height: 40px; object-fit: cover;" alt="Default Profile Picture">
+                                    {% endif %}
+                                    {% if follower.is_active %}
+                                    <div class="position-absolute" style="bottom: 0; right: 0; width: 10px; height: 10px; background-color: #20c997; border-radius: 50%; border: 2px solid white;"></div>
+                                    {% endif %}
+                                </div>
+                                <div class="ml-2">
+                                    <a href="{% url 'profile_detail' username=follower.username %}" class="text-dark font-weight-bold text-decoration-none">{{ follower.get_full_name|default:follower.username }}</a>
+                                    <p class="small text-muted mb-0">{{ follower.profile.career|default:"" }}</p>
+                                </div>
+                                <div class="ml-auto">
+                                    {% if user.profile.user_follows.filter.following__user == follower %}
+                                    <button class="btn btn-sm btn-outline-primary" onclick="toggleFollow(this)" data-username="{{ follower.username }}">Following</button>
+                                    {% else %}
+                                    <button class="btn btn-sm btn-primary" onclick="toggleFollow(this)" data-username="{{ follower.username }}">Follow</button>
+                                    {% endif %}
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-user-friends fa-3x text-secondary mb-3"></i>
+                            <p class="mb-0">You don't have any followers yet</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- User's Followers End -->
+                {% endif %}
+                
                 <!-- Popular Posts Start -->
                 <div class="mb-4">
                     <h4 class="text-uppercase font-weight-bold mb-3">Popular Posts</h4>
@@ -118,12 +301,76 @@
                     </div>
                 </div>
                 <!-- Popular Posts End -->
+
+                <!-- Featured Products Sidebar Widget -->
+                {% if featured_products %}
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Featured Products</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="featured-products-list">
+                            {% for product in featured_products|slice:":4" %}
+                            <a href="{% url 'shop:product_detail' product.slug %}" 
+                               class="featured-product-item d-flex align-items-center border-bottom p-3">
+                                <div class="featured-product-thumb mr-3" style="width: 60px; height: 60px;">
+                                    {% if product.image %}
+                                    <img src="{{ product.image.url }}" 
+                                         alt="{{ product.name }}"
+                                         class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: cover;">
+                                    {% else %}
+                                    <div class="bg-light d-flex align-items-center justify-content-center h-100 rounded">
+                                        <i class="fas fa-box text-secondary"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="featured-product-info flex-grow-1">
+                                    <h6 class="product-title mb-1">{{ product.name|truncatechars:40 }}</h6>
+                                    <div class="product-price">
+                                        {% if product.discount_price %}
+                                        <span class="current-price text-primary font-weight-bold">${{ product.discount_price }}</span>
+                                        <span class="original-price text-muted"><s>${{ product.price }}</s></span>
+                                        {% else %}
+                                        <span class="current-price text-primary font-weight-bold">${{ product.price }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </a>
+                            {% endfor %}
+                        </div>
+                        <div class="text-center p-3">
+                            <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary btn-sm">View All Products</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <!-- Featured Products End -->
+                
+                <!-- Shop Categories Widget -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Shop Categories</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="shop-categories">
+                            {% for category in shop_categories %}
+                            <a href="{% url 'shop:category_products' category.slug %}" class="btn btn-outline-secondary btn-sm m-1">
+                                {{ category.name }} <span class="badge bg-primary">{{ category.products.count }}</span>
+                            </a>
+                            {% empty %}
+                            <p class="text-muted text-center">No categories available</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Shop Categories End -->
             </div>
             <!-- Sidebar End -->
         </div>
     </div>
 </div>
 {% endblock %}
+
 {% block extra_js %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -144,9 +391,9 @@ document.addEventListener('DOMContentLoaded', function () {
             fetch('/like-post/', {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': getCookie('csrftoken'), // Handle CSRF token securely
+                    'X-CSRFToken': getCookie('csrftoken'),
                     'X-Requested-With': 'XMLHttpRequest',
-                    'Content-Type': 'application/x-www-form-urlencoded' // Set content type to form data
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: new URLSearchParams({ 'post_id': postId })
             })
@@ -172,6 +419,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Toggle follow function for followers list
+    window.toggleFollow = function(button) {
+        const username = button.dataset.username;
+        const isFollowing = button.textContent.trim() === 'Following';
+        
+        fetch(`/profile/${username}/follow/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+            
+            if (data.is_following) {
+                button.textContent = 'Following';
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-outline-primary');
+            } else {
+                button.textContent = 'Follow';
+                button.classList.remove('btn-outline-primary');
+                button.classList.add('btn-primary');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating follow status.');
+        });
+    };
+
     // Function to get CSRF token (Django-specific)
     function getCookie(name) {
         const cookies = document.cookie.split(';');
@@ -184,8 +466,169 @@ document.addEventListener('DOMContentLoaded', function () {
         return null;
     }
 });
-
 </script>
 
+<script>
+    // Add this at the end of your base template or include as a separate JS file
+document.addEventListener('DOMContentLoaded', function() {
+    // Setup like buttons
+    setupLikeButtons();
+    
+    // Setup copy link functionality
+    setupCopyLinks();
+});
 
+function setupLikeButtons() {
+    // Add event listeners to all like buttons
+    document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+            likePost(this, postId);
+        });
+    });
+}
+
+function likePost(button, postId) {
+    // Get CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    
+    if (!csrfToken) {
+        // If no CSRF token, user might not be logged in
+        window.location.href = '/login/?next=' + window.location.pathname;
+        return;
+    }
+    
+    // Show loading state
+    const originalHTML = button.innerHTML;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+    button.disabled = true;
+    
+    // Send AJAX request
+    fetch('/like-post/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `post_id=${postId}`
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Network response was not ok.');
+    })
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        // Update like button appearance
+        const heartIcon = data.liked ? 'fas fa-heart' : 'far fa-heart';
+        button.innerHTML = `<i class="${heartIcon} mr-1"></i> <span class="like-count">${data.total_likes}</span>`;
+        
+        // Update button class
+        if (data.liked) {
+            button.classList.remove('btn-outline-primary');
+            button.classList.add('btn-primary');
+        } else {
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-primary');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        button.innerHTML = originalHTML;
+        
+        // Show error toast if available, otherwise alert
+        const errorToast = document.getElementById('errorToast');
+        if (errorToast) {
+            document.getElementById('errorToastBody').textContent = error.message || 'Failed to process your request';
+            const toast = new bootstrap.Toast(errorToast);
+            toast.show();
+        } else {
+            alert('Error: ' + (error.message || 'Failed to process your request'));
+        }
+    })
+    .finally(() => {
+        button.disabled = false;
+    });
+}
+
+function setupCopyLinks() {
+    document.querySelectorAll('.copy-link').forEach(link => {
+        link.addEventListener('click', function() {
+            const url = this.getAttribute('data-url');
+            navigator.clipboard.writeText(url)
+                .then(() => {
+                    // Create temporary tooltip
+                    const tooltip = document.createElement('div');
+                    tooltip.textContent = 'Link copied!';
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.backgroundColor = '#333';
+                    tooltip.style.color = 'white';
+                    tooltip.style.padding = '5px 10px';
+                    tooltip.style.borderRadius = '3px';
+                    tooltip.style.fontSize = '12px';
+                    tooltip.style.zIndex = '9999';
+                    
+                    // Position tooltip near the clicked element
+                    const rect = this.getBoundingClientRect();
+                    tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                    tooltip.style.left = `${rect.left + window.scrollX}px`;
+                    
+                    document.body.appendChild(tooltip);
+                    
+                    // Remove the tooltip after a short delay
+                    setTimeout(() => {
+                        tooltip.remove();
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                    alert('Failed to copy link');
+                });
+        });
+    });
+}
+    
+    // Copy link functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.copy-link').forEach(function(link) {
+            link.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                navigator.clipboard.writeText(url)
+                    .then(() => {
+                        // Create temporary tooltip
+                        const tooltip = document.createElement('div');
+                        tooltip.textContent = 'Link copied!';
+                        tooltip.style.position = 'absolute';
+                        tooltip.style.backgroundColor = '#333';
+                        tooltip.style.color = 'white';
+                        tooltip.style.padding = '5px 10px';
+                        tooltip.style.borderRadius = '3px';
+                        tooltip.style.fontSize = '12px';
+                        tooltip.style.zIndex = '9999';
+                        
+                        // Position tooltip near the clicked element
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
+                        tooltip.style.left = `${rect.left + window.scrollX}px`;
+                        
+                        document.body.appendChild(tooltip);
+                        
+                        // Remove the tooltip after a short delay
+                        setTimeout(() => {
+                            tooltip.remove();
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                        alert('Failed to copy link');
+                    });
+            });
+        });
+    });
+</script>
 {% endblock %}

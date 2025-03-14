@@ -1,0 +1,431 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<title>Product List</title>
+<style>
+    /* Global Styles */
+:root {
+    --primary-color: #FFCC00;
+    --secondary-color: #31404B;
+    --accent-color: #17a2b8;
+    --text-color: #31404B;
+    --light-gray: #EDEFF4;
+    --border-radius: 8px;
+    --card-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+}
+
+/* Product List Page Styles */
+.product-grid {
+    margin: 2rem 0;
+}
+
+/* Featured Section */
+.featured-item {
+    transition: transform var(--transition-speed);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.featured-item:hover {
+    transform: translateY(-5px);
+}
+
+.featured-icon {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-right: 1rem;
+}
+
+/* Product Card Styles */
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.product-img {
+    height: 250px;
+    object-fit: cover;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+}
+
+.badge {
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    border-radius: 20px;
+}
+
+/* Search and Filter Section */
+.search-section {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+    box-shadow: var(--card-shadow);
+}
+
+.form-control, .form-select {
+    border: 1px solid #e0e0e0;
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(255, 204, 0, 0.25);
+}
+
+/* Product Detail Page Styles */
+.product-detail {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--card-shadow);
+}
+
+.product-image {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    border-radius: var(--border-radius);
+    background-color: white;
+}
+
+.quantity-input {
+    width: 100px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-radius: var(--border-radius);
+}
+
+/* Breadcrumb Styles */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 2rem;
+}
+
+.breadcrumb-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: var(--text-color);
+}
+
+/* Related Products Section */
+.related-products {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.related-product-card {
+    height: 100%;
+    border: none;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+/* Button Styles */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all var(--transition-speed);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.btn-primary:hover {
+    background-color: #e6b800;
+    border-color: #e6b800;
+    transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .product-image {
+        height: 300px;
+    }
+    
+    .card-title {
+        font-size: 1rem;
+    }
+    
+    .featured-item {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Animation Effects */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Price Styles */
+.price-original {
+    text-decoration: line-through;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.price-discount {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Stock Status Styles */
+.stock-status {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.stock-status.in-stock {
+    background-color: #28a745;
+    color: white;
+}
+
+.stock-status.out-of-stock {
+    background-color: #dc3545;
+    color: white;
+}
+</style>
+<!-- Featured Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5 pb-3">
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0">Quality Product</h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-shipping-fast text-primary m-0 mr-2"></h1>
+                <h5 class="font-weight-semi-bold m-0">Free Shipping</h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0">14-Day Return</h5>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+            <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
+                <h1 class="fa fa-phone-volume text-primary m-0 mr-3"></h1>
+                <h5 class="font-weight-semi-bold m-0">24/7 Support</h5>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Featured End -->
+
+
+
+
+
+
+<div class="container-fluid py-5">
+    <!-- Search and Filter Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" name="query" class="form-control" placeholder="Search products..." value="{{ request.GET.query }}">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-check mt-2">
+                        <input type="checkbox" name="in_stock_only" class="form-check-input" id="inStockOnly" 
+                               {% if request.GET.in_stock_only %}checked{% endif %}>
+                        <label class="form-check-label" for="inStockOnly">In Stock Only</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<!-- Featured Products -->
+{% if featured_products %}
+<div class="mb-4">
+    <h4>Featured Products</h4>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% for product in featured_products %}
+            {% include "shop/includes/product_card.html" with product=product %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+<!-- Products Grid -->
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-3 mb-4">
+        <div class="card h-100 shadow-sm">
+            {% if product.discount_price %}
+            <div class="discount-badge">
+                <span class="badge bg-primary">
+                    {% widthratio product.discount_price product.price 100 as discount_percent %}
+                    {{ discount_percent }}% OFF
+                </span>
+            </div>
+            {% endif %}
+            
+            <img src="{{ product.image.url|default:'/static/images/default-product.jpg' }}" 
+                 class="card-img-top product-img" alt="{{ product.name }}">
+            
+            <div class="card-body">
+                <h5 class="card-title text-truncate">{{ product.name }}</h5>
+                <p class="card-text text-truncate">{{ product.description }}</p>
+                
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        {% if product.discount_price %}
+                        <span class="text-primary fw-bold">${{ product.discount_price }}</span>
+                        <small class="text-muted text-decoration-line-through ms-2">${{ product.price }}</small>
+                        {% else %}
+                        <span class="fw-bold">${{ product.price }}</span>
+                        {% endif %}
+                    </div>
+                    <span class="badge {% if product.stock > 0 %}bg-primary{% else %}bg-secondary{% endif %}">
+                        {% if product.stock > 0 %}
+                        In Stock ({{ product.stock }})
+                        {% else %}
+                        Out of Stock
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center small text-muted mb-2">
+                    <span>{{ product.category.name }}</span>
+                    <span>Sold by: {{ product.seller.username }}</span>
+                </div>
+            </div>
+            
+            <div class="card-footer bg-transparent border-top-0">
+                <div class="d-grid gap-2">
+                    {% if product.stock > 0 %}
+                    <a href="{% url 'shop:order_create' product.id %}" class="btn btn-primary">
+                        <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                    </a>
+                    {% else %}
+                    <button class="btn btn-secondary" disabled>
+                        <i class="fas fa-times-circle me-2"></i>Out of Stock
+                    </button>
+                    {% endif %}
+                    <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-outline-primary">
+                        <i class="fas fa-info-circle me-2"></i>View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<div class="d-flex justify-content-center mt-4">
+    <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+                    Previous
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+                        {{ num }}
+                    </a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">
+                    Next
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endif %}
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

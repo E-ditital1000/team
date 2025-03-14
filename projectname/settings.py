@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$v79hsag()wa5o#x#^yahn2exx)#18cd7q!f^4^647(^k4jgca'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['smartmedia-t9s2.onrender.com', '.now.sh', '127.0.0.1', 'localhost']
 
@@ -27,12 +27,14 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',  # Ensure WhiteNoise is added here
     'django.contrib.staticfiles', 
     'bloger',
     'cloudinary',
     'cloudinary_storage',
-    'ckeditor',
-    'ckeditor_uploader',
+    'shop.apps.ShopConfig',  # Add this line
+    'django_ckeditor_5',
+  
 ]
 
 # Cloudinary configuration
@@ -50,9 +52,33 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+# settings.py
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+WHITENOISE_AUTOREFRESH = True 
+# Whitenoise Configuration
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -92,6 +118,18 @@ DATABASES = {
         'PASSWORD': 'atAUXOCydBRYRvgEfiBWuKXxkVeAuVtd',
         'HOST': 'autorack.proxy.rlwy.net',
         'PORT': '32405',
+    }
+}
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': env('DATABASE_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': str(env('DATABASE_NAME', default=BASE_DIR / 'db.sqlite3')),  # Convert to string
+        'USER': env('DATABASE_USER', default=''),
+        'PASSWORD': env('DATABASE_PASSWORD', default=''),
+        'HOST': env('DATABASE_HOST', default=''),
+        'PORT': env('DATABASE_PORT', default=''),
     }
 }
 
@@ -135,26 +173,156 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+# Static files configuration
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# CKEditor upload paths
+CKEDITOR_UPLOAD_PATH = 'uploads/ckeditor/'
+CKEDITOR_5_UPLOAD_PATH = "uploads/ckeditor5/"
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
-CKEDITOR_CONFIGS = {
+# File storage settings
+CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
+
+# Image Backend
+CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_5_FILE_EXTENSIONS = ['jpg', 'png', 'gif', 'jpeg']
+
+# Whitenoise Configuration
+WHITENOISE_MIMETYPES = {
+    '.js': 'application/javascript',
+    # ... other mime types
+}
+
+# CKEditor 5 Configuration
+CKEDITOR_5_CONFIGS = {
     'default': {
-        'toolbar': 'full',
-        'height': 300,
+        # Comprehensive toolbar
+        'toolbar': [
+            'heading', '|',
+            'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
+            'outdent', 'indent', '|',
+            'blockQuote', 'imageUpload', 'insertTable', 'mediaEmbed', '|',
+            'undo', 'redo', '|',
+            'sourceEditing'
+        ],
+        
+        # Responsive sizing
+        'height': '400px',
         'width': '100%',
-        'removePlugins': 'stylesheetparser',
-        'allowedContent': True,
-        'extraAllowedContent': 'iframe[*];span[*];img[*]{*}(*);table[*]{*}(*);td[*]{*}(*);th[*]{*}(*);',
-    },
+        
+        # Localization
+        'language': 'en',
+        
+        # Advanced Heading Options
+        'heading': {
+            'options': [
+                {'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph'},
+                {'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1'},
+                {'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2'},
+                {'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3'},
+            ]
+        },
+        
+        # Image Toolbar
+        'image': {
+            'toolbar': [
+                'imageStyle:inline',
+                'imageStyle:block',
+                'imageStyle:side',
+                '|',
+                'toggleImageCaption',
+                'imageTextAlternative',
+                '|',
+                'linkImage'
+            ],
+            'styles': [
+                'full',
+                'side',
+                'alignLeft',
+                'alignRight',
+                'alignCenter',
+            ]
+        },
+        
+        # Table Configuration
+        'table': {
+            'contentToolbar': [
+                'tableColumn', 
+                'tableRow', 
+                'mergeTableCells',
+                'tableProperties', 
+                'tableCellProperties'
+            ]
+        },
+        
+        # Link Configuration
+        'link': {
+            'decorators': {
+                'openInNewTab': {
+                    'mode': 'manual',
+                    'label': 'Open in a new tab',
+                    'attributes': {
+                        'target': '_blank',
+                        'rel': 'noopener noreferrer'
+                    }
+                }
+            }
+        },
+        
+        # File upload options
+        'simpleUpload': {
+            'uploadUrl': '/ckeditor5/upload/',
+            'headers': {
+                'X-CSRF-TOKEN': 'CSRF_TOKEN_PLACEHOLDER'
+            }
+        }
+    }
 }
 
 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'django_error.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'bloger': {  # Your app name
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+# Additional settings
+CKEDITOR_5_CUSTOM_CSS = None  # Optional: path to custom CSS
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

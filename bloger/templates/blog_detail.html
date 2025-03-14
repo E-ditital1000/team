@@ -1,70 +1,767 @@
-<!DOCTYPE html>
-{% extends 'base.html' %}
-{% load static %}
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>ELVIS-BLOG</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
-    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-XXXXXX"></script>
-    <style>
-        .social-sharing {
-            margin-top: 20px;
-        }
 
-        .social-sharing .btn {
-            margin-right: 10px;
-            display: inline-block;
-        }
 
-        .social-sharing .btn i {
-            margin-right: 5px;
-        }
-
-        .messages {
-            margin: 1rem 0;
-        }
-
-        .alert {
-            margin-bottom: 1rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .errorlist {
-            color: #dc3545;
-            list-style: none;
-            padding: 0;
-            margin: 0.5rem 0;
-        }
-
-        #cancelReply {
-            margin-left: 0.5rem;
-        }
-
-        .media {
-            position: relative;
-        }
-
-        .media:target {
-            background-color: #f8f9fa;
-            padding: 1rem;
-            border-radius: 0.25rem;
-        }
-    </style>
-</head>
-<body>
-
-{% block content %}
-<div class="container-fluid">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8">
-                <!-- News Detail Start -->
-                <div class="position-relative mb-3">
+                {% extends 'base.html' %}
+                {% load static %}
+                
+                {% block title %}{{ post.title }} | ELVIS-BLOG{% endblock %}
+                
+                {% block extra_css %}
+                <style>
+                    /* Modern Color Scheme */
+                    :root {
+                        --primary: #ffb300;
+                        --primary-dark: #ffb300;
+                        --secondary: #f72585;
+                        --neutral-100: #f8f9fa;
+                        --neutral-200: #e9ecef;
+                        --neutral-300: #dee2e6;
+                        --neutral-400: #ced4da;
+                        --neutral-500: #adb5bd;
+                        --neutral-600: #6c757d;
+                        --neutral-700: #495057;
+                        --neutral-800: #343a40;
+                        --neutral-900: #212529;
+                        --success: #10b981;
+                        --danger: #ef4444;
+                        --warning: #f59e0b;
+                        --info: #3b82f6;
+                    }
+                    
+                    /* Typography Enhancements */
+                    body {
+                        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                        color: var(--neutral-800);
+                        line-height: 1.7;
+                    }
+                    
+                    h1, h2, h3, h4, h5, h6 {
+                        font-weight: 700;
+                        letter-spacing: -0.025em;
+                    }
+                    
+                    /* Container styles */
+                    .content-container {
+                        max-width: 1140px;
+                        margin: 0 auto;
+                        padding: 2rem 1rem;
+                    }
+                    
+                    /* Modern Card Styling */
+                    .modern-card {
+                        border-radius: 1rem;
+                        overflow: hidden;
+                        border: none;
+                        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+                        background-color: white;
+                        transition: transform 0.2s, box-shadow 0.2s;
+                    }
+                    
+                    .modern-card:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+                    }
+                    
+                    /* Post Styling - Modern Look */
+                    .blog-article {
+                        background-color: white;
+                        border-radius: 1rem;
+                        overflow: hidden;
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                        margin-bottom: 2rem;
+                    }
+                    
+                    .post-header {
+                        padding: 2rem 2rem 0.5rem;
+                    }
+                    
+                    .post-title {
+                        font-size: 2.5rem;
+                        font-weight: 800;
+                        color: var(--neutral-900);
+                        margin-bottom: 1rem;
+                        line-height: 1.3;
+                    }
+                    
+                    .post-subtitle {
+                        font-size: 1.25rem;
+                        color: var(--neutral-600);
+                        margin-bottom: 1.5rem;
+                        font-weight: 400;
+                    }
+                    
+                    .post-meta {
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: 1.5rem;
+                        flex-wrap: wrap;
+                        gap: 1rem;
+                    }
+                    
+                    .post-category {
+                        display: inline-block;
+                        text-transform: uppercase;
+                        font-weight: 600;
+                        letter-spacing: 1px;
+                        padding: 0.35rem 1rem;
+                        border-radius: 2rem;
+                        background-color: var(--primary);
+                        color: white;
+                        text-decoration: none;
+                        font-size: 0.8rem;
+                        transition: background-color 0.2s;
+                    }
+                    
+                    .post-category:hover {
+                        background-color: var(--primary-dark);
+                        color: white;
+                    }
+                    
+                    .post-date {
+                        color: var(--neutral-600);
+                        display: flex;
+                        align-items: center;
+                        font-size: 0.9rem;
+                    }
+                    
+                    .post-date i {
+                        margin-right: 0.5rem;
+                    }
+                    
+                    .post-image-container {
+                        position: relative;
+                        overflow: hidden;
+                        height: 500px;
+                        margin-bottom: 2rem;
+                    }
+                    
+                    .post-image {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        transition: transform 0.3s;
+                    }
+                    
+                    .post-image-container:hover .post-image {
+                        transform: scale(1.03);
+                    }
+                    
+                    .post-content-wrapper {
+                        padding: 0 2rem 2rem;
+                    }
+                    
+                    .post-content {
+                        font-size: 1.1rem;
+                        line-height: 1.8;
+                        margin-bottom: 2rem;
+                        overflow-wrap: break-word;
+                        word-wrap: break-word;
+                    }
+                    
+                    /* Content styling enhancements */
+                    .post-content h2 {
+                        font-size: 1.8rem;
+                        margin-top: 2.5rem;
+                        margin-bottom: 1rem;
+                        color: var(--neutral-900);
+                    }
+                    
+                    .post-content h3 {
+                        font-size: 1.5rem;
+                        margin-top: 2rem;
+                        margin-bottom: 0.75rem;
+                        color: var(--neutral-800);
+                    }
+                    
+                    .post-content p {
+                        margin-bottom: 1.5rem;
+                    }
+                    
+                    .post-content ul, .post-content ol {
+                        margin-bottom: 1.5rem;
+                        padding-left: 1.5rem;
+                    }
+                    
+                    .post-content li {
+                        margin-bottom: 0.5rem;
+                    }
+                    
+                    .post-content blockquote {
+                        border-left: 4px solid var(--primary);
+                        padding: 1rem 0 1rem 1.5rem;
+                        margin: 2rem 0;
+                        color: var(--neutral-700);
+                        font-style: italic;
+                        background-color: var(--neutral-100);
+                        border-radius: 0 0.5rem 0.5rem 0;
+                    }
+                    
+                    /* Tags styling */
+                    .post-tags {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 0.75rem;
+                        margin: 2rem 0;
+                    }
+                    
+                    .tag-badge {
+                        display: inline-block;
+                        background-color: var(--neutral-100);
+                        color: var(--neutral-700);
+                        border-radius: 2rem;
+                        padding: 0.5rem 1rem;
+                        font-size: 0.85rem;
+                        text-decoration: none;
+                        transition: all 0.2s;
+                        border: 1px solid var(--neutral-200);
+                    }
+                    
+                    .tag-badge:hover {
+                        background-color: var(--primary);
+                        color: white;
+                        border-color: var(--primary);
+                        transform: translateY(-2px);
+                    }
+                    
+                    /* Post Footer */
+                    .post-footer {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 1.5rem 2rem;
+                        background-color: var(--neutral-100);
+                        border-radius: 0.75rem;
+                        margin: 3rem 0;
+                    }
+                    
+                    .post-author-info {
+                        display: flex;
+                        align-items: center;
+                    }
+                    
+                    .author-image {
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        margin-right: 1rem;
+                        border: 3px solid white;
+                        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+                    }
+                    
+                    .author-name {
+                        font-weight: 600;
+                        margin-bottom: 0.25rem;
+                    }
+                    
+                    .post-stats {
+                        display: flex;
+                        align-items: center;
+                        gap: 1.5rem;
+                    }
+                    
+                    .post-stat {
+                        display: flex;
+                        align-items: center;
+                        color: var(--neutral-600);
+                        font-size: 0.95rem;
+                    }
+                    
+                    .post-stat i {
+                        margin-right: 0.5rem;
+                        font-size: 1.2rem;
+                    }
+                    
+                    /* Social Sharing */
+                    .social-sharing {
+                        display: flex;
+                        gap: 0.75rem;
+                        margin-left: 1.5rem;
+                    }
+                    
+                    .social-btn {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        text-decoration: none;
+                        color: white;
+                        font-size: 1rem;
+                        transition: transform 0.2s, opacity 0.2s;
+                    }
+                    
+                    .social-btn:hover {
+                        transform: translateY(-3px);
+                        opacity: 0.9;
+                    }
+                    
+                    .social-btn.facebook {
+                        background-color: #3b5998;
+                    }
+                    
+                    .social-btn.twitter {
+                        background-color: #1da1f2;
+                    }
+                    
+                    .social-btn.email {
+                        background-color: var(--neutral-600);
+                    }
+                    
+                    .social-btn.whatsapp {
+                        background-color: #25d366;
+                    }
+                    
+                    /* Comments Styling */
+                    .comment-section {
+                        margin-bottom: 3rem;
+                    }
+                    
+                    .section-title {
+                        font-size: 1.5rem;
+                        font-weight: 700;
+                        margin-bottom: 1.5rem;
+                        position: relative;
+                        padding-bottom: 0.75rem;
+                    }
+                    
+                    .section-title::after {
+                        content: "";
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        width: 50px;
+                        height: 3px;
+                        background-color: var(--primary);
+                        border-radius: 3px;
+                    }
+                    
+                    .comment {
+                        margin-bottom: 2rem;
+                        background-color: white;
+                        padding: 1.5rem;
+                        border-radius: 1rem;
+                        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+                        transition: transform 0.2s;
+                    }
+                    
+                    .comment:target {
+                        background-color: var(--neutral-100);
+                        transform: translateX(10px);
+                        border-left: 3px solid var(--primary);
+                    }
+                    
+                    .comment-author {
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: 1rem;
+                    }
+                    
+                    .comment-author-image {
+                        width: 45px;
+                        height: 45px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        margin-right: 1rem;
+                    }
+                    
+                    .comment-author-name {
+                        font-weight: 600;
+                        color: var(--neutral-800);
+                        margin-bottom: 0.25rem;
+                    }
+                    
+                    .comment-date {
+                        font-size: 0.85rem;
+                        color: var(--neutral-600);
+                    }
+                    
+                    .comment-body {
+                        font-size: 1rem;
+                        line-height: 1.6;
+                        margin-bottom: 1rem;
+                    }
+                    
+                    .btn-reply {
+                        display: inline-flex;
+                        align-items: center;
+                        padding: 0.5rem 1rem;
+                        background-color: var(--neutral-100);
+                        color: var(--neutral-700);
+                        border: none;
+                        border-radius: 0.5rem;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                    }
+                    
+                    .btn-reply:hover {
+                        background-color: var(--primary);
+                        color: white;
+                    }
+                    
+                    .btn-reply i {
+                        margin-right: 0.5rem;
+                    }
+                    
+                    .reply {
+                        margin-left: 3.5rem;
+                        margin-top: 1.25rem;
+                        background-color: var(--neutral-100);
+                        border-radius: 0.75rem;
+                        padding: 1.25rem;
+                        position: relative;
+                    }
+                    
+                    .reply::before {
+                        content: '';
+                        position: absolute;
+                        top: -10px;
+                        left: 20px;
+                        width: 0;
+                        height: 0;
+                        border-left: 10px solid transparent;
+                        border-right: 10px solid transparent;
+                        border-bottom: 10px solid var(--neutral-100);
+                    }
+                    
+                    /* Comment Form */
+                    .comment-form-section {
+                        margin-top: 3rem;
+                        margin-bottom: 3rem;
+                    }
+                    
+                    .comment-form {
+                        background-color: white;
+                        padding: 2rem;
+                        border-radius: 1rem;
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                    }
+                    
+                    .reply-context {
+                        background-color: var(--neutral-100);
+                        padding: 1rem;
+                        border-radius: 0.5rem;
+                        margin-bottom: 1.5rem;
+                        border-left: 3px solid var(--primary);
+                    }
+                    
+                    .form-label {
+                        font-weight: 600;
+                        margin-bottom: 0.75rem;
+                        color: var(--neutral-700);
+                    }
+                    
+                    .comment-form textarea {
+                        width: 100%;
+                        padding: 1rem;
+                        border: 1px solid var(--neutral-300);
+                        border-radius: 0.5rem;
+                        resize: vertical;
+                        min-height: 120px;
+                        transition: border-color 0.2s;
+                    }
+                    
+                    .comment-form textarea:focus {
+                        outline: none;
+                        border-color: var(--primary);
+                        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+                    }
+                    
+                    .btn-submit {
+                        background-color: var(--primary);
+                        color: white;
+                        border: none;
+                        padding: 0.75rem 1.5rem;
+                        border-radius: 0.5rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        display: inline-flex;
+                        align-items: center;
+                    }
+                    
+                    .btn-submit:hover {
+                        background-color: var(--primary-dark);
+                        transform: translateY(-2px);
+                    }
+                    
+                    .btn-submit i {
+                        margin-right: 0.5rem;
+                    }
+                    
+                    .btn-link {
+                        color: var(--primary);
+                        background: none;
+                        border: none;
+                        padding: 0;
+                        font: inherit;
+                        cursor: pointer;
+                        text-decoration: underline;
+                    }
+                    
+                    /* Sidebar Styling */
+                    .sidebar-section {
+                        margin-bottom: 2.5rem;
+                        background-color: white;
+                        border-radius: 1rem;
+                        overflow: hidden;
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+                    }
+                    
+                    .sidebar-title {
+                        font-weight: 700;
+                        padding: 1.25rem;
+                        background-color: var(--neutral-100);
+                        margin-bottom: 0;
+                        font-size: 1.1rem;
+                        position: relative;
+                    }
+                    
+                    .sidebar-title::after {
+                        content: "";
+                        position: absolute;
+                        bottom: 0;
+                        left: 1.25rem;
+                        width: 40px;
+                        height: 3px;
+                        background-color: var(--primary);
+                        border-radius: 3px;
+                    }
+                    
+                    .sidebar-content {
+                        padding: 1.25rem;
+                    }
+                    
+                    /* Author profile card */
+                    .author-card {
+                        text-align: center;
+                    }
+                    
+                    .author-avatar {
+                        width: 100px;
+                        height: 100px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        margin: 0 auto 1rem;
+                        border: 4px solid white;
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                    }
+                    
+                    .author-bio {
+                        font-size: 0.95rem;
+                        color: var(--neutral-600);
+                        margin-bottom: 1.5rem;
+                    }
+                    
+                    .btn-view-profile {
+                        display: inline-block;
+                        background-color: var(--primary);
+                        color: white;
+                        padding: 0.6rem 1.5rem;
+                        border-radius: 2rem;
+                        font-weight: 600;
+                        text-decoration: none;
+                        font-size: 0.9rem;
+                        transition: all 0.2s;
+                        border: none;
+                    }
+                    
+                    .btn-view-profile:hover {
+                        background-color: var(--primary-dark);
+                        transform: translateY(-2px);
+                        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+                    }
+                    
+                    /* Popular posts */
+                    .popular-post {
+                        display: flex;
+                        align-items: center;
+                        padding: 0.75rem 0;
+                        border-bottom: 1px solid var(--neutral-200);
+                        transition: transform 0.2s;
+                    }
+                    
+                    .popular-post:last-child {
+                        border-bottom: none;
+                    }
+                    
+                    .popular-post:hover {
+                        transform: translateX(5px);
+                    }
+                    
+                    .popular-post-image {
+                        width: 70px;
+                        height: 70px;
+                        border-radius: 0.5rem;
+                        object-fit: cover;
+                        margin-right: 1rem;
+                    }
+                    
+                    .popular-post-title {
+                        font-weight: 600;
+                        font-size: 0.95rem;
+                        margin-bottom: 0.4rem;
+                        color: var(--neutral-800);
+                        line-height: 1.4;
+                    }
+                    
+                    .popular-post-meta {
+                        font-size: 0.8rem;
+                        color: var(--neutral-600);
+                        display: flex;
+                        align-items: center;
+                    }
+                    
+                    .popular-post-meta i {
+                        margin-right: 0.4rem;
+                        font-size: 0.9rem;
+                    }
+                    
+                    /* Related Posts */
+                    .related-posts {
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 1rem;
+                    }
+                    
+                    .related-post {
+                        border-radius: 0.75rem;
+                        overflow: hidden;
+                        background-color: white;
+                        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+                        transition: transform 0.2s, box-shadow 0.2s;
+                    }
+                    
+                    .related-post:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                    }
+                    
+                    .related-post-image {
+                        width: 100%;
+                        height: 120px;
+                        object-fit: cover;
+                    }
+                    
+                    .related-post-content {
+                        padding: 1rem;
+                    }
+                    
+                    .related-post-title {
+                        font-size: 0.95rem;
+                        font-weight: 600;
+                        margin-bottom: 0.5rem;
+                        line-height: 1.4;
+                        color: var(--neutral-800);
+                    }
+                    
+                    .related-post-date {
+                        font-size: 0.8rem;
+                        color: var(--neutral-600);
+                        display: flex;
+                        align-items: center;
+                    }
+                    
+                    .related-post-date i {
+                        margin-right: 0.4rem;
+                    }
+                    
+                    /* Media embeds (YouTube videos) */
+                    .video-container,
+                    .youtube-embed,
+                    .media-embed {
+                        position: relative;
+                        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+                        height: 0;
+                        overflow: hidden;
+                        max-width: 100%;
+                        background: #000;
+                        margin: 2rem 0;
+                        border-radius: 0.75rem;
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                    }
+                    
+                    .video-container iframe,
+                    .youtube-embed iframe,
+                    .media-embed iframe {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        border: 0;
+                    }
+                    
+                    /* Responsive design */
+                    @media (max-width: 992px) {
+                        .sidebar {
+                            margin-top: 3rem;
+                        }
+                    }
+                    
+                    @media (max-width: 768px) {
+                        .post-title {
+                            font-size: 2rem;
+                        }
+                        
+                        .post-footer {
+                            flex-direction: column;
+                            align-items: flex-start;
+                        }
+                        
+                        .post-stats {
+                            margin-top: 1.5rem;
+                            width: 100%;
+                            justify-content: space-between;
+                        }
+                        
+                        .social-sharing {
+                            margin-left: 0;
+                            margin-top: 1.5rem;
+                        }
+                        
+                        .related-posts {
+                            grid-template-columns: 1fr;
+                        }
+                        
+                        .post-image-container {
+                            height: 300px;
+                        }
+                    }
+                    
+                    @media (max-width: 576px) {
+                        .post-header,
+                        .post-content-wrapper {
+                            padding-left: 1.25rem;
+                            padding-right: 1.25rem;
+                        }
+                        
+                        .post-meta {
+                            flex-direction: column;
+                            align-items: flex-start;
+                            gap: 0.5rem;
+                        }
+                        
+                        .comment-form {
+                            padding: 1.25rem;
+                        }
+                        
+                        .reply {
+                            margin-left: 1rem;
+                        }
+                    }
+                </style>
+                {% endblock %}
+                
+                {% block content %}
+                <div class="content-container">
+                    <div class="row">
+                        <!-- Main Content -->
+                        <div class="col-lg-8">
+                            <!-- Post Content -->
+                              <!-- News Detail Start -->
+                  <div class="position-relative mb-3">
                     {% if post.image %}
                     <img class="img-fluid w-100" src="{{ post.image.url }}" style="object-fit: cover;">
                     {% endif %}
@@ -97,99 +794,764 @@
                 </div>
                 <!-- News Detail End -->
 
-                <div class="mb-3">
-                    <div class="section-title mb-0">
-                        <h4 class="m-0 text-uppercase font-weight-bold">{{ post.comments.count }} Comments</h4>
-                    </div>
-                    <div class="bg-white border border-top-0 p-4">
-                        {% for comment in comments %}
-                        <div class="media mb-4">
-                            <!-- Check if the user is authenticated and show their profile picture -->
-                            {% if comment.commenter.profile.profile_picture %}
-                            <img class="rounded-circle mr-2" src="{{ comment.commenter.profile.profile_picture.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;" height="auto-fit">
-                            {% else %}
-                            <img src="{% static 'img/user.jpg' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;" height="auto-fit">
-                            {% endif %}
-                            <div class="media-body">
-                                <h6><a class="text-secondary font-weight-bold" href="#">{{ comment.commenter }}</a> <small><i>{{ comment.created_on|date:"M d, Y" }}</i></small></h6>
-                                <p>{{ comment.body }}</p>
-                                <button class="btn btn-sm btn-outline-secondary reply-btn" data-id="{{ comment.id }}">Reply</button>
-                
-                                {% for reply in comment.replies.all %}
-                                <div class="media mt-4">
-                                    <!-- Check if the reply user has a profile picture -->
-                                    {% if reply.commenter.profile.profile_picture %}
-                                    <img class="rounded-circle mr-2" src="{{ reply.commenter.profile.profile_picture.url }}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
-                                    {% else %}
-                                    <img src="{% static 'img/user.jpg' %}" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
-                                    {% endif %}
-                                    <div class="media-body">
-                                        <h6><a class="text-secondary font-weight-bold" href="#">{{ reply.commenter }}</a> <small><i>{{ reply.created_on|date:"M d, Y" }}</i></small></h6>
-                                        <p>{{ reply.body }}</p>
-                                        <button class="btn btn-sm btn-outline-secondary reply-btn" data-id="{{ reply.id }}">Reply</button>
+                            
+                            <!-- Comments Section -->
+                            <section class="comment-section">
+                                <h3 class="section-title">{{ post.comments.count }} Comments</h3>
+                                
+                                {% for comment in comments %}
+                                <div class="comment" id="comment-{{ comment.id }}">
+                                    <div class="comment-author">
+                                        {% if comment.commenter.profile.profile_picture %}
+                                        <img src="{{ comment.commenter.profile.profile_picture.url }}" alt="{{ comment.commenter.username }}" class="comment-author-image">
+                                        {% else %}
+                                        <img src="{% static 'img/user.jpg' %}" alt="Default avatar" class="comment-author-image">
+                                        {% endif %}
+                                        
+                                        <div>
+                                            <div class="comment-author-name">{{ comment.commenter.username }}</div>
+                                            <div class="comment-date">{{ comment.created_on|date:"F j, Y" }}</div>
+                                        </div>
                                     </div>
+                                    
+                                    <div class="comment-body">
+                                        {{ comment.body|linebreaks }}
+                                    </div>
+                                    
+                                    <button class="btn-reply reply-btn" data-id="{{ comment.id }}">
+                                        <i class="fas fa-reply"></i> Reply
+                                    </button>
+                                    
+                                    <!-- Replies -->
+                                    {% for reply in comment.replies.all %}
+                                    <div class="reply" id="comment-{{ reply.id }}">
+                                        <div class="reply-author">
+                                            {% if reply.commenter.profile.profile_picture %}
+                                            <img src="{{ reply.commenter.profile.profile_picture.url }}" alt="{{ reply.commenter.username }}" class="reply-author-image">
+                                            {% else %}
+                                            <img src="{% static 'img/user.jpg' %}" alt="Default avatar" class="reply-author-image">
+                                            {% endif %}
+                                            
+                                            <div>
+                                                <div class="comment-author-name">{{ reply.commenter.username }}</div>
+                                                <div class="comment-date">{{ reply.created_on|date:"F j, Y" }}</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="comment-body">
+                                            {{ reply.body|linebreaks }}
+                                        </div>
+                                        
+                                        <button class="btn-reply reply-btn" data-id="{{ comment.id }}">
+                                            <i class="fas fa-reply"></i> Reply
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% empty %}
+                                <div class="alert alert-light">
+                                    <i class="far fa-comments me-2"></i> No comments yet. Be the first to comment!
                                 </div>
                                 {% endfor %}
+                            </section>
+                            
+                            <!-- Comment Form -->
+                            <section class="comment-form-section">
+                                <h3 class="section-title">Leave a comment</h3>
+                                
+                                {% if user.is_authenticated %}
+                                <div class="comment-form">
+                                    <form method="post" action="{% url 'comment_post' post.slug %}">
+                                        {% csrf_token %}
+                                        
+                                        <div class="mb-3 reply-context" id="reply-context" style="display: none;">
+                                            <div>
+                                                <strong>Replying to: <span id="reply-to"></span></strong>
+                                                <button type="button" class="btn-link" id="cancelReply">Cancel</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="id_body" class="form-label">Your comment</label>
+                                            {{ comment_form.body }}
+                                            {% if comment_form.body.errors %}
+                                            <div class="alert alert-danger mt-2">
+                                                {{ comment_form.body.errors }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <input type="hidden" name="parent_id" id="parent_id" value="">
+                                        
+                                        <button type="submit" class="btn-submit">
+                                            <i class="fas fa-paper-plane"></i> Post Comment
+                                        </button>
+                                    </form>
+                                </div>
+                                {% else %}
+                                <div class="comment-form">
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-lock mb-3" style="font-size: 2rem; color: var(--neutral-400);"></i>
+                                        <h5>Authentication Required</h5>
+                                        <p class="text-muted mb-3">Please sign in to leave a comment on this post.</p>
+                                        <a href="{% url 'login' %}?next={{ request.path }}" class="btn-view-profile">
+                                            <i class="fas fa-sign-in-alt me-2"></i> Sign In
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </section>
+                            
+                            <!-- Related Posts Section -->
+                            <section class="related-posts-section mb-5">
+                                <h3 class="section-title">You Might Also Like</h3>
+                                
+                                <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
+                                    {% for related in related_posts %}
+                                    <div class="col">
+                                        <a href="{{ related.get_absolute_url }}" class="text-decoration-none">
+                                            <div class="modern-card h-100">
+                                                {% if related.image %}
+                                                <img src="{{ related.image.url }}" alt="{{ related.title }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+                                                {% else %}
+                                                <img src="{% static 'img/default-post.jpg' %}" alt="Default post image" class="card-img-top" style="height: 180px; object-fit: cover;">
+                                                {% endif %}
+                                                
+                                                <div class="card-body">
+                                                    <h5 class="card-title mb-2" style="font-size: 1.1rem; line-height: 1.4;">{{ related.title|truncatechars:60 }}</h5>
+                                                    <div class="d-flex align-items-center text-muted" style="font-size: 0.85rem;">
+                                                        <i class="far fa-calendar-alt me-1"></i>
+                                                        <span>{{ related.created_on|date:"M d, Y" }}</span>
+                                                        <span class="mx-2">•</span>
+                                                        <i class="far fa-comment me-1"></i>
+                                                        <span>{{ related.comments.count }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </section>
+                        </div>
+                        
+                        <!-- Sidebar -->
+                        <div class="col-lg-4 sidebar">
+                            <!-- Author Widget -->
+                            <div class="sidebar-section">
+                                <h4 class="sidebar-title">About the Author</h4>
+                                <div class="sidebar-content author-card">
+                                    {% if post.writer.profile.profile_picture %}
+                                    <img src="{{ post.writer.profile.profile_picture.url }}" alt="{{ post.writer.username }}" 
+                                         class="author-avatar">
+                                    {% else %}
+                                    <img src="{% static 'img/user.png' %}" alt="Default Profile Picture" 
+                                         class="author-avatar">
+                                    {% endif %}
+                                    
+                                    <h5 class="mt-3 mb-2">{{ post.writer.username }}</h5>
+                                    
+                                    {% if post.writer.profile.bio %}
+                                    <p class="author-bio">{{ post.writer.profile.bio|truncatewords:25 }}</p>
+                                    {% endif %}
+                                    
+                                    <a href="{% url 'profile_detail' username=post.writer.username %}" class="btn-view-profile">
+                                        <i class="fas fa-user me-1"></i> View Profile
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Popular Posts -->
+                            <div class="sidebar-section">
+                                <h4 class="sidebar-title">Popular Posts</h4>
+                                <div class="sidebar-content p-0">
+                                    {% for popular in popular_posts %}
+                                    <div class="popular-post p-3">
+                                        {% if popular.image %}
+                                        <img src="{{ popular.image.url }}" alt="{{ popular.title }}" class="popular-post-image">
+                                        {% else %}
+                                        <img src="{% static 'img/default-post.jpg' %}" alt="Default post image" class="popular-post-image">
+                                        {% endif %}
+                                        
+                                        <div>
+                                            <a href="{{ popular.get_absolute_url }}" class="text-decoration-none">
+                                                <h6 class="popular-post-title">{{ popular.title|truncatechars:60 }}</h6>
+                                            </a>
+                                            <div class="popular-post-meta">
+                                                <i class="far fa-calendar-alt"></i> {{ popular.created_on|date:"M d, Y" }}
+                                                <span class="mx-2">•</span>
+                                                <i class="far fa-eye"></i> {{ popular.views }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <!-- Categories Widget -->
+                            <div class="sidebar-section">
+                                <h4 class="sidebar-title">Categories</h4>
+                                <div class="sidebar-content">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for category in categories %}
+                                        <a href="{% url 'category_detail' slug=category.slug %}" 
+                                           class="tag-badge" style="border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                                            {{ category.name }}
+                                        </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Subscribe Widget -->
+                            <div class="sidebar-section">
+                                <h4 class="sidebar-title">Stay Updated</h4>
+                                <div class="sidebar-content text-center p-4">
+                                    <i class="far fa-envelope mb-3" style="font-size: 2.5rem; color: var(--primary);"></i>
+                                    <h5 class="mb-3">Subscribe to our newsletter</h5>
+                                    <p class="text-muted mb-3">Get the latest posts delivered right to your inbox.</p>
+                                    <form>
+                                        <div class="mb-3">
+                                            <input type="email" class="form-control" placeholder="Your email address" required
+                                                  style="border-radius: 2rem; padding: 0.75rem 1.25rem;">
+                                        </div>
+                                        <button type="submit" class="btn-view-profile w-100">
+                                            <i class="fas fa-paper-plane me-2"></i> Subscribe
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                        {% empty %}
-                        <p>No comments yet.</p>
-                        {% endfor %}
                     </div>
                 </div>
-                <!-- Comment List End -->
-                <!-- Comment Form Start -->
-                <div class="mb-3">
-                    <div class="section-title mb-0">
-                        <h4 class="m-0 text-uppercase font-weight-bold">Leave a comment</h4>
-                    </div>
-                    <div class="bg-white border border-top-0 p-4">
-                        <form method="post" action="{% url 'comment_post' post.slug %}">
-                            {% csrf_token %}
-                            {{ comment_form.as_p }}
-                            <input type="hidden" name="parent_id" id="parent_id" value="">
-                            <div class="form-group mb-0">
-                                <button type="submit" class="btn btn-primary font-weight-semi-bold py-2 px-3">Leave a comment</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!-- Comment Form End -->
-            </div>
-
-            <div class="col-lg-4">
-                <!-- Popular Posts Start -->
-                <div class="mb-4">
-                    <h4 class="text-uppercase font-weight-bold mb-3">Popular Posts</h4>
-                    {% for post in popular_posts %}
-                    <div class="d-flex align-items-center mb-3">
-                        {% if post.image %}
-                        <img class="img-fluid rounded-circle mr-3" src="{{ post.image.url }}" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ post.title }}">
-                        {% else %}
-                        <img class="img-fluid rounded-circle mr-3" src="{% static 'img/default-post.jpg' %}" style="width: 40px; height: 40px; object-fit: cover;" alt="Default popular post image">
-                        {% endif %}
-                        <a href="{{ post.get_absolute_url }}" class="h6 m-0 text-secondary">{{ post.title|truncatewords:6|default:"No Title Available" }}</a>
-                    </div>
-                    {% endfor %}
-                </div>
-                <!-- Popular Posts End -->
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const replyButtons = document.querySelectorAll('.reply-btn');
-        replyButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const parentId = this.getAttribute('data-id');
-                document.getElementById('parent_id').value = parentId;
-                document.getElementById('message').focus();
-            });
-        });
-    });
-</script>
-{% endblock %}
-<script src="{% static 'js/jquery.min.js' %}"></script> <!-- Make sure jQuery is included -->
-</body>
-</html>
+                {% endblock %}
+                
+                {% block extra_js %}
+                
+                <script>
+                    // This script enhances the structure and visual elements of blog post content
+                document.addEventListener("DOMContentLoaded", function() {
+                    const postContent = document.querySelector('.post-content');
+                    if (!postContent) return;
+                    
+                    // 1. Process and enhance headings
+                    enhanceHeadings();
+                    
+                    // 2. Process and enhance paragraphs
+                    enhanceParagraphs();
+                    
+                    // 3. Process image alignments and captions
+                    enhanceImages();
+                    
+                    // 4. Process and enhance YouTube videos (critical feature)
+                    enhanceYouTubeVideos();
+                    
+                    // 5. Process blockquotes and highlighted sections
+                    enhanceQuotes();
+                    
+                    // 6. Add reading progress indicator
+                    addReadingProgress();
+                    
+                    /**
+                     * Enhance headings with proper visual hierarchy and anchor links
+                     */
+                    function enhanceHeadings() {
+                        const headings = postContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                        
+                        headings.forEach((heading, index) => {
+                            // Add unique ID to each heading for anchor links
+                            const headingId = heading.id || `heading-${index}`;
+                            heading.id = headingId;
+                            
+                            // Add visual style to headings
+                            heading.classList.add('post-heading');
+                            
+                            // Add appropriate spacing before headings
+                            if (heading.tagName === 'H2') {
+                                heading.style.marginTop = '2rem';
+                                // Add decorative element before h2 headings
+                                const divider = document.createElement('div');
+                                divider.classList.add('heading-divider');
+                                divider.style.width = '50px';
+                                divider.style.height = '3px';
+                                divider.style.backgroundColor = '#ffc107';
+                                divider.style.marginBottom = '0.75rem';
+                                divider.style.borderRadius = '2px';
+                                heading.parentNode.insertBefore(divider, heading);
+                            }
+                            
+                            // Add anchor link functionality
+                            const anchor = document.createElement('a');
+                            anchor.href = `#${headingId}`;
+                            anchor.classList.add('heading-anchor');
+                            anchor.innerHTML = '<i class="fas fa-link"></i>';
+                            anchor.style.marginLeft = '0.5rem';
+                            anchor.style.opacity = '0';
+                            anchor.style.transition = 'opacity 0.2s';
+                            anchor.style.fontSize = '0.7em';
+                            anchor.style.color = '#ffc107';
+                            heading.appendChild(anchor);
+                            
+                            heading.addEventListener('mouseenter', () => {
+                                anchor.style.opacity = '1';
+                            });
+                            
+                            heading.addEventListener('mouseleave', () => {
+                                anchor.style.opacity = '0';
+                            });
+                        });
+                    }
+                    
+                    /**
+                     * Enhance paragraphs with better readability and drop caps
+                     */
+                    function enhanceParagraphs() {
+                        const paragraphs = postContent.querySelectorAll('p');
+                        
+                        // Add proper styling to first paragraph (lead paragraph)
+                        if (paragraphs.length > 0) {
+                            const firstParagraph = paragraphs[0];
+                            if (firstParagraph.textContent.length > 100) {
+                                firstParagraph.classList.add('lead-paragraph');
+                                firstParagraph.style.fontSize = '1.2rem';
+                                firstParagraph.style.color = '#212529';
+                                firstParagraph.style.fontWeight = '500';
+                            }
+                        }
+                        
+                        // Add proper line height and spacing to all paragraphs
+                        paragraphs.forEach(paragraph => {
+                            paragraph.style.lineHeight = '1.8';
+                            paragraph.style.marginBottom = '1.5rem';
+                        });
+                    }
+                    
+                    /**
+                     * Enhance images with proper alignment, captions, and responsive behavior
+                     */
+                    function enhanceImages() {
+                        const images = postContent.querySelectorAll('img');
+                        
+                        images.forEach(image => {
+                            // Make all images responsive
+                            image.classList.add('img-fluid');
+                            image.style.borderRadius = '0.5rem';
+                            
+                            // Check if image is inside a figure (has caption)
+                            const parent = image.parentNode;
+                            if (parent.tagName === 'FIGURE') {
+                                const figcaption = parent.querySelector('figcaption');
+                                if (figcaption) {
+                                    figcaption.style.fontSize = '0.9rem';
+                                    figcaption.style.color = '#6c757d';
+                                    figcaption.style.textAlign = 'center';
+                                    figcaption.style.marginTop = '0.5rem';
+                                    figcaption.style.fontStyle = 'italic';
+                                }
+                            } else {
+                                // Wrap standalone images in a div for better responsiveness
+                                const wrapper = document.createElement('div');
+                                wrapper.classList.add('image-wrapper');
+                                wrapper.style.margin = '1.5rem 0';
+                                wrapper.style.textAlign = 'center';
+                                parent.insertBefore(wrapper, image);
+                                wrapper.appendChild(image);
+                            }
+                            
+                            // Check for alignment classes
+                            if (image.classList.contains('alignleft')) {
+                                image.style.float = 'left';
+                                image.style.marginRight = '1rem';
+                                image.style.marginBottom = '0.5rem';
+                                image.style.maxWidth = '50%';
+                            } else if (image.classList.contains('alignright')) {
+                                image.style.float = 'right';
+                                image.style.marginLeft = '1rem';
+                                image.style.marginBottom = '0.5rem';
+                                image.style.maxWidth = '50%';
+                            }
+                        });
+                    }
+                    
+                    /**
+                     * CRITICAL FEATURE: Process and enhance YouTube videos
+                     * This ensures any embedded videos display properly
+                     */
+                    function enhanceYouTubeVideos() {
+                        // Method 1: Process iframe elements that might be YouTube embeds
+                        const iframes = postContent.querySelectorAll('iframe');
+                        
+                        iframes.forEach(iframe => {
+                            const src = iframe.getAttribute('src') || '';
+                            
+                            // Detect YouTube and Vimeo URLs
+                            if (src.includes('youtube.com') || src.includes('youtu.be') || 
+                                src.includes('vimeo.com') || src.includes('player.vimeo.com')) {
+                                
+                                // Check if iframe is already wrapped
+                                if (!iframe.parentElement.classList.contains('video-container')) {
+                                    // Create responsive container
+                                    const container = document.createElement('div');
+                                    container.classList.add('video-container');
+                                    
+                                    // Apply styles for responsive embed
+                                    container.style.position = 'relative';
+                                    container.style.paddingBottom = '56.25%'; // 16:9 aspect ratio
+                                    container.style.height = '0';
+                                    container.style.overflow = 'hidden';
+                                    container.style.maxWidth = '100%';
+                                    container.style.backgroundColor = '#000';
+                                    container.style.margin = '2rem 0';
+                                    container.style.borderRadius = '0.75rem';
+                                    container.style.border = '3px solid #ffc107'; // Yellow border
+                                    
+                                    // Insert container before iframe
+                                    iframe.parentNode.insertBefore(container, iframe);
+                                    
+                                    // Move iframe inside container
+                                    container.appendChild(iframe);
+                                    
+                                    // Style iframe for proper display
+                                    iframe.style.position = 'absolute';
+                                    iframe.style.top = '0';
+                                    iframe.style.left = '0';
+                                    iframe.style.width = '100%';
+                                    iframe.style.height = '100%';
+                                    iframe.style.border = '0';
+                                    
+                                    // Add additional attributes for better iframe behavior
+                                    iframe.setAttribute('allowfullscreen', 'true');
+                                    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                                    
+                                    // Add a label to indicate it's a video
+                                    const label = document.createElement('div');
+                                    label.classList.add('video-label');
+                                    label.innerHTML = '<i class="fab fa-youtube"></i> Video Content';
+                                    label.style.position = 'absolute';
+                                    label.style.top = '-12px';
+                                    label.style.left = '20px';
+                                    label.style.backgroundColor = '#ffc107';
+                                    label.style.color = 'black';
+                                    label.style.padding = '2px 10px';
+                                    label.style.borderRadius = '12px';
+                                    label.style.fontSize = '0.8rem';
+                                    label.style.fontWeight = 'bold';
+                                    label.style.zIndex = '1';
+                                    container.appendChild(label);
+                                }
+                            }
+                        });
+                        
+                        // Method 2: Look for YouTube URLs in paragraphs and convert them to embedded videos
+                        const paragraphs = postContent.querySelectorAll('p');
+                        
+                        paragraphs.forEach(paragraph => {
+                            const content = paragraph.innerHTML;
+                            
+                            // Look for YouTube links
+                            if ((content.includes('youtube.com/watch?v=') || 
+                                 content.includes('youtu.be/')) && 
+                                !content.includes('iframe')) {
+                                
+                                const youtubeRegex = /(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/g;
+                                let match;
+                                let modifiedContent = content;
+                                
+                                // Replace each YouTube link with an embed
+                                while ((match = youtubeRegex.exec(content)) !== null) {
+                                    const videoId = match[4];
+                                    const embedHtml = `<div class="video-container" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;background:#000;margin:2rem 0;border-radius:0.75rem;border:3px solid #ffc107;"><div class="video-label" style="position:absolute;top:-12px;left:20px;background-color:#ffc107;color:black;padding:2px 10px;border-radius:12px;font-size:0.8rem;font-weight:bold;z-index:1;"><i class="fab fa-youtube"></i> Video Content</div><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe></div>`;
+                                    
+                                    // Replace the link with the embed
+                                    modifiedContent = modifiedContent.replace(match[0], embedHtml);
+                                }
+                                
+                                // If we made changes, update the paragraph
+                                if (modifiedContent !== content) {
+                                    paragraph.innerHTML = modifiedContent;
+                                }
+                            }
+                        });
+                        
+                        // Method 3: Check for figure elements with oembed class (used by WordPress and some CMS)
+                        const oembeds = postContent.querySelectorAll('figure.media, div.ck-media__wrapper, div[data-oembed-url]');
+                        
+                        oembeds.forEach(oembed => {
+                            // Check if it contains an iframe
+                            const iframe = oembed.querySelector('iframe');
+                            if (iframe) {
+                                const src = iframe.getAttribute('src') || '';
+                                
+                                if (src.includes('youtube.com') || src.includes('youtu.be')) {
+                                    // Make sure container has proper styling
+                                    oembed.style.position = 'relative';
+                                    oembed.style.paddingBottom = '56.25%';
+                                    oembed.style.height = '0';
+                                    oembed.style.overflow = 'hidden';
+                                    oembed.style.maxWidth = '100%';
+                                    oembed.style.margin = '2rem 0';
+                                    oembed.style.backgroundColor = '#000';
+                                    oembed.style.borderRadius = '0.75rem';
+                                    oembed.style.border = '3px solid #ffc107'; // Yellow highlight border
+                                    
+                                    // Style the iframe
+                                    iframe.style.position = 'absolute';
+                                    iframe.style.top = '0';
+                                    iframe.style.left = '0';
+                                    iframe.style.width = '100%';
+                                    iframe.style.height = '100%';
+                                    iframe.style.border = '0';
+                                    
+                                    // Add fullscreen capability
+                                    iframe.setAttribute('allowfullscreen', 'true');
+                                }
+                            }
+                        });
+                    }
+                    
+                    /**
+                     * Enhance blockquotes and highlighted sections
+                     */
+                    function enhanceQuotes() {
+                        const blockquotes = postContent.querySelectorAll('blockquote');
+                        
+                        blockquotes.forEach(quote => {
+                            quote.style.borderLeft = '4px solid #ffc107';
+                            quote.style.padding = '1rem 0 1rem 1.5rem';
+                            quote.style.margin = '2rem 0';
+                            quote.style.fontStyle = 'italic';
+                            quote.style.color = '#495057';
+                            quote.style.backgroundColor = '#f8f9fa';
+                            quote.style.borderRadius = '0 0.5rem 0.5rem 0';
+                        });
+                    }
+                    
+                    /**
+                     * Add reading progress indicator
+                     */
+                    function addReadingProgress() {
+                        // Create progress container
+                        const progressContainer = document.createElement('div');
+                        progressContainer.classList.add('reading-progress-container');
+                        progressContainer.style.position = 'fixed';
+                        progressContainer.style.top = '0';
+                        progressContainer.style.left = '0';
+                        progressContainer.style.width = '100%';
+                        progressContainer.style.height = '4px';
+                        progressContainer.style.backgroundColor = 'transparent';
+                        progressContainer.style.zIndex = '1000';
+                        
+                        // Create progress bar
+                        const progressBar = document.createElement('div');
+                        progressBar.classList.add('reading-progress-bar');
+                        progressBar.style.height = '100%';
+                        progressBar.style.width = '0';
+                        progressBar.style.backgroundColor = '#ffc107';
+                        progressBar.style.transition = 'width 0.1s';
+                        
+                        // Add to DOM
+                        progressContainer.appendChild(progressBar);
+                        document.body.appendChild(progressContainer);
+                        
+                        // Calculate and update progress
+                        window.addEventListener('scroll', () => {
+                            const totalHeight = postContent.offsetHeight;
+                            const windowHeight = window.innerHeight;
+                            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                            
+                            const scrolled = scrollTop / (totalHeight - windowHeight) * 100;
+                            progressBar.style.width = `${Math.min(100, Math.max(0, scrolled))}%`;
+                        });
+                    }
+                });
+                </script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                    // Reply functionality
+                    const replyButtons = document.querySelectorAll('.reply-btn');
+                    const cancelReplyButton = document.getElementById('cancelReply');
+                    const replyContext = document.getElementById('reply-context');
+                    const replyToElement = document.getElementById('reply-to');
+                    const parentIdInput = document.getElementById('parent_id');
+                    const commentForm = document.querySelector('.comment-form');
+                    
+                    // Handle reply button clicks
+                    replyButtons.forEach(button => {
+                        button.addEventListener('click', function() {
+                            const parentId = this.getAttribute('data-id');
+                            const parentAuthor = this.closest('.comment, .reply').querySelector('.comment-author-name').textContent;
+                            
+                            // Set the parent comment ID
+                            parentIdInput.value = parentId;
+                            
+                            // Show who we're replying to
+                            replyToElement.textContent = parentAuthor;
+                            replyContext.style.display = 'block';
+                            
+                            // Scroll to comment form
+                            commentForm.scrollIntoView({ behavior: 'smooth' });
+                            
+                            // Focus the comment textarea
+                            document.querySelector('#id_body').focus();
+                        });
+                    });
+                    
+                    // Handle cancel reply
+                    if (cancelReplyButton) {
+                        cancelReplyButton.addEventListener('click', function() {
+                            parentIdInput.value = '';
+                            replyContext.style.display = 'none';
+                        });
+                    }
+                    
+                    // Enhanced video embed processing
+                    
+                    // First pass: Process CKEditor media figures
+                    document.querySelectorAll('figure.media').forEach(figure => {
+                        const iframe = figure.querySelector('iframe');
+                        if (iframe && (iframe.src.includes('youtube.com') || iframe.src.includes('youtu.be'))) {
+                            console.log('Processing CKEditor media figure:', iframe.src);
+                            
+                            // Create wrapper div
+                            const wrapper = document.createElement('div');
+                            wrapper.className = 'youtube-embed';
+                            
+                            // Replace iframe with wrapper containing iframe
+                            figure.insertBefore(wrapper, iframe);
+                            wrapper.appendChild(iframe);
+                        }
+                    });
+                    
+                    // Second pass: Process direct iframes in post content
+                    document.querySelectorAll('.post-content iframe').forEach(iframe => {
+                        // Skip already processed iframes
+                        if (iframe.parentElement.classList.contains('youtube-embed') || 
+                            iframe.parentElement.classList.contains('media-embed') ||
+                            iframe.parentElement.classList.contains('video-container')) {
+                            return;
+                        }
+                        
+                        // Check if it's a video iframe
+                        if (iframe.src.includes('youtube.com') || 
+                            iframe.src.includes('youtu.be') || 
+                            iframe.src.includes('vimeo.com')) {
+                            
+                            console.log('Processing direct iframe:', iframe.src);
+                            
+                            // Create wrapper div
+                            const wrapper = document.createElement('div');
+                            wrapper.className = 'media-embed';
+                            
+                            // Replace iframe with wrapper containing iframe
+                            const parent = iframe.parentElement;
+                            parent.insertBefore(wrapper, iframe);
+                            wrapper.appendChild(iframe);
+                        }
+                    });
+                    
+                    // Third pass: Look for any unwrapped video iframes anywhere in the document
+                    document.querySelectorAll('iframe').forEach(iframe => {
+                        // Skip already processed iframes
+                        if (iframe.parentElement.classList.contains('youtube-embed') || 
+                            iframe.parentElement.classList.contains('media-embed') ||
+                            iframe.parentElement.classList.contains('video-container')) {
+                            return;
+                        }
+                        
+                        // Check if it's a video iframe
+                        if (iframe.src.includes('youtube.com') || 
+                            iframe.src.includes('youtu.be') || 
+                            iframe.src.includes('vimeo.com')) {
+                            
+                            console.log('Processing general iframe:', iframe.src);
+                            
+                            // Create wrapper div
+                            const wrapper = document.createElement('div');
+                            wrapper.className = 'video-container';
+                            
+                            // Replace iframe with wrapper containing iframe
+                            const parent = iframe.parentElement;
+                            parent.insertBefore(wrapper, iframe);
+                            wrapper.appendChild(iframe);
+                        }
+                    });
+                    
+                    // Fourth pass: Check for CKEditor oembed divs
+                    document.querySelectorAll('div[data-oembed-url]').forEach(div => {
+                        const url = div.getAttribute('data-oembed-url');
+                        if (url && (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('vimeo.com'))) {
+                            console.log('Processing oembed div:', url);
+                            div.classList.add('video-container');
+                        }
+                    });
+                    
+                    // Style enhancement for video containers
+                    document.querySelectorAll('.video-container, .youtube-embed, .media-embed').forEach(container => {
+                        container.style.borderRadius = '0.75rem';
+                        container.style.overflow = 'hidden';
+                        container.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+                        container.style.margin = '2rem 0';
+                        container.style.background = '#000';
+                        
+                        // Ensure iframe inside has correct dimensions
+                        const iframe = container.querySelector('iframe');
+                        if (iframe) {
+                            iframe.style.width = '100%';
+                            iframe.style.height = '100%';
+                            iframe.style.border = '0';
+                            iframe.style.position = 'absolute';
+                            iframe.style.top = '0';
+                            iframe.style.left = '0';
+                            
+                            // Add additional attributes that might be helpful
+                            iframe.setAttribute('allowfullscreen', 'true');
+                            iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                        }
+                    });
+                    
+                    // Add smooth scrolling for comment anchors
+                    if (window.location.hash && window.location.hash.startsWith('#comment-')) {
+                        const commentElement = document.querySelector(window.location.hash);
+                        if (commentElement) {
+                            setTimeout(() => {
+                                commentElement.scrollIntoView({ behavior: 'smooth' });
+                                commentElement.classList.add('highlight-comment');
+                                setTimeout(() => {
+                                    commentElement.classList.remove('highlight-comment');
+                                }, 2000);
+                            }, 500);
+                        }
+                    }
+                    
+                    // Add reading time estimator
+                    const postContent = document.querySelector('.post-content');
+                    if (postContent) {
+                        const text = postContent.textContent || postContent.innerText;
+                        const wordCount = text.split(/\s+/).length;
+                        const readingTime = Math.ceil(wordCount / 225); // Average reading speed
+                        
+                        // Create reading time indicator
+                        const readingTimeEl = document.createElement('div');
+                        readingTimeEl.className = 'reading-time';
+                        readingTimeEl.innerHTML = `<i class="far fa-clock"></i> ${readingTime} min read`;
+                        
+                        // Add it after the post date in post meta
+                        const postDate = document.querySelector('.post-date');
+                        if (postDate) {
+                            postDate.insertAdjacentElement('afterend', readingTimeEl);
+                        }
+                    }
+                    
+                    // Add active state to like button if user has liked
+                    const likeButton = document.getElementById('like-button');
+                    if (likeButton && likeButton.dataset.liked === 'true') {
+                        likeButton.classList.add('liked');
+                    }
+                    
+                    // Lazy load images for better performance
+                    document.querySelectorAll('.post-image, .popular-post-image, .related-post-image').forEach(img => {
+                        img.setAttribute('loading', 'lazy');
+                    });
+                });
+                </script>
+                {% endblock %}

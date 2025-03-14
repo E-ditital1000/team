@@ -4,9 +4,9 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
-from ckeditor_uploader.fields import RichTextUploadingField
+from django_ckeditor_5.fields import CKEditor5Field
 from django.urls import reverse
-from django.core.validators import MinLengthValidator, URLValidator
+from django.core.validators import MinLengthValidator, URLValidator, RegexValidator
 
 def validate_bio_length(value):
     word_count = len(value.split())
@@ -24,9 +24,47 @@ class UserProfile(models.Model):
     )
     bio = models.TextField(
         validators=[validate_bio_length],
+        blank=True,  # Allow blank (for new users)
+        default="",  # Provide empty string as default
         help_text=_("A brief introduction (max 100 words)")
     )
     
+    # Phone number fields
+    phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$',
+        message=_("Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    )
+    phone = models.CharField(
+        validators=[phone_regex],
+        max_length=17,
+        blank=True,
+        null=True,
+        help_text=_("Your contact phone number (e.g., +999999999)")
+    )
+    
+    whatsapp_phone = models.CharField(
+        validators=[phone_regex],
+        max_length=17,
+        blank=True,
+        null=True,
+        help_text=_("Your WhatsApp number for order notifications (e.g., +999999999)")
+    )
+    
+    # Business information
+    business_name = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        help_text=_("Your business or store name (for sellers)")
+    )
+    
+    business_address = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_("Your business address (for sellers)")
+    )
+    
+    # Existing fields
     cover_photo = models.ImageField(
         upload_to='cover_img/%Y/%m/',
         default='defaults/default_cover.png',
@@ -106,6 +144,16 @@ class UserProfile(models.Model):
         help_text=_("List of work experiences (e.g., job titles, companies, and dates)")
     )
 
+    # Communication preferences
+    receive_order_emails = models.BooleanField(
+        default=True,
+        help_text=_("Receive email notifications for new orders")
+    )
+    receive_order_whatsapp = models.BooleanField(
+        default=True,
+        help_text=_("Receive WhatsApp notifications for new orders")
+    )
+
     last_active = models.DateTimeField(auto_now=True)
 
     followers = models.ManyToManyField(
@@ -144,7 +192,15 @@ class UserProfile(models.Model):
         if not user or not user.is_authenticated:
             return False
         return self.likes.filter(id=user.id).exists()
-
+    
+    def get_formatted_whatsapp(self):
+        """Return the WhatsApp number in a format ready for API use"""
+        if self.whatsapp_phone:
+            # Remove any non-digit characters
+            return ''.join(filter(str.isdigit, self.whatsapp_phone))
+        elif self.phone:  # Fallback to regular phone if WhatsApp not specified
+            return ''.join(filter(str.isdigit, self.phone))
+        return None
     
     class Meta:
         indexes = [
@@ -156,14 +212,13 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Profile"
 
-    
-
     def get_absolute_url(self):
         return reverse('profile_detail', kwargs={'username': self.user.username})
     
-    @property
-    def like_count(self):
-        return self.likes.count()
+    # This property is already defined above, so removing the duplicate
+    # @property
+    # def like_count(self):
+    #     return self.likes.count()
 
 
 
@@ -276,10 +331,8 @@ class BlogPost(models.Model):
         blank=True,
         help_text=_("Optional subtitle for your post")
     )
-    body = RichTextUploadingField(
-        validators=[MinLengthValidator(100)],
-        help_text=_("Main content of your post (minimum 100 characters)")
-    )
+    body = CKEditor5Field(config_name='default')
+
     image = models.ImageField(
         upload_to='blog_images/%Y/%m/',
         null=True,

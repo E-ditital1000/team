@@ -1,0 +1,19 @@
+/* static/admin/css/json_prettify.css */
+.jsonfield {
+    font-family: monospace;
+    white-space: pre;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.json-input {
+    font-family: monospace !important;
+    white-space: pre !important;
+    min-height: 120px !important;
+}
+
+.json-input:focus {
+    background-color: #f8f9fa !important;
+}

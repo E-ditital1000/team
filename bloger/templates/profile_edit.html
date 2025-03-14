@@ -1,324 +1,673 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
-{% load i18n %}
+
+{% block title %}Edit Profile | {{ user.username }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile_form.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <!-- Main Content -->
-        <div class="col-lg-8 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white">
-                    <h2 class="card-title mb-0">{% trans "Edit Profile" %}</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'profile_detail' username=user.username %}">My Profile</a></li>
+                    <li class="breadcrumb-item active">Edit Profile</li>
+                </ol>
+            </nav>
+            
+            <h1 class="mb-4">Edit Your Profile</h1>
+            
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <h5><i class="fas fa-exclamation-circle me-2"></i> Please correct the following errors:</h5>
+                <ul class="mb-0">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                        <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
                 </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
-                        {% csrf_token %}
-
-                        <!-- Cover Photo Section -->
-                        <div class="form-group text-center mb-4">
-                            <div class="cover-photo-container mb-3">
-                                {% if user.profile.cover_photo %}
-                                    <img src="{{ user.profile.cover_photo.url }}" 
-                                         class="img-fluid mb-3"
-                                         alt="Cover Photo"
-                                         style="width: 100%; height: 200px; object-fit: cover;">
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <form method="POST" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                
+                <!-- Personal Information Section -->
+                <div class="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-user-circle"></i>
+                        Personal Information
+                    </h2>
+                    
+                    <div class="row">
+                        <!-- Profile Picture -->
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label required-field">Profile Picture</label>
+                            <div class="image-preview profile-picture-preview">
+                                {% if form.instance.profile_picture %}
+                                <img src="{{ form.instance.profile_picture.url }}" alt="Profile Picture" id="profilePreview">
                                 {% else %}
-                                    <img src="{% static 'defaults/default_cover.jpg' %}" 
-                                         class="img-fluid mb-3"
-                                         alt="Default Cover Photo"
-                                         style="width: 100%; height: 200px; object-fit: cover;">
+                                <div class="placeholder-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
                                 {% endif %}
                             </div>
-                            <div class="mt-2">
-                                <label class="btn btn-outline-primary">
-                                    {% trans "Change Cover Photo" %}
-                                    {{ form.cover_photo }}
-                                </label>
-                                {% if form.cover_photo.errors %}
-                                    <div class="invalid-feedback d-block" role="alert">
-                                        {{ form.cover_photo.errors }}
-                                    </div>
-                                {% endif %}
+                            <div class="upload-btn-wrapper">
+                                <button class="upload-btn" type="button">
+                                    <i class="fas fa-upload me-2"></i>Upload Profile Picture
+                                </button>
+                                {{ form.profile_picture }}
                             </div>
+                            {% if form.profile_picture.help_text %}
+                            <div class="form-text">{{ form.profile_picture.help_text }}</div>
+                            {% endif %}
+                            {% if form.profile_picture.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.profile_picture.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                         </div>
-
-                        <!-- Profile Picture Section -->
-                        <div class="form-group text-center mb-4">
-                            <div class="profile-picture-container">
-                                {% if user.profile.profile_picture %}
-                                    <img src="{{ user.profile.profile_picture.url }}" 
-                                         class="img-fluid rounded-circle mb-3" 
-                                         alt="Profile Picture" 
-                                         style="width: 150px; height: 150px; object-fit: cover;">
+                        
+                        <!-- Cover Photo -->
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">Cover Photo</label>
+                            <div class="image-preview cover-photo-preview">
+                                {% if form.instance.cover_photo %}
+                                <img src="{{ form.instance.cover_photo.url }}" alt="Cover Photo" id="coverPreview">
                                 {% else %}
-                                    <img src="{% static 'defaults/default_profile.png' %}" 
-                                         class="img-fluid rounded-circle mb-3" 
-                                         alt="Default Profile Picture" 
-                                         style="width: 150px; height: 150px; object-fit: cover;">
+                                <div class="placeholder-icon">
+                                    <i class="fas fa-image"></i>
+                                </div>
                                 {% endif %}
                             </div>
-                            <div class="mt-2">
-                                <label class="btn btn-outline-primary">
-                                    {% trans "Change Picture" %}
-                                    {{ form.profile_picture }}
-                                </label>
-                                {% if form.profile_picture.errors %}
-                                    <div class="invalid-feedback d-block" role="alert">
-                                        {{ form.profile_picture.errors }}
-                                    </div>
-                                {% endif %}
+                            <div class="upload-btn-wrapper">
+                                <button class="upload-btn" type="button">
+                                    <i class="fas fa-upload me-2"></i>Upload Cover Photo
+                                </button>
+                                {{ form.cover_photo }}
                             </div>
+                            {% if form.cover_photo.help_text %}
+                            <div class="form-text">{{ form.cover_photo.help_text }}</div>
+                            {% endif %}
+                            {% if form.cover_photo.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.cover_photo.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                         </div>
-
-                        <!-- Basic Information -->
-                        <div class="card mb-4">
-                            <div class="card-header bg-light">
-                                <h5 class="mb-0">{% trans "Basic Information" %}</h5>
+                        
+                        <!-- Bio -->
+                        <div class="col-12 mb-4">
+                            <label for="{{ form.bio.id_for_label }}" class="form-label required-field">{{ form.bio.label }}</label>
+                            {{ form.bio }}
+                            {% if form.bio.help_text %}
+                            <div class="form-text">{{ form.bio.help_text }}</div>
+                            {% endif %}
+                            {% if form.bio.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.bio.errors %}
+                                {{ error }}
+                                {% endfor %}
                             </div>
-                            <div class="card-body">
-                                <!-- Bio -->
-                                <div class="form-group mb-3">
-                                    <label for="{{ form.bio.id_for_label }}">{% trans "Bio" %}</label>
-                                    {{ form.bio }}
-                                    <small class="form-text text-muted">{{ form.bio.help_text }}</small>
-                                    {% if form.bio.errors %}
-                                        <div class="invalid-feedback d-block" role="alert">
-                                            {{ form.bio.errors }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-
-                                <!-- Career -->
-                                <div class="form-group mb-3">
-                                    <label for="{{ form.career.id_for_label }}">{% trans "Career" %}</label>
-                                    {{ form.career }}
-                                    <small class="form-text text-muted">{{ form.career.help_text }}</small>
-                                    {% if form.career.errors %}
-                                        <div class="invalid-feedback d-block" role="alert">
-                                            {{ form.career.errors }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-
-                                <!-- Location -->
-                                <div class="form-group mb-3">
-                                    <label for="{{ form.location.id_for_label }}">{% trans "Location" %}</label>
-                                    {{ form.location }}
-                                    <small class="form-text text-muted">{{ form.location.help_text }}</small>
-                                    {% if form.location.errors %}
-                                        <div class="invalid-feedback d-block" role="alert">
-                                            {{ form.location.errors }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-
-                                <!-- Nationality -->
-                                <div class="form-group mb-3">
-                                    <label for="{{ form.nationality.id_for_label }}">{% trans "Nationality" %}</label>
-                                    {{ form.nationality }}
-                                    {% if form.nationality.errors %}
-                                        <div class="invalid-feedback d-block" role="alert">
-                                            {{ form.nationality.errors }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-
-                                <!-- Birthday -->
-                                <div class="form-group mb-3">
-                                    <label for="{{ form.birthday.id_for_label }}">{% trans "Birthday" %}</label>
-                                    {{ form.birthday }}
-                                    <small class="form-text text-muted">{{ form.birthday.help_text }}</small>
-                                    {% if form.birthday.errors %}
-                                        <div class="invalid-feedback d-block" role="alert">
-                                            {{ form.birthday.errors }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-
-                                <!-- LinkedIn -->
-                                <div class="form-group mb-3">
-                                    <label for="{{ form.linkedin.id_for_label }}">{% trans "LinkedIn Profile" %}</label>
-                                    {{ form.linkedin }}
-                                    <small class="form-text text-muted">{{ form.linkedin.help_text }}</small>
-                                    {% if form.linkedin.errors %}
-                                        <div class="invalid-feedback d-block" role="alert">
-                                            {{ form.linkedin.errors }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-
-                                <!-- Website -->
-                                <div class="form-group mb-3">
-                                    <label for="{{ form.website.id_for_label }}">{% trans "Website" %}</label>
-                                    {{ form.website }}
-                                    <small class="form-text text-muted">{{ form.website.help_text }}</small>
-                                    {% if form.website.errors %}
-                                        <div class="invalid-feedback d-block" role="alert">
-                                            {{ form.website.errors }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
+                            {% endif %}
                         </div>
-
-                       <!-- Professional Information -->
-                       <div class="card mb-4">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0">{% trans "Professional Information" %}</h5>
+                        
+                        <!-- Location, Nationality, Birthday -->
+                        <div class="col-md-4 mb-4">
+                            <label for="{{ form.location.id_for_label }}" class="form-label">{{ form.location.label }}</label>
+                            {{ form.location }}
+                            {% if form.location.help_text %}
+                            <div class="form-text">{{ form.location.help_text }}</div>
+                            {% endif %}
+                            {% if form.location.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.location.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
                         </div>
-                        <div class="card-body">
-                            <!-- Education -->
-                            <div class="form-group mb-3">
-                                <label for="{{ form.education.id_for_label }}">{% trans "Education" %}</label>
-                                {{ form.education }}
-                                <small class="form-text text-muted">{{ form.education.help_text }}</small>
-                                {% if form.education.errors %}
-                                    <div class="invalid-feedback d-block" role="alert">
-                                        {{ form.education.errors }}
-                                    </div>
-                                {% endif %}
+                        
+                        <div class="col-md-4 mb-4">
+                            <label for="{{ form.nationality.id_for_label }}" class="form-label">{{ form.nationality.label }}</label>
+                            {{ form.nationality }}
+                            {% if form.nationality.help_text %}
+                            <div class="form-text">{{ form.nationality.help_text }}</div>
+                            {% endif %}
+                            {% if form.nationality.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.nationality.errors %}
+                                {{ error }}
+                                {% endfor %}
                             </div>
-
-                            <!-- Skills -->
-                            <div class="form-group mb-3">
-                                <label for="{{ form.skills.id_for_label }}">{% trans "Skills" %}</label>
-                                {{ form.skills }}
-                                <small class="form-text text-muted">{{ form.skills.help_text }}</small>
-                                {% if form.skills.errors %}
-                                    <div class="invalid-feedback d-block" role="alert">
-                                        {{ form.skills.errors }}
-                                    </div>
-                                {% endif %}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 mb-4">
+                            <label for="{{ form.birthday.id_for_label }}" class="form-label">{{ form.birthday.label }}</label>
+                            {{ form.birthday }}
+                            {% if form.birthday.help_text %}
+                            <div class="form-text">{{ form.birthday.help_text }}</div>
+                            {% endif %}
+                            {% if form.birthday.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.birthday.errors %}
+                                {{ error }}
+                                {% endfor %}
                             </div>
-
-                            <!-- Projects -->
-                            <div class="form-group mb-3">
-                                <label for="{{ form.projects.id_for_label }}">{% trans "Projects" %}</label>
-                                {{ form.projects }}
-                                <small class="form-text text-muted">{{ form.projects.help_text }}</small>
-                                {% if form.projects.errors %}
-                                    <div class="invalid-feedback d-block" role="alert">
-                                        {{ form.projects.errors }}
-                                    </div>
-                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Information Section -->
+                <div class="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-address-card"></i>
+                        Contact Information
+                    </h2>
+                    
+                    <div class="row">
+                        <!-- Email (readonly) -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                            {{ form.email }}
+                            {% if form.email.help_text %}
+                            <div class="form-text">{{ form.email.help_text }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Phone -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.phone.id_for_label }}" class="form-label">{{ form.phone.label }}</label>
+                            {{ form.phone }}
+                            {% if form.phone.help_text %}
+                            <div class="form-text">{{ form.phone.help_text }}</div>
+                            {% endif %}
+                            {% if form.phone.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.phone.errors %}
+                                {{ error }}
+                                {% endfor %}
                             </div>
-
-                            <!-- Recommendations -->
-                            <div class="form-group mb-3">
-                                <label for="{{ form.recommendations.id_for_label }}">{% trans "Recommendations" %}</label>
-                                {{ form.recommendations }}
-                                <small class="form-text text-muted">{{ form.recommendations.help_text }}</small>
-                                {% if form.recommendations.errors %}
-                                    <div class="invalid-feedback d-block" role="alert">
-                                        {{ form.recommendations.errors }}
-                                    </div>
-                                {% endif %}
+                            {% endif %}
+                        </div>
+                        
+                        <!-- WhatsApp -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.whatsapp_phone.id_for_label }}" class="form-label">{{ form.whatsapp_phone.label }}</label>
+                            {{ form.whatsapp_phone }}
+                            {% if form.whatsapp_phone.help_text %}
+                            <div class="form-text">{{ form.whatsapp_phone.help_text }}</div>
+                            {% endif %}
+                            {% if form.whatsapp_phone.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.whatsapp_phone.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Website -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.website.id_for_label }}" class="form-label">{{ form.website.label }}</label>
+                            {{ form.website }}
+                            {% if form.website.help_text %}
+                            <div class="form-text">{{ form.website.help_text }}</div>
+                            {% endif %}
+                            {% if form.website.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.website.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- LinkedIn -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.linkedin.id_for_label }}" class="form-label">{{ form.linkedin.label }}</label>
+                            {{ form.linkedin }}
+                            {% if form.linkedin.help_text %}
+                            <div class="form-text">{{ form.linkedin.help_text }}</div>
+                            {% endif %}
+                            {% if form.linkedin.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.linkedin.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Professional Information Section -->
+                <div class="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-briefcase"></i>
+                        Professional Information
+                    </h2>
+                    
+                    <div class="row">
+                        <!-- Career -->
+                        <div class="col-12 mb-4">
+                            <label for="{{ form.career.id_for_label }}" class="form-label">{{ form.career.label }}</label>
+                            {{ form.career }}
+                            {% if form.career.help_text %}
+                            <div class="form-text">{{ form.career.help_text }}</div>
+                            {% endif %}
+                            {% if form.career.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.career.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Skills -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.skills.id_for_label }}" class="form-label">{{ form.skills.label }}</label>
+                            {{ form.skills }}
+                            {% if form.skills.help_text %}
+                            <div class="form-text">{{ form.skills.help_text }}</div>
+                            {% endif %}
+                            {% if form.skills.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.skills.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Education -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.education.id_for_label }}" class="form-label">{{ form.education.label }}</label>
+                            {{ form.education }}
+                            {% if form.education.help_text %}
+                            <div class="form-text">{{ form.education.help_text }}</div>
+                            {% endif %}
+                            {% if form.education.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.education.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Work Experience -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.work_experience.id_for_label }}" class="form-label">{{ form.work_experience.label }}</label>
+                            {{ form.work_experience }}
+                            {% if form.work_experience.help_text %}
+                            <div class="form-text">{{ form.work_experience.help_text }}</div>
+                            {% endif %}
+                            {% if form.work_experience.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.work_experience.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Projects -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.projects.id_for_label }}" class="form-label">{{ form.projects.label }}</label>
+                            {{ form.projects }}
+                            {% if form.projects.help_text %}
+                            <div class="form-text">{{ form.projects.help_text }}</div>
+                            {% endif %}
+                            {% if form.projects.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.projects.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Recommendations -->
+                        <div class="col-12 mb-4">
+                            <label for="{{ form.recommendations.id_for_label }}" class="form-label">{{ form.recommendations.label }}</label>
+                            {{ form.recommendations }}
+                            {% if form.recommendations.help_text %}
+                            <div class="form-text">{{ form.recommendations.help_text }}</div>
+                            {% endif %}
+                            {% if form.recommendations.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.recommendations.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Business Information Section (for Sellers) -->
+                {% if user.products.exists %}
+                <div class="profile-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-store"></i>
+                        Business Information
+                    </h2>
+                    
+                    <div class="alert alert-info mb-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        These settings will be used for your shop and order notifications.
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Business Name -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.business_name.id_for_label }}" class="form-label">{{ form.business_name.label }}</label>
+                            {{ form.business_name }}
+                            {% if form.business_name.help_text %}
+                            <div class="form-text">{{ form.business_name.help_text }}</div>
+                            {% endif %}
+                            {% if form.business_name.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.business_name.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Business Address -->
+                        <div class="col-md-6 mb-4">
+                            <label for="{{ form.business_address.id_for_label }}" class="form-label">{{ form.business_address.label }}</label>
+                            {{ form.business_address }}
+                            {% if form.business_address.help_text %}
+                            <div class="form-text">{{ form.business_address.help_text }}</div>
+                            {% endif %}
+                            {% if form.business_address.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.business_address.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Notification Preferences -->
+                        <div class="col-12">
+                            <h5 class="mb-3">Order Notification Preferences</h5>
+                            
+                            <div class="notification-option">
+                                <div class="notification-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="notification-text">
+                                    <h6>Email Notifications</h6>
+                                    <p>Receive detailed order information via email</p>
+                                </div>
+                                <div class="form-check form-switch">
+                                    {{ form.receive_order_emails }}
+                                    <label class="form-check-label" for="{{ form.receive_order_emails.id_for_label }}">
+                                        Enable
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-option">
+                                <div class="notification-icon">
+                                    <i class="fab fa-whatsapp"></i>
+                                </div>
+                                <div class="notification-text">
+                                    <h6>WhatsApp Notifications</h6>
+                                    <p>Get instant order alerts via WhatsApp</p>
+                                </div>
+                                <div class="form-check form-switch">
+                                    {{ form.receive_order_whatsapp }}
+                                    <label class="form-check-label" for="{{ form.receive_order_whatsapp.id_for_label }}">
+                                        Enable
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-
-
-                        <!-- Submit Button -->
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-lg w-100">
-                                {% trans "Save Changes" %}
-                            </button>
-                        </div>
-                    </form>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Sidebar -->
-        <div class="col-lg-4">
-            {% block sidebar %}
-                <!-- Sidebar content here -->
-            {% endblock %}
+                {% endif %}
+                
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a href="{% url 'profile_detail' username=user.username %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg btn-save">
+                        <i class="fas fa-save me-2"></i>Save Profile
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/json_editor.js' %}"></script>
 <script>
-
-import axios from 'axios';
-
-const form = document.querySelector('#user-profile-form');
-
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-
-  const formData = new FormData(event.target);
-  const jsonData = {};
-  for (const [key, value] of formData.entries()) {
-    if (value) {
-      try {
-        jsonData[key] = JSON.parse(value);
-      } catch {
-        jsonData[key] = value;
-      }
-    }
-  }
-
-  try {
-    await axios.post('/profile/update/', jsonData);
-    // Handle successful update
-    console.log('Profile updated successfully!');
-  } catch (error) {
-    // Handle errors
-    console.error('Error updating profile:', error);
-  }
-});
-
-    // Form validation
-    (function() {
-        'use strict';
-        window.addEventListener('load', function() {
-            var forms = document.getElementsByClassName('needs-validation');
-            Array.prototype.filter.call(forms, function(form) {
-                form.addEventListener('submit', function(event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated');
-                }, false);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Profile Picture Preview
+        const profilePictureInput = document.getElementById('{{ form.profile_picture.id_for_label }}');
+        const profilePicturePreview = document.getElementById('profilePreview');
+        
+        if (profilePictureInput && profilePicturePreview) {
+            profilePictureInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewContainer = profilePicturePreview.closest('.profile-picture-preview');
+                        
+                        // If there's an existing image, update it
+                        if (profilePicturePreview) {
+                            profilePicturePreview.src = e.target.result;
+                        } 
+                        // Otherwise create a new image
+                        else {
+                            const placeholder = previewContainer.querySelector('.placeholder-icon');
+                            if (placeholder) {
+                                previewContainer.removeChild(placeholder);
+                            }
+                            
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.id = 'profilePreview';
+                            img.alt = 'Profile Picture';
+                            previewContainer.appendChild(img);
+                        }
+                    };
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
             });
-        }, false);
-    })();
-
- // Preview profile picture before upload
- document.querySelector('input[name="profile_picture"]').addEventListener('change', function(e) {
-        if (e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.querySelector('.profile-picture-container img').src = e.target.result;
-            };
-            reader.readAsDataURL(e.target.files[0]);
+        }
+        
+        // Cover Photo Preview
+        const coverPhotoInput = document.getElementById('{{ form.cover_photo.id_for_label }}');
+        const coverPhotoPreview = document.getElementById('coverPreview');
+        
+        if (coverPhotoInput && coverPhotoPreview) {
+            coverPhotoInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewContainer = coverPhotoPreview.closest('.cover-photo-preview');
+                        
+                        // If there's an existing image, update it
+                        if (coverPhotoPreview) {
+                            coverPhotoPreview.src = e.target.result;
+                        } 
+                        // Otherwise create a new image
+                        else {
+                            const placeholder = previewContainer.querySelector('.placeholder-icon');
+                            if (placeholder) {
+                                previewContainer.removeChild(placeholder);
+                            }
+                            
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.id = 'coverPreview';
+                            img.alt = 'Cover Photo';
+                            previewContainer.appendChild(img);
+                        }
+                    };
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+        
+        // Form validation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            let isValid = true;
+            
+            // Reset all validation states
+            const inputs = form.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.classList.remove('is-invalid');
+                const feedback = input.nextElementSibling;
+                if (feedback && feedback.classList.contains('invalid-feedback')) {
+                    feedback.textContent = '';
+                }
+            });
+            
+            // Validate WhatsApp notification option
+            const receiveWhatsApp = document.getElementById('{{ form.receive_order_whatsapp.id_for_label }}');
+            const whatsAppPhone = document.getElementById('{{ form.whatsapp_phone.id_for_label }}');
+            const phone = document.getElementById('{{ form.phone.id_for_label }}');
+            
+            if (receiveWhatsApp && whatsAppPhone && receiveWhatsApp.checked) {
+                if (!whatsAppPhone.value && (!phone || !phone.value)) {
+                    whatsAppPhone.classList.add('is-invalid');
+                    const feedback = whatsAppPhone.nextElementSibling;
+                    if (feedback && feedback.classList.contains('invalid-feedback')) {
+                        feedback.textContent = 'WhatsApp number is required if you want to receive WhatsApp notifications';
+                    } else {
+                        const newFeedback = document.createElement('div');
+                        newFeedback.className = 'invalid-feedback';
+                        newFeedback.textContent = 'WhatsApp number is required if you want to receive WhatsApp notifications';
+                        whatsAppPhone.parentNode.insertBefore(newFeedback, whatsAppPhone.nextSibling);
+                    }
+                    isValid = false;
+                }
+            }
+            
+            // Validate JSON fields
+            const jsonInputs = form.querySelectorAll('.json-input');
+            jsonInputs.forEach(input => {
+                try {
+                    const content = input.value.trim();
+                    if (content) {
+                        JSON.parse(content);
+                    }
+                } catch (error) {
+                    input.classList.add('is-invalid');
+                    const feedback = input.nextElementSibling;
+                    if (feedback && feedback.classList.contains('invalid-feedback')) {
+                        feedback.textContent = 'Invalid JSON format: ' + error.message;
+                    } else {
+                        const newFeedback = document.createElement('div');
+                        newFeedback.className = 'invalid-feedback';
+                        newFeedback.textContent = 'Invalid JSON format: ' + error.message;
+                        input.parentNode.insertBefore(newFeedback, input.nextSibling);
+                    }
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                event.preventDefault();
+                // Scroll to first error
+                const firstError = form.querySelector('.is-invalid');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+        
+        // Word counter for bio
+        const bioTextarea = document.getElementById('{{ form.bio.id_for_label }}');
+        if (bioTextarea) {
+            // Create word counter element
+            const wordCounter = document.createElement('div');
+            wordCounter.className = 'text-muted text-end small mt-1';
+            wordCounter.id = 'bioWordCounter';
+            bioTextarea.parentNode.insertBefore(wordCounter, bioTextarea.nextSibling);
+            
+            // Update word count function
+            function updateWordCount() {
+                const text = bioTextarea.value.trim();
+                const wordCount = text ? text.split(/\s+/).length : 0;
+                const maxWords = 100;
+                const wordsLeft = maxWords - wordCount;
+                
+                wordCounter.textContent = `${wordCount} words (${wordsLeft} remaining)`;
+                
+                if (wordCount > maxWords) {
+                    wordCounter.classList.add('text-danger');
+                    wordCounter.classList.remove('text-muted', 'text-success');
+                } else if (wordCount > maxWords * 0.8) {
+                    wordCounter.classList.add('text-warning');
+                    wordCounter.classList.remove('text-muted', 'text-danger', 'text-success');
+                } else {
+                    wordCounter.classList.add('text-muted');
+                    wordCounter.classList.remove('text-danger', 'text-warning', 'text-success');
+                }
+            }
+            
+            // Initial count and event listener
+            updateWordCount();
+            bioTextarea.addEventListener('input', updateWordCount);
+        }
+        
+        // Handle business fields visibility based on seller status
+        const businessSection = document.querySelector('.business-info-section');
+        const isSeller = {{ user.products.exists|yesno:"true,false" }};
+        
+        if (businessSection && !isSeller) {
+            const becomeSellerCheckbox = document.getElementById('becomeSeller');
+            if (becomeSellerCheckbox) {
+                becomeSellerCheckbox.addEventListener('change', function() {
+                    businessSection.style.display = this.checked ? 'block' : 'none';
+                });
+                
+                // Initial state
+                businessSection.style.display = becomeSellerCheckbox.checked ? 'block' : 'none';
+            }
         }
     });
-
-document.querySelector('input[name="cover_photo"]').addEventListener('change', function(e) {
-    if (e.target.files && e.target.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.querySelector('.cover-photo-container img').src = e.target.result;
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    }
-});
-
-document.querySelector('input[name="profile_picture"]').addEventListener('change', function(e) {
-    if (e.target.files && e.target.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.querySelector('.profile-picture-container img').src = e.target.result;
-        };
-        reader.readAsDataURL(e.target.files[0]);
-    }
-});
 </script>
 {% endblock %}

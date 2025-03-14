@@ -1,0 +1,1077 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Enhanced Product Detail Styles */
+    :root {
+        --primary-color: #FFCC00;
+        --secondary-color: #31404B;
+        --accent-color: #17a2b8;
+        --success-color: #28a745;
+        --danger-color: #dc3545;
+        --light-gray: #EDEFF4;
+        --dark-gray: #6c757d;
+        --border-radius: 8px;
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        --transition-speed: 0.3s;
+    }
+
+    /* Hero Section */
+    .product-hero {
+        position: relative;
+        background-color: #f8f9fa;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        margin-bottom: 3rem;
+    }
+    
+    .product-breadcrumb {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 8px 16px;
+        border-radius: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Enhanced Image Gallery */
+    .gallery-container {
+        position: relative;
+        height: 500px;
+        background-color: white;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+    }
+    
+    .main-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+    }
+    
+    .main-image:hover {
+        transform: scale(1.05);
+    }
+    
+    .image-zoom-overlay {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .image-zoom-overlay:hover {
+        background-color: white;
+        transform: scale(1.1);
+    }
+    
+    .thumbnail-container {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .thumbnail {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+    }
+    
+    .thumbnail:hover, .thumbnail.active {
+        border-color: var(--primary-color);
+        transform: translateY(-3px);
+    }
+    
+    /* Product Info Section */
+    .product-info {
+        padding: 2rem;
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        height: 100%;
+    }
+    
+    .product-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--secondary-color);
+    }
+    
+    .product-subtitle {
+        color: var(--dark-gray);
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+    }
+    
+    /* Price Display */
+    .price-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: var(--border-radius);
+    }
+    
+    .price-current {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--secondary-color);
+    }
+    
+    .price-original {
+        font-size: 1.2rem;
+        color: var(--dark-gray);
+        text-decoration: line-through;
+        margin-left: 1rem;
+    }
+    
+    .price-discount {
+        margin-left: auto;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
+        font-weight: 700;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 1.1rem;
+    }
+    
+    /* Stock Info */
+    .stock-indicator {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stock-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+    
+    .stock-badge.in-stock {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: var(--success-color);
+    }
+    
+    .stock-badge.low-stock {
+        background-color: rgba(255, 193, 7, 0.1);
+        color: #ff9800;
+    }
+    
+    .stock-badge.out-of-stock {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: var(--danger-color);
+    }
+    
+    .stock-bar-container {
+        height: 5px;
+        flex-grow: 1;
+        background-color: #e9ecef;
+        border-radius: 10px;
+        margin-left: 1rem;
+        overflow: hidden;
+    }
+    
+    .stock-bar {
+        height: 100%;
+        background-color: var(--success-color);
+        border-radius: 10px;
+    }
+    
+    /* Features List */
+    .features-list {
+        margin-bottom: 2rem;
+    }
+    
+    .feature-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .feature-icon {
+        color: var(--primary-color);
+        margin-right: 10px;
+        font-size: 1.2rem;
+    }
+    
+    /* Add to Cart Form */
+    .purchase-section {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 1.5rem;
+    }
+    
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .quantity-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        border: 1px solid #dee2e6;
+        font-size: 1.2rem;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .quantity-btn:first-child {
+        border-radius: 5px 0 0 5px;
+    }
+    
+    .quantity-btn:last-child {
+        border-radius: 0 5px 5px 0;
+    }
+    
+    .quantity-input {
+        width: 60px;
+        height: 40px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+        border-left: none;
+        border-right: none;
+        font-weight: 600;
+    }
+    
+    .btn-add-to-cart {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        transition: all 0.3s;
+    }
+    
+    .btn-add-to-cart:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Seller Info */
+    .seller-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: var(--border-radius);
+    }
+    
+    .seller-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-right: 1rem;
+        object-fit: cover;
+    }
+    
+    .seller-name {
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+    }
+    
+    .seller-rating {
+        color: var(--primary-color);
+    }
+    
+    .btn-visit-store {
+        margin-left: auto;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        background-color: white;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s;
+    }
+    
+    .btn-visit-store:hover {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+    
+    /* Tabs Section */
+    .product-tabs {
+        margin-top: 3rem;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+    }
+    
+    .nav-tabs {
+        background-color: #f8f9fa;
+        border-bottom: none;
+    }
+    
+    .nav-tabs .nav-link {
+        border: none;
+        color: var(--secondary-color);
+        font-weight: 600;
+        padding: 1rem 1.5rem;
+    }
+    
+    .nav-tabs .nav-link.active {
+        background-color: white;
+        color: var(--primary-color);
+        border-bottom: 3px solid var(--primary-color);
+    }
+    
+    .tab-content {
+        background-color: white;
+        padding: 2rem;
+    }
+    
+    /* Product Description */
+    .product-description {
+        line-height: 1.8;
+    }
+    
+    /* Specifications Table */
+    .specs-table th {
+        width: 30%;
+        background-color: #f8f9fa;
+    }
+    
+    /* Reviews Section */
+    .review-item {
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .review-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+    
+    .review-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .reviewer-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 1rem;
+    }
+    
+    .reviewer-name {
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+    }
+    
+    .review-date {
+        color: var(--dark-gray);
+        font-size: 0.9rem;
+    }
+    
+    .review-rating {
+        margin-left: auto;
+        color: var(--primary-color);
+    }
+    
+    .progress-container {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .progress-label {
+        width: 30px;
+        margin-right: 10px;
+    }
+    
+    .progress {
+        flex-grow: 1;
+        height: 5px;
+    }
+    
+    .progress-bar {
+        background-color: var(--primary-color);
+    }
+    
+    .progress-value {
+        width: 30px;
+        text-align: right;
+        margin-left: 10px;
+    }
+    
+    /* Related Products */
+    .related-products {
+        margin-top: 3rem;
+    }
+    
+    .related-products-title {
+        margin-bottom: 1.5rem;
+        position: relative;
+        padding-bottom: 1rem;
+    }
+    
+    .related-products-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100px;
+        height: 3px;
+        background-color: var(--primary-color);
+    }
+    
+    .related-product-card {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s;
+        height: 100%;
+    }
+    
+    .related-product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .related-product-img {
+        height: 200px;
+        object-fit: cover;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+    
+    .related-product-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        height: 48px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    
+    .related-product-price {
+        font-weight: 700;
+        color: var(--secondary-color);
+        font-size: 1.2rem;
+    }
+    
+    /* Wishlist Button */
+    .wishlist-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        transition: all 0.3s;
+    }
+    
+    .wishlist-btn:hover {
+        background-color: #fff0f0;
+        transform: scale(1.1);
+    }
+    
+    .wishlist-btn i {
+        color: var(--dark-gray);
+        transition: all 0.3s;
+    }
+    
+    .wishlist-btn:hover i {
+        color: var(--danger-color);
+    }
+    
+    /* Animation Effects */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .animate-fadeInUp {
+        animation: fadeInUp 0.5s ease-out;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 991px) {
+        .gallery-container {
+            height: 400px;
+        }
+        
+        .product-info {
+            margin-top: 2rem;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .gallery-container {
+            height: 350px;
+        }
+        
+        .product-title {
+            font-size: 2rem;
+        }
+        
+        .price-current {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+
+<div class="container py-5 animate-fadeInUp">
+    <!-- Breadcrumb Trail -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}" class="text-decoration-none">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'shop:product_list' %}" class="text-decoration-none">Shop</a></li>
+            {% if product.category %}
+            <li class="breadcrumb-item"><a href="#" class="text-decoration-none">{{ product.category.name }}</a></li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Image Gallery -->
+        <div class="col-lg-6 mb-4">
+            <div class="gallery-container">
+                <img id="mainImage" src="{{ product.image.url|default:'/static/images/default-product.jpg' }}" 
+                     class="main-image" alt="{{ product.name }}">
+                <div class="image-zoom-overlay" onclick="openImageModal()">
+                    <i class="fas fa-search-plus"></i>
+                </div>
+            </div>
+            
+            <!-- Thumbnails (would be dynamic based on multiple product images) -->
+            <div class="thumbnail-container">
+                <img src="{{ product.image.url|default:'/static/images/default-product.jpg' }}" 
+                     class="thumbnail active" alt="{{ product.name }}" 
+                     onclick="changeMainImage(this.src)">
+                <!-- Placeholder thumbnails (would be replaced with actual product images) -->
+                <div class="thumbnail bg-light d-flex align-items-center justify-content-center">
+                    <i class="fas fa-image text-secondary"></i>
+                </div>
+                <div class="thumbnail bg-light d-flex align-items-center justify-content-center">
+                    <i class="fas fa-image text-secondary"></i>
+                </div>
+                <div class="thumbnail bg-light d-flex align-items-center justify-content-center">
+                    <i class="fas fa-image text-secondary"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-lg-6">
+            <div class="product-info">
+                <h1 class="product-title">{{ product.name }}</h1>
+                <p class="product-subtitle">{{ product.subtitle|default:"" }}</p>
+                
+                <!-- Price Display -->
+                <div class="price-container">
+                    {% if product.discount_price %}
+                        <div class="price-current">${{ product.discount_price }}</div>
+                        <div class="price-original">${{ product.price }}</div>
+                        <div class="price-discount">
+                            {% widthratio product.discount_price product.price 100 as discount_percent %}
+                            {{ discount_percent|floatformat:0 }}% OFF
+                        </div>
+                    {% else %}
+                        <div class="price-current">${{ product.price }}</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Stock Status -->
+                <div class="stock-indicator">
+                    {% if product.stock > 0 %}
+                        {% if product.stock < 5 %}
+                            <div class="stock-badge low-stock">
+                                <i class="fas fa-exclamation-circle"></i> Low Stock
+                            </div>
+                            <div class="stock-bar-container">
+                                <div class="stock-bar" style="width: 20%; background-color: #ff9800;"></div>
+                            </div>
+                        {% else %}
+                            <div class="stock-badge in-stock">
+                                <i class="fas fa-check-circle"></i> In Stock
+                            </div>
+                            <div class="stock-bar-container">
+                                <div class="stock-bar" style="width: {% widthratio product.stock 20 100 %}%;"></div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="stock-badge out-of-stock">
+                            <i class="fas fa-times-circle"></i> Out of Stock
+                        </div>
+                        <div class="stock-bar-container">
+                            <div class="stock-bar" style="width: 0%;"></div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Key Features -->
+                <div class="features-list">
+                    <h5>Highlights</h5>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle feature-icon"></i>
+                        <span>Top quality materials</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle feature-icon"></i>
+                        <span>Fast shipping</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle feature-icon"></i>
+                        <span>30-day money-back guarantee</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle feature-icon"></i>
+                        <span>24/7 customer support</span>
+                    </div>
+                </div>
+                
+                <!-- Add to Cart Section -->
+                {% if product.stock > 0 %}
+                <div class="purchase-section">
+                    <form method="POST" action="{% url 'shop:order_create' product.pk %}">
+                        {% csrf_token %}
+                        <div class="quantity-controls">
+                            <div class="quantity-btn" onclick="decrementQuantity()">−</div>
+                            <input type="number" id="quantity" name="quantity" value="1" 
+                                   min="1" max="{{ product.stock }}" class="quantity-input">
+                            <div class="quantity-btn" onclick="incrementQuantity()">+</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-add-to-cart">
+                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                    </form>
+                </div>
+                {% else %}
+                <div class="purchase-section">
+                    <button class="btn btn-secondary btn-add-to-cart" disabled>
+                        <i class="fas fa-times-circle me-2"></i>Out of Stock
+                    </button>
+                    <div class="mt-3 text-center">
+                        <button class="btn btn-outline-primary">
+                            <i class="far fa-bell me-2"></i>Notify Me When Available
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Seller Info -->
+                <div class="seller-info">
+                    {% if product.seller.profile.profile_picture %}
+                    <img src="{{ product.seller.profile.profile_picture.url }}" alt="{{ product.seller.username }}" class="seller-avatar">
+                    {% else %}
+                    <div class="seller-avatar bg-light d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user text-secondary"></i>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <div class="seller-name">{{ product.seller.username }}</div>
+                        <div class="seller-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="ms-1">4.5</span>
+                        </div>
+                    </div>
+                    <a href="{% url 'profile_detail' username=product.seller.username %}" class="btn btn-visit-store">
+                        Visit Store
+                    </a>
+                </div>
+                
+                <!-- Social Sharing -->
+                <div class="d-flex gap-2 mt-4">
+                    <button class="btn btn-outline-primary">
+                        <i class="fas fa-share-alt me-2"></i>Share
+                    </button>
+                    <button class="btn btn-outline-danger">
+                        <i class="far fa-heart me-2"></i>Add to Wishlist
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Tabs Section -->
+    <div class="product-tabs mt-5">
+        <ul class="nav nav-tabs" id="productTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="description-tab" data-bs-toggle="tab" 
+                        data-bs-target="#description" type="button" role="tab" 
+                        aria-controls="description" aria-selected="true">
+                    Description
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="specifications-tab" data-bs-toggle="tab" 
+                        data-bs-target="#specifications" type="button" role="tab" 
+                        aria-controls="specifications" aria-selected="false">
+                    Specifications
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" 
+                        data-bs-target="#reviews" type="button" role="tab" 
+                        aria-controls="reviews" aria-selected="false">
+                    Reviews
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" 
+                        data-bs-target="#shipping" type="button" role="tab" 
+                        aria-controls="shipping" aria-selected="false">
+                    Shipping & Returns
+                </button>
+            </li>
+        </ul>
+        <div class="tab-content" id="productTabsContent">
+            <!-- Description Tab -->
+            <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                <div class="product-description">
+                    {{ product.description|linebreaks }}
+                </div>
+            </div>
+            
+            <!-- Specifications Tab -->
+            <div class="tab-pane fade" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                <table class="table specs-table">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Product ID</th>
+                            <td>{{ product.id }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Category</th>
+                            <td>{{ product.category.name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Seller</th>
+                            <td>{{ product.seller.username }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Added On</th>
+                            <td>{{ product.created_on|date:"F j, Y" }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Last Updated</th>
+                            <td>{{ product.updated_on|date:"F j, Y" }}</td>
+                        </tr>
+                        <!-- Custom fields would be added here based on product type -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Reviews Tab -->
+            <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="text-center mb-4">
+                            <h2 class="mb-0">4.8</h2>
+                            <div class="mb-2">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            </div>
+                            <p class="text-muted mb-0">Based on 24 reviews</p>
+                        </div>
+                        
+                        <div class="rating-breakdown">
+                            <div class="progress-container">
+                                <div class="progress-label">5★</div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 75%"></div>
+                                </div>
+                                <div class="progress-value">18</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-label">4★</div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 20%"></div>
+                                </div>
+                                <div class="progress-value">5</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-label">3★</div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 4%"></div>
+                                </div>
+                                <div class="progress-value">1</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-label">2★</div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="progress-value">0</div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-label">1★</div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="progress-value">0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button class="btn btn-outline-primary">Write a Review</button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="review-list">
+                            <!-- Sample Review 1 -->
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <img src="https://via.placeholder.com/40" alt="Reviewer" class="reviewer-avatar">
+                                    <div>
+                                        <div class="reviewer-name">John Doe</div>
+                                        <div class="review-date">1 month ago</div>
+                                    </div>
+                                    <div class="review-rating">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                    </div>
+                                </div>
+                                <div class="review-content">
+                                    <p>Absolutely love this product! The quality is exceptional and it arrived much faster than expected. Would definitely purchase again and recommend to friends.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Sample Review 2 -->
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <img src="https://via.placeholder.com/40" alt="Reviewer" class="reviewer-avatar">
+                                    <div>
+                                        <div class="reviewer-name">Jane Smith</div>
+                                        <div class="review-date">2 weeks ago</div>
+                                    </div>
+                                    <div class="review-rating">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="far fa-star text-warning"></i>
+                                    </div>
+                                </div>
+                                <div class="review-content">
+                                    <p>Great product overall. The only reason I'm giving it 4 stars instead of 5 is because the color was slightly different than what was shown in the pictures. Otherwise, very satisfied with my purchase.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Sample Review 3 -->
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <img src="https://via.placeholder.com/40" alt="Reviewer" class="reviewer-avatar">
+                                    <div>
+                                        <div class="reviewer-name">Michael Johnson</div>
+                                        <div class="review-date">3 days ago</div>
+                                    </div>
+                                    <div class="review-rating">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                    </div>
+                                </div>
+                                <div class="review-content">
+                                    <p>This product exceeds expectations. The attention to detail is impressive and it's clear that a lot of thought went into the design. Shipping was quick and the packaging was secure.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <button class="btn btn-outline-secondary">Load More Reviews</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Shipping & Returns Tab -->
+            <div class="tab-pane fade" id="shipping" role="tabpanel" aria-labelledby="shipping-tab">
+                <h5>Shipping Information</h5>
+                <ul class="mb-4">
+                    <li>Orders are typically processed within 1-2 business days.</li>
+                    <li>Standard shipping takes 3-5 business days.</li>
+                    <li>Express shipping (2-3 business days) is available for an additional fee.</li>
+                    <li>Free shipping on orders over $50.</li>
+                    <li>International shipping is available to select countries.</li>
+                </ul>
+                
+                <h5>Return Policy</h5>
+                <ul>
+                    <li>Returns accepted within 30 days of delivery.</li>
+                    <li>Item must be unused and in original packaging.</li>
+                    <li>Return shipping fees may apply.</li>
+                    <li>Refunds are processed within 5-7 business days after receiving the returned item.</li>
+                    <li>For damaged or defective items, please contact customer support within 48 hours of delivery.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related_products %}
+    <div class="related-products">
+        <h3 class="related-products-title">You Might Also Like</h3>
+        <div class="row">
+            {% for related in related_products %}
+            <div class="col-md-3 mb-4">
+                <div class="card related-product-card">
+                    <div class="position-relative">
+                        <button class="wishlist-btn" title="Add to Wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <img src="{{ related.image.url|default:'/static/images/default-product.jpg' }}" 
+                             class="related-product-img" alt="{{ related.name }}">
+                        {% if related.discount_price %}
+                        <div class="position-absolute bottom-0 start-0 bg-primary text-dark m-2 px-2 py-1 rounded">
+                            {% widthratio related.discount_price related.price 100 as discount_percent %}
+                            {{ discount_percent|floatformat:0 }}% OFF
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h6 class="related-product-title">{{ related.name }}</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                {% if related.discount_price %}
+                                <span class="related-product-price">${{ related.discount_price }}</span>
+                                <small class="text-muted text-decoration-line-through ms-1">${{ related.price }}</small>
+                                {% else %}
+                                <span class="related-product-price">${{ related.price }}</span>
+                                {% endif %}
+                            </div>
+                            {% if related.stock > 0 %}
+                            <span class="badge bg-success">In Stock</span>
+                            {% else %}
+                            <span class="badge bg-danger">Out of Stock</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-top-0 text-center">
+                        <a href="{% url 'shop:product_detail' related.slug %}" class="btn btn-outline-primary w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">{{ product.name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="{{ product.image.url|default:'/static/images/default-product.jpg' }}" 
+                     class="img-fluid" alt="{{ product.name }}">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // Quantity Input Handler
+    function incrementQuantity() {
+        const input = document.getElementById('quantity');
+        const max = parseInt(input.max);
+        const currentValue = parseInt(input.value);
+        if (currentValue < max) {
+            input.value = currentValue + 1;
+        }
+    }
+    
+    function decrementQuantity() {
+        const input = document.getElementById('quantity');
+        const currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+            input.value = currentValue - 1;
+        }
+    }
+    
+    // Image Gallery Handler
+    function changeMainImage(src) {
+        document.getElementById('mainImage').src = src;
+        document.getElementById('modalImage').src = src;
+        
+        // Update active thumbnail
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        thumbnails.forEach(thumb => {
+            if (thumb.src === src) {
+                thumb.classList.add('active');
+            } else {
+                thumb.classList.remove('active');
+            }
+        });
+    }
+    
+    function openImageModal() {
+        const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+        modal.show();
+    }
+    
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

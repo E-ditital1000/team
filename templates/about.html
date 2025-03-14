@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<!-- Header -->
-<header class="bg-dark text-white text-center py-5">
+<!-- Header Section -->
+<header class="bg-primary text-white text-center py-5">
     <div class="container">
-     
-        <h1 class="display-4">Abraham E. Bedell</h1>
-        <p class="lead">IT Support Specialist & Web Developer</p>
+        <h1 class="display-4">Welcome to NextGen Creators</h1>
+        <p class="lead">Empowering the Next Generation of Innovators & Digital Leaders</p>
+        <p class="mb-0">Powered by E-Digital Network</p>
         <div class="social-links mt-3">
             <a href="#" class="text-white mx-2"><i class="fab fa-twitter"></i></a>
             <a href="#" class="text-white mx-2"><i class="fab fa-facebook"></i></a>
@@ -19,155 +19,412 @@
 <!-- About Section -->
 <section id="about" class="py-5">
     <div class="container">
-        <div class="section-title text-center mb-5">
-            <h2>About Me</h2>
-            <p>Ability to multitask and quickly adapt to new environments, effective problem solver with good interpersonal skills, and proficient in computer programming, graphic design, and networking.</p>
-        </div>
         <div class="row">
-            <div class="col-lg-4 text-center">
-                <img src="{% static 'img/port.jpg' %}" alt="Profile Image" class="img-fluid rounded-circle mb-3">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="section-heading">About NextGen Creators</h2>
+                <hr class="my-4">
+                <p class="lead">Building a thriving community of entrepreneurs, tech innovators, and digital professionals dedicated to growth, networking, and skill development in Liberia.</p>
             </div>
-            <div class="col-lg-8">
-                <h3>IT Support Specialist & Web Developer</h3>
-                <div class="row">
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-5">
+                <img src="{% static 'img/community.jpg' %}" alt="NextGen Creators Community" class="img-fluid rounded shadow mb-4">
+            </div>
+            <div class="col-lg-7">
+                <h3>What We Do</h3>
+                <p>NextGen Creators is a community-driven initiative under <strong>E-Digital Network</strong> that provides a platform for digital skill-building, entrepreneurship, and professional networking. Founded in 2023, we're committed to fostering Liberia's digital transformation through:</p>
+                <div class="row mt-4">
                     <div class="col-md-6">
-                        <ul class="list-unstyled">
-                            <li><strong>Phone:</strong> 0778187295 / 0888880929</li>
-                            <li><strong>Email:</strong> techelvis7@gmail.com</li>
-                            <li><strong>Freelance:</strong> Available</li>
-                        </ul>
+                        <div class="d-flex mb-4">
+                            <div class="me-3">
+                                <i class="fas fa-rocket fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h5>Workshops & Training</h5>
+                                <p class="mb-0">Learn digital skills, business strategies, and tech development.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-4">
+                            <div class="me-3">
+                                <i class="fas fa-link fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h5>Networking & Collaboration</h5>
+                                <p class="mb-0">Connect with like-minded professionals and industry leaders.</p>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-6">
-                        <ul class="list-unstyled">
-                            <li><strong>Location:</strong> Barnesville Dry Rice Market, Montserrado County, Liberia</li>
-                            <li><strong>Nationality:</strong> Liberian</li>
-                        </ul>
+                        <div class="d-flex mb-4">
+                            <div class="me-3">
+                                <i class="fas fa-chart-line fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h5>Career & Business Growth</h5>
+                                <p class="mb-0">Access mentorship, job opportunities, and business acceleration.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-4">
+                            <div class="me-3">
+                                <i class="fas fa-globe fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h5>Community Impact</h5>
+                                <p class="mb-0">Support digital transformation and innovation across Liberia.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-               
             </div>
         </div>
     </div>
 </section>
 
-<!-- Skills Section -->
-<section id="skills" class="bg-light py-5">
+<!-- Our Vision & Mission -->
+<section class="bg-light py-5">
     <div class="container">
-        <div class="section-title text-center mb-5">
-            <h2>Skills</h2>
-            <p>Comprehensive skills in Web Development, Graphic Design, and IT Support.</p>
-        </div>
         <div class="row">
-            <div class="col-md-6" style="color: black;">
-                <div class="progress mb-3">
-                    <div class="progress-bar" role="progressbar" style="width: 100%;">HTML</div>
-                </div>
-                <div class="progress mb-3">
-                    <div class="progress-bar" role="progressbar" style="width: 90%;">CSS</div>
-                </div>
-                <div class="progress mb-3">
-                    <div class="progress-bar" role="progressbar" style="width: 75%;">JavaScript</div>
+            <div class="col-md-6 mb-4 mb-md-0">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-eye fa-3x text-primary"></i>
+                        </div>
+                        <h3 class="text-center mb-4">Our Vision</h3>
+                        <p class="text-center">To be Liberia's leading hub for innovative digital solutions and technology-driven empowerment, fostering a digitally skilled and connected society.</p>
+                    </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="progress mb-3">
-                    <div class="progress-bar" role="progressbar" style="width: 80%;">PHP</div>
-                </div>
-                <div class="progress mb-3">
-                    <div class="progress-bar" role="progressbar" style="width: 90%;">WordPress/CMS</div>
-                </div>
-                <div class="progress mb-3">
-                    <div class="progress-bar" role="progressbar" style="width: 55%;">Photoshop</div>
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-bullseye fa-3x text-primary"></i>
+                        </div>
+                        <h3 class="text-center mb-4">Our Mission</h3>
+                        <p class="text-center">To transform how Liberian businesses and individuals interact with technology by providing innovative tools, practical training, and unwavering support for growth and success.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Portfolio Section -->
-<section id="portfolio" class="py-5">
+<!-- Why Join Section -->
+<section id="benefits" class="py-5">
     <div class="container">
-        <div class="section-title text-center mb-5">
-            <h2>Portfolio</h2>
-            <p>Some of my recent works in Web Development, Graphic Design, and IT Support.</p>
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="section-heading">Why Join NextGen Creators?</h2>
+                <hr class="my-4">
+                <p class="lead">Gain essential skills, expand your professional network, and access exclusive opportunities.</p>
+            </div>
         </div>
         <div class="row">
-            <div class="col-md-4 portfolio-item">
-                <img src="{% static 'img/crm-reasons.jpg' %}" alt="Portfolio Image" class="img-fluid">
-                <div class="portfolio-overlay"><a href="#">CUSTOMER RELATED MANAGEMENT</a></div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-lightbulb fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Master Digital & Business Skills</h4>
+                        <p class="card-text">Access practical training in high-demand digital skills and business development.</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4 portfolio-item">
-                <img src="{% static 'img/Header.jpg' %}" alt="Portfolio Image" class="img-fluid">
-                <div class="portfolio-overlay"><a href="jobnet360.com">JOB BOARD</a></div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-bullhorn fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Exclusive Access to Experts</h4>
+                        <p class="card-text">Learn from industry leaders and receive mentorship from experienced professionals.</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4 portfolio-item">
-                <img src="{% static 'img/online.jpg' %}" alt="Portfolio Image" class="img-fluid">
-                <div class="portfolio-overlay"><a href="#">ONLINE SHOP</a></div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-hands-helping fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Collaborate on Projects</h4>
+                        <p class="card-text">Work on real-world projects and gain hands-on experience with the latest technologies.</p>
+                    </div>
+                </div>
             </div>
-            <!-- Add more portfolio items as needed -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-bolt fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Showcase Your Talents</h4>
+                        <p class="card-text">Build your personal brand and showcase your skills to potential employers and clients.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-calendar-alt fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Attend Community Events</h4>
+                        <p class="card-text">Participate in workshops, conferences, and networking events throughout the year.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-trophy fa-3x text-primary mb-3"></i>
+                        <h4 class="card-title">Drive Digital Transformation</h4>
+                        <p class="card-text">Be part of the movement that's driving Liberia's digital future forward.</p>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+</section>
+
+<!-- Programs & Services -->
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="section-heading">Our Programs & Services</h2>
+                <hr class="my-4">
+                <p class="lead">Powered by E-Digital Network's expertise in technology and innovation</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow h-100">
+                    <div class="card-body p-4">
+                        <h4><i class="fas fa-laptop-code text-primary me-2"></i> Digital Skills Training</h4>
+                        <p>Comprehensive courses covering Microsoft Office, basic coding, graphic design, and social media for business.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i> Web Development Fundamentals</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Digital Marketing Essentials</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Graphic Design for Beginners</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Business Applications of Technology</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow h-100">
+                    <div class="card-body p-4">
+                        <h4><i class="fas fa-tools text-primary me-2"></i> Entrepreneurship Support</h4>
+                        <p>Resources, mentorship, and networking opportunities for aspiring entrepreneurs and small business owners.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i> Business Plan Development</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Market Research Strategies</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Funding and Investment Guidance</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Digital Business Models</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow h-100">
+                    <div class="card-body p-4">
+                        <h4><i class="fas fa-project-diagram text-primary me-2"></i> Project Collaboration</h4>
+                        <p>Join collaborative projects that solve real-world problems while building your portfolio and experience.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i> Community Impact Projects</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Technology Solutions Development</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Client-Based Project Work</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Innovation Challenges</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow h-100">
+                    <div class="card-body p-4">
+                        <h4><i class="fas fa-users text-primary me-2"></i> Community Events</h4>
+                        <p>Regular meetups, workshops, and conferences to foster learning, networking, and community building.</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i> Monthly Tech Meetups</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Quarterly Skills Workshops</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Annual Innovation Conference</li>
+                            <li><i class="fas fa-check text-success me-2"></i> Networking Socials</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Community in Action -->
+<section id="portfolio" class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="section-heading">Our Community in Action</h2>
+                <hr class="my-4">
+                <p class="lead">Explore some of our projects, workshops, and success stories</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="portfolio-item position-relative overflow-hidden">
+                    <img src="{% static 'img/training.jpg' %}" alt="Digital Training" class="img-fluid w-100">
+                    <div class="portfolio-overlay position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
+                        <div class="text-center text-white p-3">
+                            <h5>Digital Skills Training</h5>
+                            <p class="mb-0">Empowering youth with practical skills for the digital economy</p>
+                            <a href="#" class="btn btn-sm btn-light mt-2">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="portfolio-item position-relative overflow-hidden">
+                    <img src="{% static 'img/networking.jpg' %}" alt="Networking" class="img-fluid w-100">
+                    <div class="portfolio-overlay position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
+                        <div class="text-center text-white p-3">
+                            <h5>Networking Events</h5>
+                            <p class="mb-0">Building connections within Liberia's tech and business ecosystem</p>
+                            <a href="#" class="btn btn-sm btn-light mt-2">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="portfolio-item position-relative overflow-hidden">
+                    <img src="{% static 'img/workshops.jpg' %}" alt="Workshops" class="img-fluid w-100">
+                    <div class="portfolio-overlay position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
+                        <div class="text-center text-white p-3">
+                            <h5>Workshops & Mentorship</h5>
+                            <p class="mb-0">Hands-on learning and guidance from industry experts</p>
+                            <a href="#" class="btn btn-sm btn-light mt-2">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- E-Digital Network Connection -->
+<section class="bg-primary text-white py-5">
+    <div class="container text-center">
+        <h2 class="mb-4">Powered by E-Digital Network</h2>
+        <p class="lead mb-4">NextGen Creators is an initiative of E-Digital Network, a forward-thinking Liberian-based technology startup focused on driving innovation and empowering businesses through cutting-edge digital solutions.</p>
+        <a href="#" class="btn btn-light btn-lg">Learn More About E-Digital Network</a>
     </div>
 </section>
 
 <!-- Contact Section -->
-<section id="contact" class="bg-light py-5">
+<section id="contact" class="py-5">
     <div class="container">
-        <div class="section-title text-center mb-5">
-            <h2>Contact Me</h2>
-            <p>Feel free to get in touch with me to discuss potential projects or opportunities.</p>
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="section-heading">Join NextGen Creators</h2>
+                <hr class="my-4">
+                <p class="lead">Become part of Liberia's most dynamic tech & innovation network</p>
+            </div>
         </div>
         <div class="row">
             <div class="col-lg-5">
                 <div class="info">
-                    <div class="address mb-3">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <h4>Location:</h4>
-                        <p>Barnesville Dry Rice Market, Montserrado County, Liberia</p>
+                    <div class="address mb-4">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h5>Location</h5>
+                                <p>Town Hall Junction, Gardnersville<br>Montserrado County, Liberia</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="email mb-3">
-                        <i class="fas fa-envelope"></i>
-                        <h4>Email:</h4>
-                        <p>techelvis7@gmail.com</p>
+                    <div class="email mb-4">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-envelope fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h5>Email</h5>
+                                <p>contact@nextgencreators.com</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="phone mb-3">
-                        <i class="fas fa-phone-alt"></i>
-                        <h4>Call:</h4>
-                        <p>+231-778187295</p>
+                    <div class="phone mb-4">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-phone-alt fa-2x text-primary"></i>
+                            </div>
+                            <div>
+                                <h5>Call</h5>
+                                <p>+231-778-187-295</p>
+                            </div>
+                        </div>
                     </div>
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.49303859512!2d-10.741470225462121!3d6.330104925381462!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xf09f9c504ee2c69%3A0x9f3384473675f3c8!2sBarnesville%20Junction!5e0!3m2!1sen!2s!4v1716039280717!5m2!1sen!2s"  frameborder="0" style="border:0; width: 100%; height: 290px;" allowfullscreen></iframe>
                 </div>
             </div>
             <div class="col-lg-7">
-                <form action="#" method="post" role="form" class="php-email-form">
-                  {% csrf_token %}
-                    <div class="row">
-                        <div class="form-group col-md-6">
-                            <label for="name">Your Name</label>
-                            <input type="text" name="name" class="form-control" id="name" required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="email">Your Email</label>
-                            <input type="email" class="form-control" name="email" id="email" required>
-                        </div>
+                <div class="card border-0 shadow">
+                    <div class="card-body p-4">
+                        <h4 class="mb-4">Get in Touch</h4>
+                        <form action="#" method="post" role="form">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="name">Your Name</label>
+                                    <input type="text" name="name" class="form-control" id="name" required>
+                                </div>
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="email">Your Email</label>
+                                    <input type="email" class="form-control" name="email" id="email" required>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="message">Why do you want to join?</label>
+                                <textarea class="form-control" name="message" rows="5" required></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary btn-lg">Become a Member</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="subject">Subject</label>
-                        <input type="text" class="form-control" name="subject" id="subject" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea class="form-control" name="message" rows="5" required></textarea>
-                    </div>
-                    <div class="text-center"><button type="submit">Send Message</button></div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </section>
+
+<style>
+/* Custom styles for the about page */
+.portfolio-item {
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.portfolio-overlay {
+    top: 0;
+    left: 0;
+    background: rgba(0, 123, 255, 0.85);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.portfolio-item:hover .portfolio-overlay {
+    opacity: 1;
+}
+
+section {
+    padding: 80px 0;
+}
+
+.section-heading {
+    font-weight: 600;
+}
+
+/* Card hover effect */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+</style>
 {% endblock %}
-<script>
-  document.getElementById('contact-form').addEventListener('submit', function(event) {
-      event.preventDefault(); // Prevent form submission
-      document.getElementById('form-message').innerHTML = '<div class="alert alert-danger">Our form is down currently, please use the contacts above.</div>';
-  });
-</script>

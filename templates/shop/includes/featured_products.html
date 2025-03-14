@@ -1,0 +1,40 @@
+<!-- templates/shop/includes/featured_products.html -->
+
+{% if featured_products %}
+<div class="card mb-4 shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Featured Products</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="featured-products-list">
+            {% for product in featured_products %}
+            <a href="{% url 'shop:product_detail' product.slug %}" 
+               class="featured-product-item">
+                <div class="featured-product-thumb">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" 
+                         alt="{{ product.name }}"
+                         class="featured-product-img">
+                    {% else %}
+                    <img src="{% static 'img/default-product.jpg' %}" 
+                         alt="Default product image"
+                         class="featured-product-img">
+                    {% endif %}
+                </div>
+                <div class="featured-product-info">
+                    <h6 class="product-title">{{ product.name|truncatechars:40 }}</h6>
+                    <div class="product-price">
+                        {% if product.discount_price %}
+                        <span class="current-price">${{ product.discount_price }}</span>
+                        <span class="original-price">${{ product.price }}</span>
+                        {% else %}
+                        <span class="current-price">${{ product.price }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}

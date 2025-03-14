@@ -1,328 +1,702 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ user.username }}'s Profile</title>
+    <title>{{ profile.user.username }} | NextGen Creators</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #ffb300;
-            --primary-dark: #ffb300;
-            --primary-light: #dbeafe;
-            --success: #22c55e;
-            --gray-50: #f8fafc;
-            --gray-100: #f1f5f9;
-            --gray-200: #e2e8f0;
-            --gray-300: #cbd5e1;
-            --gray-400: #94a3b8;
-            --gray-500: #64748b;
-            --gray-600: #475569;
-            --gray-700: #334155;
-            --gray-800: #1e293b;
-            --gray-900: #0f172a;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --primary: #ffbb00;
+            --primary-hover: #ffbb00;
+            --secondary: #42b72a;
+            --secondary-hover: #36a420;
+            --bg-light: #f0f2f5;
+            --text-dark: #050505;
+            --text-secondary: #65676b;
+            --border-color: #dddfe2;
+            --card-bg: #ffffff;
         }
 
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: var(--gray-100);
-            color: var(--gray-800);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
             line-height: 1.5;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
+        /* Header */
         .profile-header {
             position: relative;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+            background-color: var(--card-bg);
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .cover-container {
+            position: relative;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+            height: 350px;
         }
 
         .cover-photo {
             width: 100%;
-            height: 350px;
+            height: 100%;
             object-fit: cover;
-            border-radius: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .cover-edit-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .cover-edit-btn:hover {
+            background-color: rgba(255, 255, 255, 0.9);
         }
 
         .profile-info-container {
-            position: relative;
-            margin-top: -100px;
-            padding: 2rem;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--gray-200);
+            padding: 0 1rem 1rem;
         }
 
         .profile-picture-wrapper {
-            position: absolute;
-            top: -80px;
-            left: 50px;
+            position: relative;
+            margin-top: -100px;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+            display: inline-block;
         }
 
         .profile-picture {
-            width: 160px;
-            height: 160px;
+            width: 168px;
+            height: 168px;
             border-radius: 50%;
-            border: 4px solid white;
+            border: 4px solid var(--card-bg);
             object-fit: cover;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .online-status {
+        .profile-photo-edit {
             position: absolute;
             bottom: 10px;
             right: 10px;
-            width: 20px;
-            height: 20px;
+            background-color: var(--bg-light);
             border-radius: 50%;
-            background-color: var(--success);
-            border: 3px solid white;
-            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
-            animation: pulse 2s infinite;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        .profile-photo-edit:hover {
+            background-color: #e4e6e9;
         }
 
-        .profile-main {
-            margin-left: 200px;
-            padding-top: 1rem;
+        .online-indicator {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #31a24c;
+            border: 2px solid var(--card-bg);
+        }
+
+        .profile-name-section {
+            display: flex;
+            flex-direction: column;
+            margin-left: 190px;
+            margin-top: -70px;
         }
 
         .profile-name {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: var(--gray-900);
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-headline {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
             margin-bottom: 0.5rem;
         }
 
-        .profile-title {
-            color: var(--gray-600);
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
+        .profile-location {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
+        /* Profile Stats */
         .profile-stats {
-    display: flex;
-    flex-wrap: wrap; /* Allows wrapping on smaller screens */
-    gap: 1.5rem; /* Adjust the gap for better spacing on smaller screens */
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background: var(--gray-50);
-    border-radius: 12px;
-    border: 1px solid var(--gray-200);
-    justify-content: center; /* Centers items if wrapped */
-}
+            display: flex;
+            margin-top: 5px;
+            gap: 1.5rem;
+        }
 
-.stat-item {
-    text-align: center;
-    flex: 1; /* Ensures equal space allocation */
-    min-width: 120px; /* Prevents items from shrinking too small */
-}
-
-.stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 0.25rem;
-}
-
-.stat-label {
-    color: var(--gray-600);
-    font-size: 0.875rem;
-}
-
-.action-buttons {
-    display: flex;
-    flex-wrap: wrap; /* Enables wrapping for smaller screens */
-    gap: 1rem;
-    margin: 1.5rem 0;
-    justify-content: center; /* Centers buttons if wrapped */
-}
-
-@media (max-width: 768px) {
-    .profile-stats {
-        flex-direction: row; /* Ensures stats stay in a row */
-        gap: 1rem; /* Reduces gap for smaller screens */
-    }
-
-    .action-buttons {
-        flex-direction: row; /* Ensures buttons stay in a row */
-        gap: 0.75rem; /* Slightly smaller gaps for tighter layout */
-    }
-
-    .stat-value {
-        font-size: 1.25rem; /* Adjusts font size for mobile readability */
-    }
-
-    .stat-label {
-        font-size: 0.8rem; /* Adjusts label size */
-    }
-}
-
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
+        .stat-item {
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 5px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+            align-items: center;
+        }
+
+        .btn-action {
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
             border: none;
         }
 
-        .btn-primary {
+        .btn-primary-action {
             background-color: var(--primary);
             color: white;
         }
 
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
+        .btn-primary-action:hover {
+            background-color: var(--primary-hover);
+            color: white;
         }
 
-        .btn-outline {
-            border: 2px solid var(--gray-300);
-            background-color: transparent;
-            color: var(--gray-700);
+        .btn-following {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
         }
 
-        .btn-outline:hover {
-            border-color: var(--primary);
+        .btn-following:hover {
+            background-color: #e4e6e9;
+        }
+
+        .btn-secondary-action {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary-action:hover {
+            background-color: var(--secondary-hover);
+        }
+
+        .btn-outline-action {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .btn-outline-action:hover {
+            background-color: #e4e6e9;
+        }
+
+        /* Nav tabs */
+        .profile-nav {
+            display: flex;
+            border-top: 1px solid var(--border-color);
+            margin-top: 1rem;
+            padding-top: 5px;
+        }
+
+        .nav-item {
+            padding: 15px 16px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-item.active {
             color: var(--primary);
         }
 
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
         }
 
+        /* Main content layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2.5fr;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        /* Profile sidebar */
+        .profile-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Cards */
         .card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--gray-200);
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            border: none;
+            margin-bottom: 16px;
         }
 
         .card-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            padding: 0 0 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 12px;
         }
 
         .card-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            color: var(--gray-800);
+            color: var(--text-dark);
+            margin: 0;
         }
 
-        .card-icon {
-            width: 32px;
-            height: 32px;
+        .card-action {
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .card-action:hover {
+            text-decoration: underline;
+        }
+
+        /* About section */
+        .about-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .about-icon {
+            width: 36px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        /* Photos section */
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+
+        .photo-item {
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Friends section */
+        .friends-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .friend-item {
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        .friend-item:hover .friend-name {
+            text-decoration: underline;
+        }
+
+        .friend-img-container {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .friend-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .friend-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Post cards */
+        .post-card {
+            margin-bottom: 16px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        .post-author {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-author-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .post-author-name:hover {
+            text-decoration: underline;
+        }
+
+        .post-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .post-content {
+            margin-bottom: 12px;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 8px;
+        }
+
+        .post-action {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: var(--primary-light);
-            color: var(--primary);
-            border-radius: 8px;
+            padding: 6px 0;
+            border-radius: 4px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
         }
 
+        .post-action:hover {
+            background-color: var(--bg-light);
+        }
+
+        .post-action i {
+            margin-right: 6px;
+        }
+
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        /* Create post section */
+        .create-post {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 12px;
+        }
+
+        .post-input {
+            margin-left: 10px;
+            background-color: var(--bg-light);
+            border-radius: 20px;
+            padding: 8px 16px;
+            flex-grow: 1;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .post-input:hover {
+            background-color: #e4e6e9;
+        }
+
+        .post-options {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 16px;
+        }
+
+        .post-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .post-option:hover {
+            background-color: var(--bg-light);
+        }
+
+        .post-option i {
+            font-size: 1.25rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-sidebar {
+                order: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cover-container {
+                height: 250px;
+            }
+            
+            .profile-picture {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .profile-picture-wrapper {
+                margin-top: -75px;
+            }
+            
+            .profile-name-section {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+            
+            .profile-name {
+                font-size: 1.5rem;
+            }
+            
+            .profile-nav {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 5px;
+            }
+            
+            .nav-item {
+                padding: 10px 12px;
+            }
+            
+            .photos-grid, .friends-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Shop products section */
+        .products-section {
+            margin-top: 20px;
+        }
+
+        .product-item {
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+        }
+
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-img {
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .shop-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .shop-stat-item {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .shop-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Skill tags */
         .skill-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem;
+            gap: 8px;
+            margin-top: 10px;
         }
 
         .skill-tag {
-            background-color: var(--primary-light);
+            background-color: #e7f3ff;
             color: var(--primary);
-            padding: 0.5rem 1rem;
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             font-weight: 500;
-            transition: all 0.2s;
         }
 
-        .skill-tag:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-
+        /* Timeline for education/experience */
         .timeline-item {
             position: relative;
-            padding-left: 2rem;
-            padding-bottom: 1.5rem;
-            border-left: 2px solid var(--primary-light);
+            padding-left: 28px;
+            padding-bottom: 20px;
+            border-left: 2px solid #e4e6e9;
+        }
+
+        .timeline-item:last-child {
+            border-left: 2px solid transparent;
         }
 
         .timeline-item::before {
             content: '';
             position: absolute;
-            left: -0.5rem;
+            left: -7px;
             top: 0;
-            width: 1rem;
-            height: 1rem;
+            width: 12px;
+            height: 12px;
             background-color: var(--primary);
             border-radius: 50%;
-            border: 3px solid var(--primary-light);
         }
 
         .timeline-title {
             font-weight: 600;
-            color: var(--gray-900);
-            margin-bottom: 0.25rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
         }
 
         .timeline-subtitle {
-            color: var(--gray-600);
-            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
         }
 
-        @media (max-width: 768px) {
-            .profile-main {
-                margin-left: 0;
-                padding-top: 100px;
-                text-align: center;
-            }
+        .timeline-date {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
 
-            .profile-picture-wrapper {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-            .profile-stats {
-                flex-direction: column;
-                gap: 1.5rem;
+        /* Improved mobile responsiveness */
+        @media (max-width: 576px) {
+            .shop-stats {
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .action-buttons {
+                flex-wrap: wrap;
+            }
+
+            .btn-action {
+                flex: 1;
                 justify-content: center;
+            }
+
+            .profile-stats {
+                flex-wrap: wrap;
             }
         }
     </style>
-    <!-- Favicon -->
-    <link href="{% static 'img/favicon.ico' %}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -336,6 +710,8 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+   
+    
 </head>
   <body>
       <!-- Topbar Start -->
@@ -406,7 +782,7 @@
 <div class="container-fluid p-0">
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-2 py-lg-0 px-lg-5">
         <a href="{% url 'index' %}" class="navbar-brand d-block d-lg-none">
-            <h1 class="m-0 display-4 text-uppercase text-primary">SMART<span class="text-white font-weight-normal">MEDIA</span></h1>
+            <h1 class="m-0 display-4 text-uppercase text-primary">NextGen Creators<span class="text-white font-weight-normal">Creators</span></h1>
         </a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
@@ -420,16 +796,18 @@
                     <a href="{% url 'create_blog_post' %}" class="nav-item nav-link">Post</a>
                     <a href="{% url 'draft_posts' %}" class="nav-item nav-link">Draft Posts</a>  <!-- Draft Post Link -->
                     <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
-                {% else %}
-                    <a href="{% url 'login' %}" class="nav-item nav-link">Login or Signup</a>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dropdown</a>
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Shop</a>
                         <div class="dropdown-menu rounded-0 m-0">
-                            <a href="#" class="dropdown-item">More item 1</a>
-                            <a href="#" class="dropdown-item">More item 2</a>
-                            <a href="#" class="dropdown-item">More item 3</a>
+                            <!-- Replace # with your actual URLs 
+                            <a href="#" class="dropdown-item">Product List</a>-->
+                            
                         </div>
                     </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-item nav-link">Login or Signup</a>
+                    
+                    <a href="{% url 'shop:product_list' %}" class="nav-item nav-link">Shop</a>
                     <a href="#" class="nav-item nav-link">Contact</a>
                 {% endif %}
             </div>
@@ -443,418 +821,647 @@
     </nav>
 </div>
 <!-- Navbar End -->
-<div class="container">
+    <!-- Header/Navbar would go here -->
+    
+    <!-- Profile Header Section -->
     <div class="profile-header">
-        <img src="{{ profile.cover_photo.url }}" alt="Cover photo" class="cover-photo">
+        <div class="cover-container">
+            <img src="{{ profile.cover_photo.url }}" alt="Cover photo" class="cover-photo">
+            {% if is_own_profile %}
+            <button class="cover-edit-btn">
+                <i class="fas fa-camera"></i> Edit Cover Photo
+            </button>
+            {% endif %}
+        </div>
         
         <div class="profile-info-container">
             <div class="profile-picture-wrapper">
                 <img src="{{ profile.profile_picture.url }}" alt="Profile picture" class="profile-picture">
                 {% if user.is_active %}
-                <div class="online-status"></div>
+                <div class="online-indicator"></div>
+                {% endif %}
+                
+                {% if is_own_profile %}
+                <div class="profile-photo-edit">
+                    <i class="fas fa-camera"></i>
+                </div>
                 {% endif %}
             </div>
-
-            <div class="profile-main">
+            
+            <div class="profile-name-section">
                 <h1 class="profile-name">{{ profile.user.get_full_name|default:profile.user.username }}</h1>
-                <p class="profile-title">{{ profile.career }}</p>
+                {% if profile.career %}
+                <p class="profile-headline">{{ profile.career }}</p>
+                {% endif %}
+                
+                {% if profile.location %}
                 <p class="profile-location">
                     <i class="fas fa-map-marker-alt"></i> {{ profile.location }}
                 </p>
-            
+                {% endif %}
+                
                 <div class="profile-stats">
                     <div class="stat-item">
-                        <div class="stat-value">{{ profile.followers.count }}</div>
-                        <div class="stat-label">Followers</div>
+                        <span class="stat-value">{{ profile.follower_count }}</span> Followers
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value">{{ profile.user.following.count }}</div>
-                        <div class="stat-label">Following</div>
+                        <span class="stat-value">{{ profile.following_count }}</span> Following
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value">{{ post_count }}</div>
-                        <div class="stat-label">Posts</div>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <div class="stat-value">{{ profile.like_count }}</div>
-                        <div class="stat-label">Likes</div>
+                        <span class="stat-value">{{ post_count }}</span> Posts
                     </div>
                 </div>
-            
+                
                 <div class="action-buttons">
-                    {% if not is_own_profile %}
-                    <button class="btn btn-primary" onclick="toggleFollow(this)" data-username="{{ profile.user.username }}">
-                        <i class="fas {% if is_following %}fa-user-minus{% else %}fa-user-plus{% endif %}"></i>
-                        <span>{% if is_following %}Following{% else %}Follow{% endif %}</span>
-                    </button>
-                    <button class="btn btn-outline" onclick="toggleLike(this)" data-username="{{ profile.user.username }}">
-                        <i class="fas {% if is_liked %}fa-heart{% else %}fa-heart-o{% endif %}"></i>
-                        <span>Like</span>
-                    </button>
+                    {% if is_own_profile %}
+                        <a href="{% url 'profile_edit' %}" class="btn btn-action btn-outline-action">
+                            <i class="fas fa-pencil-alt"></i> Edit Profile
+                        </a>
+                        <a href="{% url 'shop:product_create' %}" class="btn btn-action btn-secondary-action">
+                            <i class="fas fa-plus"></i> Add Product
+                        </a>
                     {% else %}
-                    <a href="{% url 'profile_edit' %}" class="btn btn-primary">
-                        <i class="fas fa-edit"></i>
-                        Edit Profile
-                    </a>
+                        <button class="btn btn-action {% if is_following %}btn-following{% else %}btn-primary-action{% endif %}" 
+                                onclick="toggleFollow(this)" 
+                                data-username="{{ profile.user.username }}">
+                            <i class="fas {% if is_following %}fa-user-check{% else %}fa-user-plus{% endif %}"></i>
+                            <span>{% if is_following %}Following{% else %}Follow{% endif %}</span>
+                        </button>
+                        <button class="btn btn-action btn-outline-action" 
+                                onclick="toggleLike(this)" 
+                                data-username="{{ profile.user.username }}">
+                            <i class="fas {% if is_liked %}fa-heart{% else %}fa-heart{% endif %}"></i>
+                            <span>{% if is_liked %}Liked{% else %}Like{% endif %}</span>
+                        </button>
+                        <button class="btn btn-action btn-outline-action">
+                            <i class="fas fa-comment-alt"></i> Message
+                        </button>
                     {% endif %}
                 </div>
             </div>
             
-
-
-<!-- Featured News Section Start -->
-<div class="container-fluid pt-5 mb-3">
-    <div class="container">
-        <div class="section-title">
-            <h4 class="m-0 text-uppercase font-weight-bold">Featured News</h4>
-        </div>
-        <div class="owl-carousel news-carousel carousel-item-4 position-relative">
-            {% for post in posts %}
-                <div class="position-relative overflow-hidden" style="height: 300px;">
-                    {% if post.image %}
-                        <img class="img-fluid h-100" src="{{ post.image.url }}" style="object-fit: cover;" alt="{{ post.title }}">
-                    {% else %}
-                        <img class="img-fluid h-100" src="{% static 'img/default-featured.jpg' %}" style="object-fit: cover;" alt="Default featured image">
-                    {% endif %}
-                    <div class="overlay">
-                        <div class="mb-2">
-                            <a class="text-white" href="{{ post.get_absolute_url }}">
-                                <small>{{ post.created_on|date:"M d, Y" }}</small>
-                            </a>
-                        </div>
-                        <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="{{ post.get_absolute_url }}">
-                            {{ post.title|truncatewords:10|default:"No Title Available" }}
-                        </a>
-                    </div>
-                </div>
-            {% endfor %}
+            <!-- Navigation Tabs -->
+            <div class="profile-nav">
+                <div class="nav-item active"><a href="{% url 'index' %}" >Home</a></div>
+                <div class="nav-item">About</div>
+                <div class="nav-item">Friends</div>
+                <div class="nav-item">Photos</div>
+                <div class="nav-item">Shop</div>
+                <div class="nav-item">More</div>
+            </div>
         </div>
     </div>
-</div>
-<!-- Featured News Section End -->
-
-            <div class="content-grid">
+    
+    <!-- Main Content Section -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Left Sidebar -->
+            <div class="profile-sidebar">
                 <!-- About Card -->
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-icon">
-                            <i class="fas fa-user"></i>
-                        </div>
                         <h2 class="card-title">About</h2>
+                        {% if is_own_profile %}
+                        <span class="card-action">Edit</span>
+                        {% endif %}
                     </div>
+                    
+                    {% if profile.bio %}
                     <p>{{ profile.bio }}</p>
+                    {% endif %}
+                    
+                    <div class="about-section">
+                        {% if profile.career %}
+                        <div class="about-item">
+                            <div class="about-icon"><i class="fas fa-briefcase"></i></div>
+                            <div>Works as {{ profile.career }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if profile.education %}
+                        <div class="about-item">
+                            <div class="about-icon"><i class="fas fa-graduation-cap"></i></div>
+                            <div>Studied at {{ profile.education.0.institution }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if profile.location %}
+                        <div class="about-item">
+                            <div class="about-icon"><i class="fas fa-home"></i></div>
+                            <div>Lives in {{ profile.location }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if profile.nationality %}
+                        <div class="about-item">
+                            <div class="about-icon"><i class="fas fa-flag"></i></div>
+                            <div>From {{ profile.nationality }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if profile.website %}
+                        <div class="about-item">
+                            <div class="about-icon"><i class="fas fa-globe"></i></div>
+                            <div><a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a></div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if profile.linkedin %}
+                        <div class="about-item">
+                            <div class="about-icon"><i class="fab fa-linkedin"></i></div>
+                            <div><a href="{{ profile.linkedin }}" target="_blank">LinkedIn</a></div>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
-            
-            
-                <!-- Skills Card -->
+                
+                <!-- Photos Card -->
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-icon">
-                            <i class="fas fa-award"></i>
-                        </div>
-                        <h2 class="card-title">Skills</h2>
+                        <h2 class="card-title">Photos</h2>
+                        <span class="card-action">See All</span>
                     </div>
+                    
+                    <div class="photos-grid">
+                        {% for post in posts %}
+                            {% if post.image %}
+                            <div class="photo-item">
+                                <img src="{{ post.image.url }}" alt="Photo">
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Friends Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Friends</h2>
+                        <span class="card-action">See All</span>
+                    </div>
+                    
+                    <div class="friends-grid">
+                        {% for follower in profile.followers.all|slice:":6" %}
+                        <a href="{% url 'profile_detail' follower.username %}" class="friend-item">
+                            <div class="friend-img-container">
+                                <img src="{{ follower.profile.profile_picture.url }}" alt="{{ follower.username }}" class="friend-img">
+                            </div>
+                            <div class="friend-name">{{ follower.get_full_name|default:follower.username }}</div>
+                        </a>
+                        {% empty %}
+                        <p class="text-secondary">No friends to show</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Skills Card -->
+                {% if profile.skills %}
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Skills</h2>
+                        {% if is_own_profile %}
+                        <span class="card-action">Edit</span>
+                        {% endif %}
+                    </div>
+                    
                     <div class="skill-tags">
                         {% for skill in profile.skills %}
                         <span class="skill-tag">{{ skill }}</span>
                         {% endfor %}
                     </div>
                 </div>
+                {% endif %}
+            </div>
             
-                <!-- Education Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <h2 class="card-title">Education</h2>
+            <!-- Main Content -->
+            <div class="profile-content">
+                <!-- Create Post Card (only for logged in users) -->
+                {% if user.is_authenticated %}
+                <div class="card post-card">
+                    <div class="create-post">
+                        <img src="{{ user.profile.profile_picture.url }}" alt="{{ user.username }}" class="post-avatar">
+                        <div class="post-input">What's on your mind?</div>
                     </div>
+                    
+                    <div class="post-options">
+                        <div class="post-option">
+                            <i class="fas fa-images" style="color: #45bd62;"></i>
+                            Photo/Video
+                        </div>
+                        <div class="post-option">
+                            <i class="fas fa-user-tag" style="color: #1877f2;"></i>
+                            Tag People
+                        </div>
+                        <div class="post-option">
+                            <i class="fas fa-laugh" style="color: #f7b928;"></i>
+                            Feeling/Activity
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Blog Posts Header -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2 class="card-title">Blog Posts</h2>
+                        {% if is_own_profile %}
+                        <a href="{% url 'create_blog_post' %}" class="card-action">
+                            <i class="fas fa-plus"></i> Create Post
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Featured Blog Post (if available) -->
+                {% with featured_post=posts|dictsortreversed:"views"|first %}
+                {% if featured_post %}
+                <div class="card post-card mb-4">
+                    <div class="post-header d-flex justify-content-between align-items-start p-3">
+                        <div class="d-flex">
+                            <img src="{{ featured_post.writer.profile.profile_picture.url }}" alt="{{ featured_post.writer.username }}" class="post-avatar">
+                            <div class="post-author ms-2">
+                                <a href="{% url 'profile_detail' featured_post.writer.username %}" class="post-author-name">
+                                    {{ featured_post.writer.get_full_name|default:featured_post.writer.username }}
+                                </a>
+                                <span class="post-time">{{ featured_post.created_on|date:"F d, Y" }} at {{ featured_post.created_on|date:"g:i A" }}</span>
+                            </div>
+                        </div>
+                        <span class="badge bg-primary">Featured</span>
+                    </div>
+                    
+                    <div class="post-content p-3">
+                        <h3 class="mb-3">{{ featured_post.title }}</h3>
+                        {% if featured_post.subtitle %}
+                        <h5 class="text-muted mb-3">{{ featured_post.subtitle }}</h5>
+                        {% endif %}
+                        
+                        {% if featured_post.image %}
+                        <div class="featured-image-container mb-3">
+                            <img src="{{ featured_post.image.url }}" alt="{{ featured_post.title }}" class="post-image w-100 rounded">
+                        </div>
+                        {% endif %}
+                        
+                        <div class="post-excerpt mb-3">
+                            {{ featured_post.body|safe|truncatewords:100 }}
+                        </div>
+                        
+                        <div class="post-meta mb-3">
+                            {% if featured_post.category %}
+                            <span class="badge bg-secondary me-2">{{ featured_post.category.name }}</span>
+                            {% endif %}
+                            
+                            {% for tag in featured_post.tag_list %}
+                            <span class="badge bg-light text-dark me-1">#{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <a href="{% url 'post_detail' featured_post.slug %}" class="btn btn-primary">Read More</a>
+                    </div>
+                    
+                    <div class="post-stats p-3 border-top">
+                        <div class="row">
+                            <div class="col-4 text-center">
+                                <i class="fas fa-thumbs-up text-primary"></i> {{ featured_post.likes.count }} likes
+                            </div>
+                            <div class="col-4 text-center">
+                                <i class="fas fa-comment text-primary"></i> {{ featured_post.comments.count }} comments
+                            </div>
+                            <div class="col-4 text-center">
+                                <i class="fas fa-eye text-primary"></i> {{ featured_post.views }} views
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="post-actions">
+                        <div class="post-action">
+                            <i class="far fa-thumbs-up"></i> Like
+                        </div>
+                        <div class="post-action">
+                            <i class="far fa-comment"></i> Comment
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i> Share
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endwith %}
+                
+                <!-- Blog Posts Grid -->
+                <div class="row">
+                    {% for post in posts %}
+                    {% if forloop.first and posts|length > 1 %}
+                    {% else %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card post-card h-100">
+                            {% if post.image %}
+                            <div class="post-image-container" style="height: 200px; overflow: hidden;">
+                                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="card-img-top" style="object-fit: cover; height: 100%; width: 100%;">
+                            </div>
+                            {% endif %}
+                            
+                            <div class="card-body">
+                                <div class="post-header d-flex mb-3">
+                                    <img src="{{ post.writer.profile.profile_picture.url }}" alt="{{ post.writer.username }}" class="post-avatar">
+                                    <div class="post-author ms-2">
+                                        <a href="{% url 'profile_detail' post.writer.username %}" class="post-author-name">
+                                            {{ post.writer.get_full_name|default:post.writer.username }}
+                                        </a>
+                                        <span class="post-time">{{ post.created_on|date:"F d, Y" }}</span>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="card-title">{{ post.title }}</h5>
+                                {% if post.subtitle %}
+                                <h6 class="card-subtitle mb-2 text-muted">{{ post.subtitle }}</h6>
+                                {% endif %}
+                                
+                                <div class="card-text mb-3">{{ post.body|safe|striptags|truncatechars:120 }}</div>
+                                
+                                <div class="post-meta mb-3">
+                                    {% if post.category %}
+                                    <span class="badge bg-secondary me-2">{{ post.category.name }}</span>
+                                    {% endif %}
+                                    
+                                    {% for tag in post.tag_list|slice:":3" %}
+                                    <span class="badge bg-light text-dark me-1">#{{ tag }}</span>
+                                    {% endfor %}
+                                </div>
+                                
+                                <a href="{% url 'post_detail' post.slug %}" class="btn btn-sm btn-outline-primary">Read More</a>
+                            </div>
+                            
+                            <div class="card-footer bg-transparent">
+                                <div class="d-flex justify-content-between">
+                                    <small><i class="fas fa-thumbs-up text-primary"></i> {{ post.likes.count }}</small>
+                                    <small><i class="fas fa-comment text-primary"></i> {{ post.comments.count }}</small>
+                                    <small><i class="fas fa-eye text-primary"></i> {{ post.views }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% empty %}
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="p-4 text-center">
+                                <p class="text-secondary">No blog posts to show</p>
+                                {% if is_own_profile %}
+                                <a href="{% url 'create_blog_post' %}" class="btn btn-primary mt-2">Create Your First Blog Post</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                {% if posts|length > 6 %}
+                <div class="text-center mt-2 mb-4">
+                    <a href="{% url 'index' %}?author={{ profile.user.username }}" class="btn btn-outline-primary">View All Blog Posts</a>
+                </div>
+                {% endif %}
+                
+                <!-- Shop Section -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h2 class="card-title">Shop</h2>
+                        <a href="{% url 'shop:product_list' %}?seller={{ profile.user.username }}" class="card-action">See All</a>
+                    </div>
+                    
+                    <!-- Shop Stats -->
+                    <div class="shop-stats">
+                        <div class="shop-stat-item">
+                            <div class="shop-stat-value">{{ profile.user.products.count }}</div>
+                            <div class="shop-stat-label">Products</div>
+                        </div>
+                        <div class="shop-stat-item">
+                            <div class="shop-stat-value">{{ profile.user.orders.count }}</div>
+                            <div class="shop-stat-label">Sales</div>
+                        </div>
+                        <div class="shop-stat-item">
+                            <div class="shop-stat-value">${{ total_revenue|default:"0" }}</div>
+                            <div class="shop-stat-label">Revenue</div>
+                        </div>
+                        <div class="shop-stat-item">
+                            <div class="shop-stat-value">{{ active_listings|default:"0" }}</div>
+                            <div class="shop-stat-label">Active</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Products Grid -->
+                    <div class="products-section">
+                        <div class="row row-cols-1 row-cols-md-3 g-3">
+                            {% for product in profile.user.products.all|slice:":6" %}
+                            <div class="col">
+                                <div class="card product-item">
+                                    {% if product.image %}
+                                    <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+                                    {% else %}
+                                    <div class="product-img bg-light d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-box fa-2x text-secondary"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h6 class="card-title">{{ product.name }}</h6>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-primary fw-bold">${{ product.get_current_price }}</span>
+                                            <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-sm btn-primary">View</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="col-12">
+                                <p class="text-center text-secondary">No products to show</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Education & Experience Section -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h2 class="card-title">Education & Experience</h2>
+                        {% if is_own_profile %}
+                        <span class="card-action">Edit</span>
+                        {% endif %}
+                    </div>
+                    
+                    <h5 class="mt-3 mb-2">Education</h5>
                     {% for edu in profile.education %}
                     <div class="timeline-item">
                         <h3 class="timeline-title">{{ edu.degree }}</h3>
                         <p class="timeline-subtitle">{{ edu.institution }}</p>
-                        <p class="timeline-subtitle">{{ edu.year }}</p>
+                        <p class="timeline-date">{{ edu.year }}</p>
                     </div>
+                    {% empty %}
+                    <p class="text-secondary">No education details added</p>
+                    {% endfor %}
+                    
+                    <h5 class="mt-4 mb-2">Work Experience</h5>
+                    {% for job in profile.work_experience %}
+                    <div class="timeline-item">
+                        <h3 class="timeline-title">{{ job.title }}</h3>
+                        <p class="timeline-subtitle">{{ job.company }}</p>
+                        <p class="timeline-date">{{ job.start_date }} - {{ job.end_date|default:"Present" }}</p>
+                        {% if job.description %}
+                        <p>{{ job.description }}</p>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <p class="text-secondary">No work experience added</p>
                     {% endfor %}
                 </div>
-            
-                <!-- Projects Card -->
+                
+                <!-- Projects Section -->
                 {% if profile.projects %}
-                <div class="card">
-                    <h2 class="card-title">
-                        <i class="fas fa-folder"></i>
-                        Projects
-                    </h2>
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h2 class="card-title">Projects</h2>
+                        {% if is_own_profile %}
+                        <span class="card-action">Edit</span>
+                        {% endif %}
+                    </div>
+                    
                     {% for project in profile.projects %}
-                    <div class="timeline-item">
+                    <div class="project-item mb-3 pb-3 border-bottom">
                         <h3 class="timeline-title">{{ project.name }}</h3>
-                        <p class="timeline-subtitle">{{ project.description }}</p>
+                        <p>{{ project.description }}</p>
                         {% if project.url %}
-                        <a href="{{ project.url }}" class="social-link" target="_blank" rel="noopener noreferrer">
-                            View Project <i class="fas fa-external-link-alt"></i>
+                        <a href="{{ project.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> View Project
                         </a>
                         {% endif %}
                     </div>
                     {% endfor %}
                 </div>
                 {% endif %}
-            
-                <!-- Recommendations Card -->
-                {% if profile.recommendations %}
-                <div class="card">
-                    <h2 class="card-title">
-                        <i class="fas fa-thumbs-up"></i>
-                        Recommendations
-                    </h2>
-                    {% for rec in profile.recommendations %}
-                    <div class="recommendation">
-                        <p class="recommendation-text">"{{ rec.text }}"</p>
-                        <p class="recommendation-author">- {{ rec.author }}</p>
-                        <p class="recommendation-title">{{ rec.title }}</p>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            
-                <!-- Work Experience Card -->
-                {% if profile.work_experience %}
-                <div class="card">
-                    <h2 class="card-title">
-                        <i class="fas fa-briefcase"></i>
-                        Work Experience
-                    </h2>
-                    {% for job in profile.work_experience %}
-                    <div class="timeline-item">
-                        <h3 class="timeline-title">{{ job.title }}</h3>
-                        <p class="timeline-subtitle">{{ job.company }}</p>
-                        <p class="timeline-subtitle">{{ job.start_date }} - {{ job.end_date }}</p>
-                        {% if job.description %}
-                        <p class="timeline-description">{{ job.description }}</p>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
             </div>
-            
-    </div>
-</div>
-<!-- Featured News Section End -->
-
-   <!-- Footer Start -->
-   <div class="container-fluid bg-dark pt-5 px-sm-3 px-md-5 mt-5">
-    <div class="row py-4">
-        <div class="col-lg-3 col-md-6 mb-5">
-            <h5 class="mb-4 text-white text-uppercase font-weight-bold">Get In Touch</h5>
-            <p class="font-weight-medium"><i class="fa fa-map-marker-alt mr-2"></i>Barnesville, Montserrado County</p>
-            <p class="font-weight-medium"><i class="fa fa-phone-alt mr-2"></i>+231-778187295</p>
-            <p class="font-weight-medium"><i class="fa fa-envelope mr-2"></i>edigitalnetwork842@gmail.com</p>
-            <h6 class="mt-4 mb-3 text-white text-uppercase font-weight-bold">Follow Us</h6>
-            <div class="d-flex justify-content-start">
-                <a class="btn btn-lg btn-secondary btn-lg-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-                <a class="btn btn-lg btn-secondary btn-lg-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-                <a class="btn btn-lg btn-secondary btn-lg-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-                <a class="btn btn-lg btn-secondary btn-lg-square mr-2" href="#"><i class="fab fa-instagram"></i></a>
-                <a class="btn btn-lg btn-secondary btn-lg-square" href="#"><i class="fab fa-youtube"></i></a>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-5">
-          <h5 class="mb-4 text-white text-uppercase font-weight-bold">Popular News</h5>
-          {% for post in recent_posts %}
-              <div class="mb-3">
-                  <div class="mb-2">
-                     
-                      <a class="text-body" href="{% url 'blog_detail' post.slug %}"><small>{{ post.created_on|date:"M d, Y" }}</small></a>
-                  </div>
-                  <a class="small text-body text-uppercase font-weight-medium" href="{% url 'blog_detail' post.slug %}">{{ post.title|truncatechars:50 }}</a>
-              </div>
-          {% empty %}
-              <p>No recent posts available.</p>
-          {% endfor %}
-      </div>
-      
-      <div class="col-lg-3 col-md-6 mb-5">
-        <h5 class="mb-4 text-white text-uppercase font-weight-bold">Categories</h5>
-        <div class="m-n1">
-            {% for category in categories %}
-                <!-- The URL 'category_detail' should be defined in your urls.py to handle category views -->
-                <a href="{% url 'category_detail' category.slug %}" class="btn btn-sm btn-secondary m-1">{{ category.name }}</a>
-            {% empty %}
-                <p>No categories found.</p>
-            {% endfor %}
         </div>
     </div>
     
-    </div>
-</div>
-<div class="container-fluid py-4 px-sm-3 px-md-5" style="background: #111111;">
-    <p class="m-0 text-center">&copy; <a href="#">SMART MEDIA</a>. All Rights Reserved. 
-
-<!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-Design by <a href="https://www.edigitalnetwork.tech">E-DIGITAL NETWORK</a></p>
-</div>
-<!-- Footer End -->
-
-
-<!-- Back to Top -->
-<a href="#" class="btn btn-primary btn-square back-to-top"><i class="fa fa-arrow-up"></i></a>
-
-
-<!-- JavaScript Libraries -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <!-- Bootstrap core JS-->
+    <!-- Footer would go here -->
+    
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
-
+    
+    <script>
+        function toggleFollow(button) {
+            const username = button.dataset.username;
+            fetch(`/profile/${username}/follow/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                
+                const icon = button.querySelector('i');
+                const text = button.querySelector('span');
+                
+                if (data.is_following) {
+                    button.classList.remove('btn-primary-action');
+                    button.classList.add('btn-following');
+                    icon.classList.remove('fa-user-plus');
+                    icon.classList.add('fa-user-check');
+                    text.textContent = 'Following';
+                } else {
+                    button.classList.remove('btn-following');
+                    button.classList.add('btn-primary-action');
+                    icon.classList.remove('fa-user-check');
+                    icon.classList.add('fa-user-plus');
+                    text.textContent = 'Follow';
+                }
+                
+                // Update follower count in the stats section
+                document.querySelectorAll('.stat-item').forEach(item => {
+                    if (item.textContent.includes('Followers')) {
+                        item.querySelector('.stat-value').textContent = data.follower_count;
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        function toggleLike(button) {
+            const username = button.dataset.username;
+            fetch(`/profile/${username}/like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                
+                const icon = button.querySelector('i');
+                const text = button.querySelector('span');
+                
+                if (data.is_liked) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    text.textContent = 'Liked';
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    text.textContent = 'Like';
+                }
+                
+                // Update like count in the stats section
+                document.querySelectorAll('.stat-item').forEach(item => {
+                    if (item.textContent.includes('Likes')) {
+                        item.querySelector('.stat-value').textContent = data.like_count;
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Tab navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Here you would handle showing/hiding different sections
+                // Based on which tab is clicked
+                // This would likely involve AJAX calls to load different content
+            });
+        });
+    </script>
 </body>
-<!-- Include Owl Carousel CSS and JS -->
-<link rel="stylesheet" href="{% static 'path/to/owl.carousel.min.css' %}">
-<link rel="stylesheet" href="{% static 'path/to/owl.theme.default.min.css' %}">
-
-<script src="{% static 'path/to/jquery.min.js' %}"></script>
-<script src="{% static 'path/to/owl.carousel.min.js' %}"></script>
-<script>
-    $(document).ready(function(){
-        $(".owl-carousel").owlCarousel({
-            loop: true,
-            margin: 10,
-            nav: true,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 1
-                },
-                1000: {
-                    items: 1
-                }
-            }
-        });
-    });
-</script>
-<script>
-    function toggleFollow(button) {
-        const username = button.dataset.username;
-        fetch(`/profile/${username}/follow/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-            
-            const icon = button.querySelector('i');
-            const text = button.querySelector('span');
-            
-            button.classList.toggle('following');
-            icon.classList.toggle('fa-user-plus');
-            icon.classList.toggle('fa-user-minus');
-            text.textContent = data.is_following ? 'Following' : 'Follow';
-            
-            // Update follower count
-            document.querySelector('.stat-value').textContent = data.follower_count;
-        });
-    }
-    
-    function toggleLike(button) {
-        const username = button.dataset.username;
-        fetch(`/profile/${username}/like/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-            
-            const icon = button.querySelector('i');
-            const count = button.querySelector('.like-count');
-            
-            button.classList.toggle('liked');
-            icon.classList.toggle('fa-heart-o');
-            icon.classList.toggle('fa-heart');
-            count.textContent = data.like_count;
-        });
-    }
-    
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-    </script>
-<script src="{% static 'lib/easing/easing.min.js' %}"></script>
-<script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
-<script>
-    document.querySelectorAll('.reply-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.getElementById('parent_id').value = this.getAttribute('data-id');
-            window.scrollTo(0, document.body.scrollHeight);
-        });
-    });
-    </script>
-<!-- Template Javascript -->
-<script src="{% static 'js/main.js' %}"></script>
-<script>
- document.addEventListener("DOMContentLoaded", function() {
-    var cookieBanner = document.getElementById("cookie-banner");
-    var acceptButton = document.getElementById("accept-cookies");
-
-    if (!getCookie("cookieConsent")) {
-        cookieBanner.style.display = "block";
-    }
-
-    acceptButton.addEventListener("click", function() {
-        setCookie("cookieConsent", "true", 365);
-        cookieBanner.style.display = "none";
-    });
-
-    function setCookie(name, value, days) {
-        var expires = "";
-        if (days) {
-            var date = new Date();
-            date.setTime(date.getTime() + (days*24*60*60*1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-    }
-
-    function getCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0;i < ca.length;i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
-    }
-});
-
-
-
-</script>
-
-
 </html>
