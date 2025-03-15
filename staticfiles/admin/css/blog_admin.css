@@ -1,0 +1,189 @@
+/* Blog Admin Custom Styles */
+
+/* Status badges styling */
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+}
+
+.badge-success {
+    color: #fff;
+    background-color: #28a745;
+}
+
+.badge-secondary {
+    color: #fff;
+    background-color: #6c757d;
+}
+
+.badge-warning {
+    color: #212529;
+    background-color: #ffc107;
+}
+
+.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+
+/* Featured post indicator */
+.featured-icon {
+    color: #ffc107;
+    margin-left: 5px;
+}
+
+/* Preview links */
+a.preview-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a.preview-link:hover {
+    text-decoration: underline;
+}
+
+/* Table improvements */
+#result_list th {
+    background-color: #f8f9fa;
+}
+
+#result_list tr:hover {
+    background-color: rgba(0, 123, 255, 0.04);
+}
+
+/* Profile picture thumbnail */
+.profile-thumbnail {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ddd;
+}
+
+/* Dashboard widgets */
+.dashboard-widget {
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+.dashboard-widget h3 {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.dashboard-widget .stat-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+.dashboard-widget .stat-label {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+/* Stat cards for dashboard */
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.stat-card-title {
+    font-size: 14px;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.stat-card-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #343a40;
+}
+
+/* Improves the look of filter sidebar */
+.module.filtered h2 {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* General form improvements */
+.form-row {
+    padding: 8px 12px;
+}
+
+.form-row:not(.field-image) label {
+    font-weight: 500;
+}
+
+.form-row textarea {
+    font-family: monospace;
+}
+
+/* JSON field styling */
+textarea.json-field {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+}
+
+/* Better error display */
+.errorlist {
+    color: #dc3545;
+    font-weight: 500;
+    padding-left: 20px;
+}
+
+/* Tags styling */
+.tag {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    background-color: #e9ecef;
+    color: #495057;
+    margin-right: 3px;
+    margin-bottom: 3px;
+}
+
+/* Comment approval styling */
+.approval-status {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.approval-status.approved {
+    background-color: #28a745;
+}
+
+.approval-status.unapproved {
+    background-color: #dc3545;
+}

@@ -72,6 +72,8 @@ LOGGING = {
     },
 }
 WHITENOISE_AUTOREFRESH = True 
+
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 # Whitenoise Configuration
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 

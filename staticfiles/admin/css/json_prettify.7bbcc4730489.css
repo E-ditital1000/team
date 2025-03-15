@@ -1,0 +1,142 @@
+/* JSON Prettify Styles for Admin Interface */
+
+/* JSON field textarea customization */
+textarea.json-prettify {
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    tab-size: 2 !important;
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    padding: 10px !important;
+    resize: vertical !important;
+    width: 100% !important;
+    max-width: 800px !important;
+    min-height: 150px !important;
+}
+
+/* JSON display formatting for read-only */
+pre.json-display {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 10px;
+    tab-size: 2;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+    max-width: 800px;
+}
+
+/* JSON syntax highlighting */
+.json-key {
+    color: #d63384;  /* Pink for keys */
+}
+
+.json-string {
+    color: #198754;  /* Green for strings */
+}
+
+.json-number {
+    color: #0d6efd;  /* Blue for numbers */
+}
+
+.json-boolean {
+    color: #dc3545;  /* Red for booleans */
+}
+
+.json-null {
+    color: #6c757d;  /* Gray for null */
+}
+
+.json-bracket, .json-brace {
+    color: #6f42c1;  /* Purple for brackets/braces */
+    font-weight: bold;
+}
+
+.json-comma, .json-colon {
+    color: #343a40;  /* Dark gray for punctuation */
+}
+
+/* Improve JSON field responsiveness on smaller screens */
+@media (max-width: 767px) {
+    textarea.json-prettify,
+    pre.json-display {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* JSON field validation error styles */
+textarea.json-prettify.error {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* JSON field with valid content */
+textarea.json-prettify.valid {
+    border-color: #198754 !important;
+}
+
+/* Add JSON form field instructions */
+.json-field-help {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #6c757d;
+    max-width: 800px;
+}
+
+/* JSON field formatting toolbar */
+.json-toolbar {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+    max-width: 800px;
+}
+
+.json-toolbar button {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #495057;
+}
+
+.json-toolbar button:hover {
+    background-color: #e9ecef;
+}
+
+.json-toolbar button:active {
+    background-color: #dee2e6;
+}
+
+/* Tooltip for JSON validation errors */
+.json-validation-error {
+    position: relative;
+    display: inline-block;
+    background-color: #dc3545;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.json-validation-error:before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 10px;
+    border-width: 0 5px 5px;
+    border-style: solid;
+    border-color: transparent transparent #dc3545;
+}
