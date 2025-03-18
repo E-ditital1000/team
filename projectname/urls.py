@@ -17,6 +17,7 @@ urlpatterns = [
     # Main applications
     path('', include('bloger.urls')),
     path('shop/', include('shop.urls', namespace='shop')),  # Shop app URLs
+    path('messaging/', include('messaging.urls', namespace='messaging')),  # Messaging app URLs
     
     # CKEditor - ensure this is included
     path("ckeditor5/", include('django_ckeditor_5.urls')),

@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
     'shop.apps.ShopConfig',  # Add this line
+    'messaging.apps.MessagingConfig',
     'django_ckeditor_5',
   
 ]

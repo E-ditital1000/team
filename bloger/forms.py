@@ -528,3 +528,12 @@ class CategoryForm(forms.ModelForm):
         if len(name.strip()) < 2:
             raise ValidationError(_('Category name must be at least 2 characters long.'))
         return name
+    
+
+
+
+
+
+
+
+
