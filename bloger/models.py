@@ -431,6 +431,16 @@ class BlogPost(models.Model):
     @property
     def tag_list(self):
         return [tag.strip() for tag in self.tags.split(',') if tag.strip()]
+    
+    def toggle_like(self, user):
+        """Add or remove a like for the post from a user."""
+        if user in self.likes.all():
+            self.likes.remove(user)
+            liked = False
+        else:
+            self.likes.add(user)
+            liked = True
+        return liked
 
 class Comment(models.Model):
     post = models.ForeignKey(

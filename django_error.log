@@ -1,640 +1,136 @@
-ERROR 2025-03-13 01:46:41,019 log Internal Server Error: /blog/comment/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/
+ERROR 2025-03-15 19:03:21,088 log Internal Server Error: /
 Traceback (most recent call last):
   File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
                ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
-    return view_func(request, *args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
-    return func(request, *args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 866, in comment_post
-    if form.is_valid():
-       ^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\forms.py", line 197, in is_valid
-    return self.is_bound and not self.errors
-                                 ^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\forms.py", line 192, in errors
-    self.full_clean()
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\forms.py", line 327, in full_clean
-    self._clean_fields()
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\forms.py", line 342, in _clean_fields
-    value = getattr(self, "clean_%s" % name)()
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\forms.py", line 35, in clean_body
-    body = bleach.clean(
-           ^^^^^^^^^^^^^
-TypeError: clean() got an unexpected keyword argument 'styles'
-ERROR 2025-03-13 01:46:41,085 basehttp "POST /blog/comment/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/ HTTP/1.1" 500 109805
-ERROR 2025-03-13 01:56:32,032 log Internal Server Error: /blog/comment/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
-    return view_func(request, *args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
-    return func(request, *args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 866, in comment_post
-    if form.is_valid():
-       ^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\forms.py", line 197, in is_valid
-    return self.is_bound and not self.errors
-                                 ^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\forms.py", line 192, in errors
-    self.full_clean()
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\forms.py", line 327, in full_clean
-    self._clean_fields()
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\forms.py", line 342, in _clean_fields
-    value = getattr(self, "clean_%s" % name)()
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\forms.py", line 35, in clean_body
-    body = bleach.clean(
-           ^^^^^^^^^^^^^
-TypeError: clean() got an unexpected keyword argument 'styles'
-ERROR 2025-03-13 01:56:32,157 basehttp "POST /blog/comment/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/ HTTP/1.1" 500 109853
-ERROR 2025-03-13 02:17:04,509 log Internal Server Error: /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 502, in parse
-    compile_func = self.tags[command]
-                   ~~~~~~~~~^^^^^^^^^
-KeyError: 'endblock'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 988, in post_detail_view
-    return render(request, 'blog_detail.html', context)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\shortcuts.py", line 25, in render
-    content = loader.render_to_string(template_name, context, request, using=using)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
-    template = get_template(template_name, using=using)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 15, in get_template
-    return engine.get_template(template_name)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
-    return Template(self.engine.get_template(template_name), self)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 177, in get_template
-    template, origin = self.find_template(template_name)
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 159, in find_template
-    template = loader.get_template(name, skip=skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
-    template = super().get_template(template_name, skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
-    return Template(
-           ^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 154, in __init__
-    self.nodelist = self.compile_nodelist()
-                    ^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
-    return parser.parse()
-           ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
-    nodelist = parser.parse()
-               ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
-    nodelist = parser.parse(("endblock",))
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\defaulttags.py", line 861, in do_for
-    nodelist_loop = parser.parse(
-                    ^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 504, in parse
-    self.invalid_block_tag(token, command, parse_until)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 555, in invalid_block_tag
-    raise self.error(
-django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 975: 'endblock', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
-ERROR 2025-03-13 02:17:04,595 basehttp "GET /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/ HTTP/1.1" 500 225782
-ERROR 2025-03-13 02:18:41,087 log Internal Server Error: /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 502, in parse
-    compile_func = self.tags[command]
-                   ~~~~~~~~~^^^^^^^^^
-KeyError: 'endblock'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 988, in post_detail_view
-    return render(request, 'blog_detail.html', context)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\shortcuts.py", line 25, in render
-    content = loader.render_to_string(template_name, context, request, using=using)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
-    template = get_template(template_name, using=using)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 15, in get_template
-    return engine.get_template(template_name)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
-    return Template(self.engine.get_template(template_name), self)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 177, in get_template
-    template, origin = self.find_template(template_name)
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 159, in find_template
-    template = loader.get_template(name, skip=skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
-    template = super().get_template(template_name, skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
-    return Template(
-           ^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 154, in __init__
-    self.nodelist = self.compile_nodelist()
-                    ^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
-    return parser.parse()
-           ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
-    nodelist = parser.parse()
-               ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
-    nodelist = parser.parse(("endblock",))
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\defaulttags.py", line 861, in do_for
-    nodelist_loop = parser.parse(
-                    ^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 504, in parse
-    self.invalid_block_tag(token, command, parse_until)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 555, in invalid_block_tag
-    raise self.error(
-django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 1014: 'endblock', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
-ERROR 2025-03-13 02:18:41,213 basehttp "GET /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/ HTTP/1.1" 500 225923
-ERROR 2025-03-13 02:19:10,063 log Internal Server Error: /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 502, in parse
-    compile_func = self.tags[command]
-                   ~~~~~~~~~^^^^^^^^^
-KeyError: 'endblock'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 988, in post_detail_view
-    return render(request, 'blog_detail.html', context)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\shortcuts.py", line 25, in render
-    content = loader.render_to_string(template_name, context, request, using=using)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
-    template = get_template(template_name, using=using)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 15, in get_template
-    return engine.get_template(template_name)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
-    return Template(self.engine.get_template(template_name), self)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 177, in get_template
-    template, origin = self.find_template(template_name)
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 159, in find_template
-    template = loader.get_template(name, skip=skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
-    template = super().get_template(template_name, skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
-    return Template(
-           ^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 154, in __init__
-    self.nodelist = self.compile_nodelist()
-                    ^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
-    return parser.parse()
-           ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
-    nodelist = parser.parse()
-               ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
-    nodelist = parser.parse(("endblock",))
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\defaulttags.py", line 861, in do_for
-    nodelist_loop = parser.parse(
-                    ^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 504, in parse
-    self.invalid_block_tag(token, command, parse_until)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 555, in invalid_block_tag
-    raise self.error(
-django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 1204: 'endblock', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
-ERROR 2025-03-13 02:19:10,084 basehttp "GET /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/ HTTP/1.1" 500 221788
-ERROR 2025-03-13 02:20:37,736 log Internal Server Error: /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 502, in parse
-    compile_func = self.tags[command]
-                   ~~~~~~~~~^^^^^^^^^
-KeyError: 'endblock'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 988, in post_detail_view
-    return render(request, 'blog_detail.html', context)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\shortcuts.py", line 25, in render
-    content = loader.render_to_string(template_name, context, request, using=using)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
-    template = get_template(template_name, using=using)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 15, in get_template
-    return engine.get_template(template_name)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
-    return Template(self.engine.get_template(template_name), self)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 177, in get_template
-    template, origin = self.find_template(template_name)
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 159, in find_template
-    template = loader.get_template(name, skip=skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
-    template = super().get_template(template_name, skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
-    return Template(
-           ^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 154, in __init__
-    self.nodelist = self.compile_nodelist()
-                    ^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
-    return parser.parse()
-           ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
-    nodelist = parser.parse()
-               ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
-    nodelist = parser.parse(("endblock",))
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\defaulttags.py", line 861, in do_for
-    nodelist_loop = parser.parse(
-                    ^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 504, in parse
-    self.invalid_block_tag(token, command, parse_until)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 555, in invalid_block_tag
-    raise self.error(
-django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 1014: 'endblock', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
-ERROR 2025-03-13 02:20:37,801 basehttp "GET /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/ HTTP/1.1" 500 226054
-ERROR 2025-03-13 02:35:05,824 log Internal Server Error: /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 502, in parse
-    compile_func = self.tags[command]
-                   ~~~~~~~~~^^^^^^^^^
-KeyError: 'endblock'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 988, in post_detail_view
-    return render(request, 'blog_detail.html', context)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\shortcuts.py", line 25, in render
-    content = loader.render_to_string(template_name, context, request, using=using)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
-    template = get_template(template_name, using=using)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 15, in get_template
-    return engine.get_template(template_name)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
-    return Template(self.engine.get_template(template_name), self)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 177, in get_template
-    template, origin = self.find_template(template_name)
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 159, in find_template
-    template = loader.get_template(name, skip=skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
-    template = super().get_template(template_name, skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
-    return Template(
-           ^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 154, in __init__
-    self.nodelist = self.compile_nodelist()
-                    ^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
-    return parser.parse()
-           ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
-    nodelist = parser.parse()
-               ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
-    nodelist = parser.parse(("endblock",))
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\defaulttags.py", line 861, in do_for
-    nodelist_loop = parser.parse(
-                    ^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 504, in parse
-    self.invalid_block_tag(token, command, parse_until)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 555, in invalid_block_tag
-    raise self.error(
-django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 1206: 'endblock', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
-ERROR 2025-03-13 02:35:05,866 basehttp "GET /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/ HTTP/1.1" 500 221651
-ERROR 2025-03-13 02:38:04,112 log Internal Server Error: /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 502, in parse
-    compile_func = self.tags[command]
-                   ~~~~~~~~~^^^^^^^^^
-KeyError: 'endblock'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 988, in post_detail_view
-    return render(request, 'blog_detail.html', context)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\shortcuts.py", line 25, in render
-    content = loader.render_to_string(template_name, context, request, using=using)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
-    template = get_template(template_name, using=using)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 15, in get_template
-    return engine.get_template(template_name)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
-    return Template(self.engine.get_template(template_name), self)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 177, in get_template
-    template, origin = self.find_template(template_name)
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 159, in find_template
-    template = loader.get_template(name, skip=skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
-    template = super().get_template(template_name, skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
-    return Template(
-           ^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 154, in __init__
-    self.nodelist = self.compile_nodelist()
-                    ^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
-    return parser.parse()
-           ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
-    nodelist = parser.parse()
-               ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
-    nodelist = parser.parse(("endblock",))
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\defaulttags.py", line 861, in do_for
-    nodelist_loop = parser.parse(
-                    ^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 504, in parse
-    self.invalid_block_tag(token, command, parse_until)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 555, in invalid_block_tag
-    raise self.error(
-django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 1206: 'endblock', expected 'empty' or 'endfor'. Did you forget to register or load this tag?
-ERROR 2025-03-13 02:38:04,176 basehttp "GET /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/ HTTP/1.1" 500 221366
-ERROR 2025-03-13 02:55:18,077 log Internal Server Error: /admin/auth/user/1/change/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\admin\options.py", line 716, in wrapper
-    return self.admin_site.admin_view(view)(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
-    result = _process_exception(request, e)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
-    response = view_func(request, *args, **kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
-    response = view_func(request, *args, **kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\admin\sites.py", line 240, in inner
-    return view(request, *args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\admin\options.py", line 1948, in change_view
-    return self.changeform_view(request, object_id, form_url, extra_context)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
-    return bound_method(*args, **kwargs)
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\utils\decorators.py", line 188, in _view_wrapper
-    result = _process_exception(request, e)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\utils\decorators.py", line 186, in _view_wrapper
-    response = view_func(request, *args, **kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\admin\options.py", line 1804, in changeform_view
-    return self._changeform_view(request, object_id, form_url, extra_context)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\admin\options.py", line 1856, in _changeform_view
-    self.save_related(request, form, formsets, not add)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\admin\options.py", line 1287, in save_related
-    self.save_formset(request, form, formset, change=change)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\admin\options.py", line 1275, in save_formset
-    formset.save()
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\models.py", line 794, in save
-    return self.save_existing_objects(commit) + self.save_new_objects(commit)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\models.py", line 943, in save_existing_objects
-    saved_instances.append(self.save_existing(form, obj, commit=commit))
-                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\models.py", line 771, in save_existing
-    return form.save(commit=commit)
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\templatetags\static.py", line 116, in render
+    url = self.url(context)
+          ^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\templatetags\static.py", line 113, in url
+    return self.handle_simple(path)
            ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\forms\models.py", line 552, in save
-    self.instance.save()
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\db\models\base.py", line 822, in save
-    self.save_base(
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\db\models\base.py", line 909, in save_base
-    updated = self._save_table(
-              ^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\db\models\base.py", line 1031, in _save_table
-    values = [
-             ^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\db\models\base.py", line 1035, in <listcomp>
-    (getattr(self, f.attname) if raw else f.pre_save(self, False)),
-                                          ^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\db\models\fields\files.py", line 317, in pre_save
-    file.save(file.name, file.file, save=False)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\db\models\fields\files.py", line 93, in save
-    self.name = self.storage.save(name, content, max_length=self.field.max_length)
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\files\storage\base.py", line 49, in save
-    name = self._save(name, content)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\cloudinary_storage\storage.py", line 68, in _save
-    response = self._upload(name, content)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\cloudinary_storage\storage.py", line 62, in _upload
-    return cloudinary.uploader.upload(content, **options)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\cloudinary\uploader.py", line 50, in upload
-    return call_cacheable_api("upload", params, file=file, **options)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\cloudinary\uploader.py", line 467, in call_cacheable_api
-    result = call_api(action, params, http_headers, return_error, unsigned, file, timeout, **options)
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\cloudinary\uploader.py", line 557, in call_api
-    raise Error(result["error"]["message"])
-cloudinary.exceptions.Error: File size too large. Got 11325542. Maximum is 10485760. Upgrade your plan to enjoy higher limits https://www.cloudinary.com/pricing/upgrades/file-limit
-ERROR 2025-03-13 02:55:18,184 basehttp "POST /admin/auth/user/1/change/ HTTP/1.1" 500 241814
-ERROR 2025-03-13 19:23:09,265 log Internal Server Error: /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\templatetags\static.py", line 129, in handle_simple
+    return staticfiles_storage.url(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\staticfiles\storage.py", line 203, in url
+    return self._url(self.stored_name, name, force)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\staticfiles\storage.py", line 182, in _url
+    hashed_name = hashed_name_func(*args)
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\staticfiles\storage.py", line 516, in stored_name
+    raise ValueError(
+ValueError: Missing staticfiles manifest entry for 'lib/owlcarousel/assets/owl.carousel.min.css'
+ERROR 2025-03-15 19:03:21,096 basehttp "GET / HTTP/1.1" 500 145
+ERROR 2025-03-15 19:05:17,984 log Internal Server Error: /
 Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 502, in parse
-    compile_func = self.tags[command]
-                   ~~~~~~~~~^^^^^^^^^
-KeyError: 'endif'
-
-During handling of the above exception, another exception occurred:
-
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\templatetags\static.py", line 116, in render
+    url = self.url(context)
+          ^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\templatetags\static.py", line 113, in url
+    return self.handle_simple(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\templatetags\static.py", line 129, in handle_simple
+    return staticfiles_storage.url(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\staticfiles\storage.py", line 203, in url
+    return self._url(self.stored_name, name, force)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\staticfiles\storage.py", line 182, in _url
+    hashed_name = hashed_name_func(*args)
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\staticfiles\storage.py", line 516, in stored_name
+    raise ValueError(
+ValueError: Missing staticfiles manifest entry for 'lib/owlcarousel/assets/owl.carousel.min.css'
+ERROR 2025-03-15 19:05:17,995 basehttp "GET / HTTP/1.1" 500 145
+ERROR 2025-03-17 11:32:28,223 log Internal Server Error: /like-post/
 Traceback (most recent call last):
   File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
     response = get_response(request)
@@ -642,16 +138,110 @@ Traceback (most recent call last):
   File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
     response = wrapped_callback(request, *callback_args, **callback_kwargs)
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 988, in post_detail_view
-    return render(request, 'blog_detail.html', context)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\shortcuts.py", line 25, in render
-    content = loader.render_to_string(template_name, context, request, using=using)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
-    template = get_template(template_name, using=using)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 15, in get_template
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 855, in like_post
+    liked = post.toggle_like(user)
+            ^^^^^^^^^^^^^^^^
+AttributeError: 'BlogPost' object has no attribute 'toggle_like'
+ERROR 2025-03-17 11:32:28,235 basehttp "POST /like-post/ HTTP/1.1" 500 145
+ERROR 2025-03-17 11:32:32,317 log Internal Server Error: /like-post/
+Traceback (most recent call last):
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 855, in like_post
+    liked = post.toggle_like(user)
+            ^^^^^^^^^^^^^^^^
+AttributeError: 'BlogPost' object has no attribute 'toggle_like'
+ERROR 2025-03-17 11:32:32,322 basehttp "POST /like-post/ HTTP/1.1" 500 145
+ERROR 2025-03-17 11:32:34,980 log Internal Server Error: /like-post/
+Traceback (most recent call last):
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 855, in like_post
+    liked = post.toggle_like(user)
+            ^^^^^^^^^^^^^^^^
+AttributeError: 'BlogPost' object has no attribute 'toggle_like'
+ERROR 2025-03-17 11:32:34,985 basehttp "POST /like-post/ HTTP/1.1" 500 145
+ERROR 2025-03-17 11:34:19,484 log Internal Server Error: /like-post/
+Traceback (most recent call last):
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\views\decorators\http.py", line 64, in inner
+    return func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 844, in like_post
+    liked = post.toggle_like(user)
+            ^^^^^^^^^^^^^^^^
+AttributeError: 'BlogPost' object has no attribute 'toggle_like'
+ERROR 2025-03-17 11:34:19,493 basehttp "POST /like-post/ HTTP/1.1" 500 145
+ERROR 2025-03-17 18:52:52,135 log Internal Server Error: /profile/Darius/like/
+Traceback (most recent call last):
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: toggle_like() got an unexpected keyword argument 'username'
+ERROR 2025-03-17 18:52:52,140 basehttp "POST /profile/Darius/like/ HTTP/1.1" 500 145
+ERROR 2025-03-17 23:51:39,775 log Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 502, in parse
+    compile_func = self.tags[command]
+                   ~~~~~~~~~^^^^^^^^^
+KeyError: 'endblock'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\response.py", line 90, in rendered_content
+    template = self.resolve_template(self.template_name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\response.py", line 72, in resolve_template
+    return select_template(template, using=self.using)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 42, in select_template
     return engine.get_template(template_name)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
@@ -691,98 +281,17 @@ Traceback (most recent call last):
   File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 234, in do_block
     nodelist = parser.parse(("endblock",))
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
+    raise self.error(token, e)
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
+    compiled_result = compile_func(self, token)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\defaulttags.py", line 961, in do_if
+    nodelist = parser.parse(("elif", "else", "endif"))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 504, in parse
     self.invalid_block_tag(token, command, parse_until)
   File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 555, in invalid_block_tag
     raise self.error(
-django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 1069: 'endif', expected 'endblock'. Did you forget to register or load this tag?
-ERROR 2025-03-13 19:23:09,320 basehttp "GET /blog/africas-tech-pioneers-innovative-solutions-for-a-sustainable-future/ HTTP/1.1" 500 267706
-ERROR 2025-03-13 19:40:31,741 log Internal Server Error: /blog/universities-in-the-us-commit-support-to-ul/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Desktop\blog\team\bloger\views.py", line 988, in post_detail_view
-    return render(request, 'blog_detail.html', context)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\shortcuts.py", line 25, in render
-    content = loader.render_to_string(template_name, context, request, using=using)
-              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 61, in render_to_string
-    template = get_template(template_name, using=using)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader.py", line 15, in get_template
-    return engine.get_template(template_name)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\backends\django.py", line 33, in get_template
-    return Template(self.engine.get_template(template_name), self)
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 177, in get_template
-    template, origin = self.find_template(template_name)
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\engine.py", line 159, in find_template
-    template = loader.get_template(name, skip=skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\cached.py", line 57, in get_template
-    template = super().get_template(template_name, skip)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loaders\base.py", line 28, in get_template
-    return Template(
-           ^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 154, in __init__
-    self.nodelist = self.compile_nodelist()
-                    ^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 196, in compile_nodelist
-    return parser.parse()
-           ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
-    nodelist = parser.parse()
-               ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 295, in do_extends
-    nodelist = parser.parse()
-               ^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 510, in parse
-    raise self.error(token, e)
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\base.py", line 508, in parse
-    compiled_result = compile_func(self, token)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\template\loader_tags.py", line 228, in do_block
-    raise TemplateSyntaxError(
-django.template.exceptions.TemplateSyntaxError: 'block' tag with name 'title' appears more than once
-ERROR 2025-03-13 19:40:31,799 basehttp "GET /blog/universities-in-the-us-commit-support-to-ul/ HTTP/1.1" 500 268724
-ERROR 2025-03-14 11:42:41,714 log Internal Server Error: /profile/Elvis/like/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TypeError: toggle_like() got an unexpected keyword argument 'username'
-ERROR 2025-03-14 11:42:41,787 basehttp "POST /profile/Elvis/like/ HTTP/1.1" 500 74064
-ERROR 2025-03-14 11:43:02,102 log Internal Server Error: /profile/Elvis/like/
-Traceback (most recent call last):
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-               ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\E\Envs\blog\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TypeError: toggle_like() got an unexpected keyword argument 'username'
-ERROR 2025-03-14 11:43:02,105 basehttp "POST /profile/Elvis/like/ HTTP/1.1" 500 74064
-ERROR 2025-03-14 17:14:44,565 views Registration error: UNIQUE constraint failed: bloger_userprofile.user_id
-ERROR 2025-03-14 17:19:10,425 views Registration error: UNIQUE constraint failed: bloger_userprofile.user_id
-ERROR 2025-03-14 17:24:45,568 views Registration error: UNIQUE constraint failed: bloger_userprofile.user_id
+django.template.exceptions.TemplateSyntaxError: Invalid block tag on line 309: 'endblock', expected 'elif', 'else' or 'endif'. Did you forget to register or load this tag?
+ERROR 2025-03-17 23:51:40,049 basehttp "GET / HTTP/1.1" 500 145

@@ -32,6 +32,7 @@ urlpatterns = [
     
     # Blog Post Interaction URLs
     path('blog/like/', views.like_post, name='like_post'),
+    path('like-post/', views.like_post, name='like_post'),
     path('blog/comment/<slug:slug>/', views.comment_post, name='comment_post'),
     
     # Blog Post Detail URLs - Note: Only one needed with two name aliases

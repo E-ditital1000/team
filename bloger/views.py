@@ -476,48 +476,35 @@ class BlogListView(ListView):
 
         return context
 
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from .models import BlogPost
 
+    
+#BLOGPOST LIKE
 @login_required
 @require_POST
 def like_post(request):
-    """
-    Toggle like status for a blog post.
-    This view handles both liking and unliking a post.
-    """
     post_id = request.POST.get('post_id')
-    
     if not post_id:
-        return JsonResponse({'error': 'No post ID provided'}, status=400)
-        
+        return JsonResponse({'error': 'Post ID required'}, status=400)
+
     try:
         post = BlogPost.objects.get(id=post_id)
         user = request.user
-        
-        # Check if user already liked the post
+
+        # Toggle the like status directly
         if user in post.likes.all():
-            # Unlike the post
             post.likes.remove(user)
             liked = False
         else:
-            # Like the post
             post.likes.add(user)
             liked = True
-            
+        
         return JsonResponse({
-            'status': 'success',
             'liked': liked,
-            'total_likes': post.likes.count(),
+            'total_likes': post.total_likes(),
             'post_id': post_id
         })
-        
     except BlogPost.DoesNotExist:
         return JsonResponse({'error': 'Post not found'}, status=404)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
     
 # Function-based Views
 @cache_page(60 * 15)  # Cache for 15 minutes
