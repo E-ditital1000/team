@@ -31,13 +31,16 @@ INSTALLED_APPS = [
     'shop.apps.ShopConfig',
     'chats.apps.ChatsConfig',
     'django_ckeditor_5',
-     'crispy_forms',
+    'crispy_forms',
+    'crispy_bootstrap5',
     'channels',  # Add Channels
     'django_htmx',  # You already have the middleware, adding the app for consistency
 ]
 
 # Add to the bottom of settings.py
-CRISPY_TEMPLATE_PACK = 'bootstrap4'  # or 'bootstrap5' if using Bootstrap 5
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+# or 'bootstrap5' if using Bootstrap 5
 # In settings.py
 SELECT2_CACHE_BACKEND = 'default'
 
