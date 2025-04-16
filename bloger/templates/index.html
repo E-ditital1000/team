@@ -1,440 +1,691 @@
-<!--index.html-->
 {% extends 'base.html' %}
 {% load static %}
+{% load blog_tags %}
+{% load tz %}
 {% csrf_token %}
 
+{% block extra_css %}
+<style>
+  /* Hero section styles */
+  .hero-section {
+    position: relative;
+    background: linear-gradient(135deg, #ffffff 0%, #ffe100 100%);
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .hero-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjMzQ0OTVlIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiM0MDU0NmEiIHN0cm9rZS13aWR0aD0iMSI+PC9wYXRoPgo8L3N2Zz4=');
+    opacity: 0.5;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Featured cards */
+  .feature-card {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+  
+  .feature-card .card-img-top {
+    height: 180px;
+    object-fit: cover;
+  }
+  
+  /* Custom section headings */
+  .section-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .section-header h2 {
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 0;
+    margin-right: 1rem;
+  }
+  
+  .section-header::after {
+    content: "";
+    flex-grow: 1;
+    height: 2px;
+    background: #f0f0f0;
+  }
+  
+  /* Post card styles */
+  .post-card {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    height: 100%;
+  }
+  
+  .post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+  
+  .post-card .card-img-wrapper {
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .post-card .card-img-wrapper img {
+    transition: transform 0.5s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .post-card:hover .card-img-wrapper img {
+    transform: scale(1.05);
+  }
+  
+  .post-card .category-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+  }
+  
+  .post-card .card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    line-height: 1.4;
+  }
+  
+  .post-card .card-text {
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+  
+  /* Author info */
+  .author-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .author-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0.5rem;
+  }
+  
+  /* Post stats and engagement */
+  .post-stats {
+    display: flex;
+    font-size: 0.85rem;
+    color: #6c757d;
+  }
+  
+  .post-stats span {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .post-stats i {
+    margin-right: 0.25rem;
+  }
+  
+  /* Product cards */
+  .product-card {
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    height: 100%;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .product-card .discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    background-color: #ff6b6b;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  
+  .product-card .product-img {
+    height: 180px;
+    width: 100%;
+    object-fit: cover;
+  }
+  
+  .product-price {
+    font-weight: 700;
+    color: #343a40;
+  }
+  
+  .product-card .old-price {
+    text-decoration: line-through;
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+  }
+
+  /* Animation classes */
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 992px) {
+    .hero-section {
+      padding: 2rem 0;
+    }
+    
+    .feature-card .card-img-top {
+      height: 160px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .post-card .card-img-wrapper {
+      height: 180px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .hero-section h1 {
+      font-size: 1.75rem;
+    }
+    
+    .section-header h2 {
+      font-size: 1.25rem;
+    }
+    
+    .post-card .card-img-wrapper {
+      height: 160px;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<!-- Featured News Section Start -->
-<div class="container-fluid pt-5 mb-3">
-    <div class="container">
-        <div class="section-title">
-            <h4 class="m-0 text-uppercase font-weight-bold">Featured News</h4>
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+<!-- Hero Section -->
+<div class="container">
+  <div class="hero-section mb-4">
+    <div class="hero-pattern"></div>
+    <div class="hero-content container py-4">
+      <div class="row align-items-center">
+        <div class="col-lg-7 mb-4 mb-lg-0">
+          <div class="text-center text-lg-start mb-4">
+           <!-- <img src="{% static 'images/favicons/favicon.png' %}" alt="NextGen Creators' Logo" class="img-fluid" style="max-height: 120px;">-->
+          </div>
+          <h2 class="text-white mb-3">NextGen <span class="text-primary">Creators</span></h2>
+          <p class="lead mb-4">Connecting Liberia's tech and business communities to spark innovation, collaboration, and growth. Empowering the next generation of digital leaders and creative problem-solvers.</p>
+          <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'about' %}" class="btn btn-primary px-4">Learn More</a>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="btn btn-outline-light px-4">Join the Community</a>
+            {% else %}
+            <a href="{% url 'create_blog_post' %}" class="btn btn-outline-light px-4">Share Your Ideas</a>
+            {% endif %}
+          </div>
         </div>
-        <div class="owl-carousel news-carousel carousel-item-4 position-relative">
-            {% for post in posts %}
-            <div class="position-relative overflow-hidden" style="height: 300px;">
-                {% if post.image %}
-                <img class="img-fluid h-100" src="{{ post.image.url }}" style="object-fit: cover;" alt="{{ post.title }}">
-                {% else %}
-                <img class="img-fluid h-100" src="{% static 'img/default-featured.jpg' %}" style="object-fit: cover;" alt="Default featured image">
-                {% endif %}
-                <div class="overlay">
-                    <div class="mb-2">
-                        <a class="text-white" href="{{ post.get_absolute_url }}"><small>{{ post.created_on|date:"M d, Y" }}</small></a>
-                    </div>
-                    <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="{{ post.get_absolute_url }}">
-                        {{ post.title|truncatewords:10|default:"No Title Available" }}
+        <div class="col-lg-5">
+          <div class="showcase-image-container text-center">
+            <img src="{% static 'assets/nextgen.png' %}" alt="NextGen Creators showcase image" class="img-fluid rounded shadow-lg" style="max-height: 700px; object-fit: contain;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Featured News Carousel -->
+<div class="container-fluid py-4 bg-light">
+  <div class="container">
+    <div class="section-header">
+      <h2><i class="fas fa-star mr-2"></i> Featured Stories</h2>
+    </div>
+    
+    <div class="owl-carousel news-carousel carousel-item-4 position-relative">
+      {% for post in posts|slice:":6" %}
+      <div class="feature-card card border-0 shadow-sm h-100">
+        <div class="position-relative">
+          {% if post.image %}
+          <img class="card-img-top" src="{{ post.image.url }}" alt="{{ post.title }}">
+          {% else %}
+          <img class="card-img-top" src="{% static 'img/default-featured.jpg' %}" alt="Default featured image">
+          {% endif %}
+          <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);">
+            <a href="{{ post.get_absolute_url }}" class="text-white text-decoration-none">
+              <h5 class="m-0">{{ post.title|truncatewords:8 }}</h5>
+            </a>
+            <div class="d-flex mt-2 text-white-50">
+              <small><i class="far fa-calendar-alt mr-1"></i> {{ post.created_on|date:"M d, Y" }}</small>
+              <small class="ml-3"><i class="far fa-eye mr-1"></i> {{ post.views }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- Latest Posts Section -->
+      <div class="section-header">
+        <h2><i class="fas fa-newspaper mr-2"></i> Latest Updates</h2>
+      </div>
+      
+      <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 mb-4 fade-in">
+          <div class="post-card card h-100">
+            <!-- Category Badge -->
+            {% if post.category %}
+            <span class="category-badge badge bg-primary">{{ post.category.name }}</span>
+            {% endif %}
+            
+            <!-- Post Image -->
+            <div class="card-img-wrapper">
+              {% if post.image %}
+              <img src="{{ post.image.url }}" alt="{{ post.title }}">
+              {% else %}
+              <img src="{% static 'img/default-featured.jpg' %}" alt="Default post image">
+              {% endif %}
+            </div>
+            
+            <div class="card-body">
+              <!-- Post Meta -->
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted"><i class="far fa-calendar-alt mr-1"></i> {{ post.created_on|date:"M d, Y" }}</small>
+                <small class="text-muted">{{ post.comments.count }} comments</small>
+              </div>
+              
+              <!-- Post Title -->
+              <h5 class="card-title">
+                <a href="{{ post.get_absolute_url }}" class="text-decoration-none text-dark">
+                  {{ post.title|default:"Untitled Post" }}
+                </a>
+              </h5>
+              
+              <!-- Post Excerpt -->
+              <p class="card-text">{{ post.body|truncatewords:20|default:"No content available." }}</p>
+            </div>
+            
+            <div class="card-footer bg-transparent border-top-0">
+              <div class="d-flex justify-content-between align-items-center">
+                <!-- Author Info -->
+                <div class="author-info">
+                  {% if post.writer.profile.profile_picture %}
+                  <img src="{{ post.writer.profile.profile_picture.url }}" alt="{{ post.writer.username }}">
+                  {% else %}
+                  <img src="{% static 'img/user.png' %}" alt="Default Profile Picture">
+                  {% endif %}
+                  <small>
+                    <a href="{% url 'profile_detail' username=post.writer.username %}" class="text-decoration-none">
+                      {{ post.writer.username }}
                     </a>
+                  </small>
                 </div>
+                
+                <!-- Like Button -->
+                <button class="btn btn-sm {% if request.user in post.likes.all %}btn-primary{% else %}btn-outline-primary{% endif %} like-btn" 
+                        data-post-id="{{ post.id }}">
+                  <i class="{% if request.user in post.likes.all %}fas{% else %}far{% endif %} fa-heart mr-1"></i>
+                  <span class="like-count">{{ post.likes.count }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+          <div class="p-4 rounded bg-light">
+            <i class="fas fa-newspaper fa-3x text-secondary mb-3"></i>
+            <h4>No Posts Available</h4>
+            <p class="text-muted">Be the first to share content with the community!</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'create_blog_post' %}" class="btn btn-primary">Create a Post</a>
+            {% else %}
+            <a href="{% url 'login' %}" class="btn btn-primary">Sign In to Post</a>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      
+      <!-- Pagination if needed -->
+      {% if posts.has_other_pages %}
+      <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+          {% if posts.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ posts.previous_page_number }}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {% endif %}
+          
+          {% for i in posts.paginator.page_range %}
+            {% if posts.number == i %}
+            <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+            {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+          
+          {% if posts.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ posts.next_page_number }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+      
+      <!-- Featured Products Section -->
+      <div class="section-header mt-5">
+        <h2><i class="fas fa-shopping-bag mr-2"></i> Featured Products</h2>
+      </div>
+      
+      <div class="row">
+        {% for product in featured_products|slice:":6" %}
+        <div class="col-md-4 mb-4 fade-in">
+          <div class="product-card card h-100">
+            <!-- Product Image -->
+            <div class="position-relative">
+              {% if product.discount_price %}
+              <div class="discount-badge">
+                {% widthratio product.discount_price 100 product.price as percentage %}
+                {{ percentage }}% OFF
+              </div>
+              {% endif %}
+              
+              {% if product.image %}
+              <img src="{{ product.image.url }}" class="product-img" alt="{{ product.name }}">
+              {% else %}
+              <div class="product-img bg-light d-flex align-items-center justify-content-center">
+                <i class="fas fa-box fa-3x text-secondary"></i>
+              </div>
+              {% endif %}
+            </div>
+            
+            <div class="card-body">
+              <h5 class="product-title">
+                <a href="{% url 'shop:product_detail' product.slug %}" class="text-decoration-none text-dark">
+                  {{ product.name|truncatechars:40 }}
+                </a>
+              </h5>
+              
+              <div class="d-flex align-items-center mt-2 mb-3">
+                <!-- Price -->
+                <div class="product-price">
+                  {% if product.discount_price %}
+                  ${{ product.discount_price }}
+                  <span class="old-price">${{ product.price }}</span>
+                  {% else %}
+                  ${{ product.price }}
+                  {% endif %}
+                </div>
+              </div>
+              
+              <!-- Stock Status -->
+              <div class="mb-3">
+                {% if product.stock > 0 %}
+                <span class="badge bg-success"><i class="fas fa-check-circle mr-1"></i> In Stock</span>
+                {% else %}
+                <span class="badge bg-danger"><i class="fas fa-times-circle mr-1"></i> Out of Stock</span>
+                {% endif %}
+                
+                {% if product.category %}
+                <span class="badge bg-secondary ml-2">{{ product.category.name }}</span>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="card-footer bg-transparent border-top-0">
+              <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-outline-primary btn-sm d-block">View Product</a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+          <div class="p-4 rounded bg-light">
+            <i class="fas fa-store fa-3x text-secondary mb-3"></i>
+            <h4>No Products Available</h4>
+            <p class="text-muted">Check back later for exciting products!</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      
+      <div class="text-center mt-3 mb-5">
+        <a href="{% url 'shop:product_list' %}" class="btn btn-primary">Browse All Products <i class="fas fa-arrow-right ml-2"></i></a>
+      </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <!-- Categories Widget -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="fas fa-list-alt mr-2"></i> Categories</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            {% get_categories as categories %}
+            {% for category in categories %}
+            <div class="col-6 mb-2">
+              <a href="{% url 'category_detail' slug=category.slug %}" 
+                  class="d-flex justify-content-between align-items-center text-decoration-none">
+                <span>{{ category.name }}</span>
+                <span class="badge bg-primary rounded-pill">
+                  {{ category.post_set.count }}
+                </span>
+              </a>
+            </div>
+            {% empty %}
+            <div class="col-12">
+              <p class="text-muted text-center mb-0">No categories available</p>
             </div>
             {% endfor %}
+          </div>
         </div>
-    </div>
-</div>
-<!-- Featured News Section End -->
-<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-<div class="container-fluid">
-    <div class="container">
-        <div class="row">
-            <!-- Main Content Column Start -->
-            <div class="col-lg-8">
-                         <!-- Latest News Section Start -->
-                         <div class="section-title">
-                            <h4 class="m-0 text-uppercase font-weight-bold">Latest News</h4>
-                        </div>
-                        <div class="row">
-                            {% for post in posts %}
-                            <div class="col-lg-6">
-                                <div class="position-relative mb-3">
-                                    <!-- Post Image -->
-                                    {% if post.image %}
-                                    <img class="img-fluid w-100" src="{{ post.image.url }}" style="object-fit: cover; height: 200px;" alt="{{ post.title }}">
-                                    {% else %}
-                                    <img class="img-fluid w-100" src="{% static 'img/default-featured.jpg' %}" style="object-fit: cover; height: 200px;" alt="Default post image">
-                                    {% endif %}
-                                    
-                                    <!-- Post Content -->
-                                    <div class="bg-white border border-top-0 p-4">
-                                        <div class="mb-2">
-                                            <a class="text-body" href="{{ post.get_absolute_url }}">
-                                                <small>{{ post.created_on|date:"F j, Y" }}</small>
-                                            </a>
-                                            <span class="text-secondary mx-2">|</span>
-                                            <a class="text-body" href="{{ post.category.get_absolute_url }}">
-                                                <small>{{ post.category.name }}</small>
-                                            </a>
-                                        </div>
-                                        <a class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold" href="{{ post.get_absolute_url }}">
-                                            {{ post.title|default:"Untitled Post" }}
-                                        </a>
-                                        <p class="m-0">
-                                            {{ post.body|truncatewords:20|default:"No content available." }}
-                                        </p>
-                                    </div>
-                            
-                                    <!-- Post Footer with Like and Share Buttons -->
-                                    <div class="bg-white border border-top-0 p-3">
-                                        <!-- Author and Stats Row -->
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <div class="d-flex align-items-center">
-                                                {% if post.writer.profile.profile_picture %}
-                                                <img class="rounded-circle mr-2" src="{{ post.writer.profile.profile_picture.url }}" width="25" height="25" alt="{{ post.writer.username }}">
-                                                {% else %}
-                                                <img class="rounded-circle mr-2" src="{% static 'img/user.png' %}" width="25" height="25" alt="Default Profile Picture">
-                                                {% endif %}
-                                
-                                                <a href="{% url 'profile_detail' username=post.writer.username %}" class="text-dark">
-                                                    <small>{{ post.writer.username }}</small>
-                                                </a>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <span class="ml-3"><i class="far fa-eye mr-1"></i>{{ post.views }}</span>
-                                                <span class="ml-3"><i class="far fa-comment mr-1"></i>{{ post.comments.count }}</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Like and Share buttons -->
-                                        <div class="d-flex justify-content-between border-top pt-2">
-                                            <!-- Like Button -->
-                                            <button class="btn btn-sm {% if request.user in post.likes.all %}btn-primary{% else %}btn-outline-primary{% endif %} like-btn" 
-                                                    data-post-id="{{ post.id }}" 
-                                                    type="button">
-                                                <i class="{% if request.user in post.likes.all %}fas{% else %}far{% endif %} fa-heart mr-1"></i>
-                                                <span class="like-count">{{ post.likes.count }}</span>
-                                            </button>
-                                            
-                                            <!-- Share Dropdown -->
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="shareDropdown{{ post.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i class="fas fa-share-alt mr-1"></i> Share
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="shareDropdown{{ post.id }}">
-                                                    <a class="dropdown-item" href="https://www.facebook.com/sharer/sharer.php?u={{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}" target="_blank">
-                                                        <i class="fab fa-facebook-f mr-2 text-primary"></i>Facebook
-                                                    </a>
-                                                    <a class="dropdown-item" href="https://twitter.com/intent/tweet?url={{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}&text={{ post.title }}" target="_blank">
-                                                        <i class="fab fa-twitter mr-2 text-info"></i>Twitter
-                                                    </a>
-                                                    <a class="dropdown-item" href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}&title={{ post.title }}" target="_blank">
-                                                        <i class="fab fa-linkedin mr-2 text-primary"></i>LinkedIn
-                                                    </a>
-                                                    <a class="dropdown-item" href="mailto:?subject={{ post.title }}&body=Check out this article: {{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}">
-                                                        <i class="fas fa-envelope mr-2 text-secondary"></i>Email
-                                                    </a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item copy-link" href="javascript:void(0);" data-url="{{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}">
-                                                        <i class="fas fa-link mr-2 text-dark"></i>Copy Link
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <!-- Latest News Section End -->
-                
-                <!-- Shop Products Section Start -->
-                <div class="section-title mt-5">
-                    <h4 class="m-0 text-uppercase font-weight-bold">Featured Products</h4>
-                </div>
-                <div class="bg-white border p-4 mb-4">
-                    <div class="row">
-                        {% for product in featured_products|slice:":6" %}
-                        <div class="col-md-4 mb-4">
-                            <div class="card product-card h-100 border-0 shadow-sm">
-                                <div class="position-relative overflow-hidden" style="height: 160px;">
-                                    {% if product.image %}
-                                    <img src="{{ product.image.url }}" class="card-img-top h-100 w-100" style="object-fit: cover;" alt="{{ product.name }}">
-                                    {% else %}
-                                    <div class="bg-light d-flex align-items-center justify-content-center h-100">
-                                        <i class="fas fa-box fa-3x text-secondary"></i>
-                                    </div>
-                                    {% endif %}
-                                    
-                                    {% if product.discount_price %}
-                                    <div class="position-absolute top-0 start-0 bg-primary text-white px-2 py-1 m-2 rounded">
-                                        Sale!
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                <div class="card-body p-3">
-                                    <a href="{% url 'shop:product_detail' product.slug %}" class="card-title h6 text-decoration-none text-dark d-block mb-2">{{ product.name|truncatechars:40 }}</a>
-                                    
-                                    <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <div>
-                                            {% if product.discount_price %}
-                                            <span class="text-primary fw-bold">${{ product.discount_price }}</span>
-                                            <small class="text-muted text-decoration-line-through ms-2">${{ product.price }}</small>
-                                            {% else %}
-                                            <span class="text-primary fw-bold">${{ product.price }}</span>
-                                            {% endif %}
-                                        </div>
-                                        <div class="small text-muted">
-                                            {% if product.stock > 0 %}<i class="fas fa-check-circle text-success me-1"></i> In Stock{% else %}<i class="fas fa-times-circle text-danger me-1"></i> Out of Stock{% endif %}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer bg-transparent border-top-0 p-3">
-                                    <div class="d-grid">
-                                        <a href="{% url 'shop:product_detail' product.slug %}" class="btn btn-sm btn-outline-primary">View Product</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <div class="col-12 text-center py-5">
-                            <i class="fas fa-store fa-3x text-secondary mb-3"></i>
-                            <h5>No Products Available</h5>
-                            <p class="text-muted">Check back later for exciting products!</p>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    
-                    <div class="text-center mt-3">
-                        <a href="{% url 'shop:product_list' %}" class="btn btn-primary">Browse All Products <i class="fas fa-arrow-right ml-2"></i></a>
-                    </div>
-                </div>
-                <!-- Shop Products Section End -->
-            </div>
-            <!-- Main Content Column End -->
-
-            <!-- Sidebar Start -->
-            <div class="col-lg-4">
-                {% if user.is_authenticated %}
-                <!-- User Profile Card Start -->
-                <div class="card mb-4 border rounded shadow-sm">
-                    <div class="card-body p-0">
-                        <div class="d-flex align-items-center p-3 border-bottom">
-                            {% if user.profile.profile_picture %}
-                            <img src="{{ user.profile.profile_picture.url }}" class="rounded-circle mr-3" style="width: 50px; height: 50px; object-fit: cover;" alt="{{ user.username }}">
-                            {% else %}
-                            <img src="{% static 'img/user.png' %}" class="rounded-circle mr-3" style="width: 50px; height: 50px; object-fit: cover;" alt="Default Profile Picture">
-                            {% endif %}
-                            <div>
-                                <h5 class="mb-0">{{ user.get_full_name|default:user.username }}</h5>
-                                <p class="small text-muted mb-0">{{ user.profile.career|default:"" }}</p>
-                            </div>
-                        </div>
-                        <div class="d-flex border-bottom">
-                            <div class="flex-fill p-3 text-center border-right">
-                                <h6 class="mb-0">{{ user.blog_posts.count }}</h6>
-                                <small class="text-muted">Posts</small>
-                            </div>
-                            <div class="flex-fill p-3 text-center border-right">
-                                <h6 class="mb-0">{{ user.profile.follower_count }}</h6>
-                                <small class="text-muted">Followers</small>
-                            </div>
-                            <div class="flex-fill p-3 text-center">
-                                <h6 class="mb-0">{{ user.following.count }}</h6>
-                                <small class="text-muted">Following</small>
-                            </div>
-                        </div>
-                        <div class="p-3">
-                            <a href="{% url 'profile_detail' username=user.username %}" class="btn btn-primary btn-sm d-block">View Profile</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- User Profile Card End -->
-              
-                {% endif %}
-                
-            
-                <!-- Featured Products Sidebar Widget -->
-                {% if featured_products %}
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Featured Products</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="featured-products-list">
-                            {% for product in featured_products|slice:":4" %}
-                            <a href="{% url 'shop:product_detail' product.slug %}" 
-                               class="featured-product-item d-flex align-items-center border-bottom p-3">
-                                <div class="featured-product-thumb mr-3" style="width: 60px; height: 60px;">
-                                    {% if product.image %}
-                                    <img src="{{ product.image.url }}" 
-                                         alt="{{ product.name }}"
-                                         class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: cover;">
-                                    {% else %}
-                                    <div class="bg-light d-flex align-items-center justify-content-center h-100 rounded">
-                                        <i class="fas fa-box text-secondary"></i>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                <div class="featured-product-info flex-grow-1">
-                                    <h6 class="product-title mb-1">{{ product.name|truncatechars:40 }}</h6>
-                                    <div class="product-price">
-                                        {% if product.discount_price %}
-                                        <span class="current-price text-primary font-weight-bold">${{ product.discount_price }}</span>
-                                        <span class="original-price text-muted"><s>${{ product.price }}</s></span>
-                                        {% else %}
-                                        <span class="current-price text-primary font-weight-bold">${{ product.price }}</span>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </a>
-                            {% endfor %}
-                        </div>
-                        <div class="text-center p-3">
-                            <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary btn-sm">View All Products</a>
-                        </div>
-                    </div>
+      </div>
+      
+      <!-- Quick Stats -->
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0"><i class="fas fa-chart-bar mr-2"></i> Community Stats</h5>
+        </div>
+        <div class="card-body p-0">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Active Members
+              <span class="badge bg-primary rounded-pill">{{ user_count|default:"0" }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Total Posts
+              <span class="badge bg-primary rounded-pill">{{ total_posts|default:"0" }}</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Available Products
+              <span class="badge bg-primary rounded-pill">{{ total_products|default:"0" }}</span>
+            </li>
+            <li class="list-group-item text-center">
+              <span class="text-muted small">Last updated: {% now "F j, Y" %}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Featured Products Sidebar Widget -->
+      {% if featured_products %}
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="fas fa-shopping-bag mr-2"></i> Featured Products</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="featured-products-list">
+            {% for product in featured_products|slice:":4" %}
+            <a href="{% url 'shop:product_detail' product.slug %}" 
+               class="featured-product-item d-flex align-items-center border-bottom p-3">
+              <div class="featured-product-thumb mr-3" style="width: 60px; height: 60px;">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" 
+                     alt="{{ product.name }}"
+                     class="img-fluid rounded" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center h-100 rounded">
+                  <i class="fas fa-box text-secondary"></i>
                 </div>
                 {% endif %}
-                <!-- Featured Products End -->
-                
-                <!-- Shop Categories Widget -->
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-dark text-white">
-                        <h5 class="mb-0">Shop Categories</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="shop-categories">
-                            {% for category in shop_categories %}
-                            <a href="{% url 'shop:category_products' category.slug %}" class="btn btn-outline-secondary btn-sm m-1">
-                                {{ category.name }} <span class="badge bg-primary">{{ category.products.count }}</span>
-                            </a>
-                            {% empty %}
-                            <p class="text-muted text-center">No categories available</p>
-                            {% endfor %}
-                        </div>
-                    </div>
+              </div>
+              <div class="featured-product-info flex-grow-1">
+                <h6 class="product-title mb-1">{{ product.name|truncatechars:40 }}</h6>
+                <div class="product-price">
+                  {% if product.discount_price %}
+                  <span class="current-price text-primary font-weight-bold">${{ product.discount_price }}</span>
+                  <span class="original-price text-muted"><s>${{ product.price }}</s></span>
+                  {% else %}
+                  <span class="current-price text-primary font-weight-bold">${{ product.price }}</span>
+                  {% endif %}
                 </div>
-                <!-- Shop Categories End -->
-            </div>
-            <!-- Sidebar End -->
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+          <div class="text-center p-3">
+            <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary btn-sm">View All Products</a>
+          </div>
         </div>
+      </div>
+      {% endif %}
     </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const likeButtons = document.querySelectorAll('.like-btn');
-
-    likeButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const postId = this.dataset.postId;
-            const likeText = this.querySelector('.like-text');
-            const likeCount = this.nextElementSibling;
-            const spinner = this.querySelector('.spinner-border');
-
-            // Show loading spinner
-            spinner.classList.remove('d-none');
-
-            fetch('/like-post/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken'),
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({ 'post_id': postId })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        console.error(data.error);
-                        alert('An error occurred: ' + data.error);
-                    } else {
-                        // Update the like text and count
-                        likeText.textContent = data.liked ? 'Unlike' : 'Like';
-                        likeCount.textContent = `${data.total_likes} Likes`;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An unexpected error occurred. Please try again.');
-                })
-                .finally(() => {
-                    // Hide loading spinner
-                    spinner.classList.add('d-none');
-                });
-        });
+  // Initialize Owl Carousel
+  $(document).ready(function(){
+    $(".news-carousel").owlCarousel({
+      loop: true,
+      margin: 20,
+      nav: true,
+      dots: true,
+      autoplay: true,
+      autoplayTimeout: 5000,
+      autoplayHoverPause: true,
+      navText: [
+        '<i class="fas fa-chevron-left"></i>',
+        '<i class="fas fa-chevron-right"></i>'
+      ],
+      responsive: {
+        0: { items: 1 },
+        576: { items: 2 },
+        992: { items: 3, },
+        1200: { items: 4 }
+      }
     });
-
-    // Toggle follow function for followers list
-    window.toggleFollow = function(button) {
-        const username = button.dataset.username;
-        const isFollowing = button.textContent.trim() === 'Following';
-        
-        fetch(`/profile/${username}/follow/`, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-                'Content-Type': 'application/json'
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-            
-            if (data.is_following) {
-                button.textContent = 'Following';
-                button.classList.remove('btn-primary');
-                button.classList.add('btn-outline-primary');
-            } else {
-                button.textContent = 'Follow';
-                button.classList.remove('btn-outline-primary');
-                button.classList.add('btn-primary');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while updating follow status.');
-        });
-    };
-
-    // Function to get CSRF token (Django-specific)
-    function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith(name + '=')) {
-                return decodeURIComponent(cookie.substring(name.length + 1));
-            }
+    
+    // Smooth fade-in animation for elements as they scroll into view
+    const fadeElements = document.querySelectorAll('.fade-in');
+    
+    const fadeInObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+          fadeInObserver.unobserve(entry.target);
         }
-        return null;
-    }
-});
-</script>
-
-<script>
-    // Add this at the end of your base template or include as a separate JS file
-document.addEventListener('DOMContentLoaded', function() {
+      });
+    }, { threshold: 0.1 });
+    
+    fadeElements.forEach(element => {
+      element.style.opacity = 0;
+      element.style.transform = 'translateY(20px)';
+      element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      fadeInObserver.observe(element);
+    });
+    
     // Setup like buttons
     setupLikeButtons();
     
     // Setup copy link functionality
     setupCopyLinks();
-});
+  });
 
-function setupLikeButtons() {
+  function setupLikeButtons() {
     // Add event listeners to all like buttons
     document.querySelectorAll('.like-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const postId = this.getAttribute('data-post-id');
-            likePost(this, postId);
-        });
+      button.addEventListener('click', function() {
+        const postId = this.getAttribute('data-post-id');
+        likePost(this, postId);
+      });
     });
-}
+  }
 
-function likePost(button, postId) {
+  function likePost(button, postId) {
     // Get CSRF token
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
     
     if (!csrfToken) {
-        // If no CSRF token, user might not be logged in
-        window.location.href = '/login/?next=' + window.location.pathname;
-        return;
+      // If no CSRF token, user might not be logged in
+      window.location.href = '/login/?next=' + window.location.pathname;
+      return;
     }
     
     // Show loading state
@@ -444,130 +695,134 @@ function likePost(button, postId) {
     
     // Send AJAX request
     fetch('/like-post/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': csrfToken,
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: `post_id=${postId}`
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': csrfToken,
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: `post_id=${postId}`
     })
     .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        throw new Error('Network response was not ok.');
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Network response was not ok.');
     })
     .then(data => {
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        
-        // Update like button appearance
-        const heartIcon = data.liked ? 'fas fa-heart' : 'far fa-heart';
-        button.innerHTML = `<i class="${heartIcon} mr-1"></i> <span class="like-count">${data.total_likes}</span>`;
-        
-        // Update button class
-        if (data.liked) {
-            button.classList.remove('btn-outline-primary');
-            button.classList.add('btn-primary');
-        } else {
-            button.classList.remove('btn-primary');
-            button.classList.add('btn-outline-primary');
-        }
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      // Update like button appearance
+      const heartIcon = data.liked ? 'fas fa-heart' : 'far fa-heart';
+      button.innerHTML = `<i class="${heartIcon} mr-1"></i> <span class="like-count">${data.total_likes}</span>`;
+      
+      // Update button class
+      if (data.liked) {
+        button.classList.remove('btn-outline-primary');
+        button.classList.add('btn-primary');
+      } else {
+        button.classList.remove('btn-primary');
+        button.classList.add('btn-outline-primary');
+      }
     })
     .catch(error => {
-        console.error('Error:', error);
-        button.innerHTML = originalHTML;
-        
-        // Show error toast if available, otherwise alert
-        const errorToast = document.getElementById('errorToast');
-        if (errorToast) {
-            document.getElementById('errorToastBody').textContent = error.message || 'Failed to process your request';
-            const toast = new bootstrap.Toast(errorToast);
-            toast.show();
-        } else {
-            alert('Error: ' + (error.message || 'Failed to process your request'));
-        }
+      console.error('Error:', error);
+      button.innerHTML = originalHTML;
+      
+      // Show error toast if available, otherwise alert
+      const errorToast = document.getElementById('errorToast');
+      if (errorToast) {
+        document.getElementById('errorToastBody').textContent = error.message || 'Failed to process your request';
+        const toast = new bootstrap.Toast(errorToast);
+        toast.show();
+      } else {
+        alert('Error: ' + (error.message || 'Failed to process your request'));
+      }
     })
     .finally(() => {
-        button.disabled = false;
+      button.disabled = false;
     });
-}
+  }
 
-function setupCopyLinks() {
+  function setupCopyLinks() {
     document.querySelectorAll('.copy-link').forEach(link => {
-        link.addEventListener('click', function() {
-            const url = this.getAttribute('data-url');
-            navigator.clipboard.writeText(url)
-                .then(() => {
-                    // Create temporary tooltip
-                    const tooltip = document.createElement('div');
-                    tooltip.textContent = 'Link copied!';
-                    tooltip.style.position = 'absolute';
-                    tooltip.style.backgroundColor = '#333';
-                    tooltip.style.color = 'white';
-                    tooltip.style.padding = '5px 10px';
-                    tooltip.style.borderRadius = '3px';
-                    tooltip.style.fontSize = '12px';
-                    tooltip.style.zIndex = '9999';
-                    
-                    // Position tooltip near the clicked element
-                    const rect = this.getBoundingClientRect();
-                    tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                    tooltip.style.left = `${rect.left + window.scrollX}px`;
-                    
-                    document.body.appendChild(tooltip);
-                    
-                    // Remove the tooltip after a short delay
-                    setTimeout(() => {
-                        tooltip.remove();
-                    }, 2000);
-                })
-                .catch(err => {
-                    console.error('Could not copy text: ', err);
-                    alert('Failed to copy link');
-                });
-        });
+      link.addEventListener('click', function() {
+        const url = this.getAttribute('data-url');
+        navigator.clipboard.writeText(url)
+          .then(() => {
+            // Create temporary tooltip
+            const tooltip = document.createElement('div');
+            tooltip.textContent = 'Link copied!';
+            tooltip.style.position = 'absolute';
+            tooltip.style.backgroundColor = '#333';
+            tooltip.style.color = 'white';
+            tooltip.style.padding = '5px 10px';
+            tooltip.style.borderRadius = '3px';
+            tooltip.style.fontSize = '12px';
+            tooltip.style.zIndex = '9999';
+            
+            // Position tooltip near the clicked element
+            const rect = this.getBoundingClientRect();
+            tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
+            tooltip.style.left = `${rect.left + window.scrollX}px`;
+            
+            document.body.appendChild(tooltip);
+            
+            // Remove the tooltip after a short delay
+            setTimeout(() => {
+              tooltip.remove();
+            }, 2000);
+          })
+          .catch(err => {
+            console.error('Could not copy text: ', err);
+            alert('Failed to copy link');
+          });
+      });
     });
-}
+  }
+  
+  // Toggle follow functionality
+  window.toggleFollow = function(button) {
+    const username = button.dataset.username;
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
     
-    // Copy link functionality
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.copy-link').forEach(function(link) {
-            link.addEventListener('click', function() {
-                const url = this.getAttribute('data-url');
-                navigator.clipboard.writeText(url)
-                    .then(() => {
-                        // Create temporary tooltip
-                        const tooltip = document.createElement('div');
-                        tooltip.textContent = 'Link copied!';
-                        tooltip.style.position = 'absolute';
-                        tooltip.style.backgroundColor = '#333';
-                        tooltip.style.color = 'white';
-                        tooltip.style.padding = '5px 10px';
-                        tooltip.style.borderRadius = '3px';
-                        tooltip.style.fontSize = '12px';
-                        tooltip.style.zIndex = '9999';
-                        
-                        // Position tooltip near the clicked element
-                        const rect = this.getBoundingClientRect();
-                        tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
-                        tooltip.style.left = `${rect.left + window.scrollX}px`;
-                        
-                        document.body.appendChild(tooltip);
-                        
-                        // Remove the tooltip after a short delay
-                        setTimeout(() => {
-                            tooltip.remove();
-                        }, 2000);
-                    })
-                    .catch(err => {
-                        console.error('Could not copy text: ', err);
-                        alert('Failed to copy link');
-                    });
-            });
-        });
+    fetch(`/profile/${username}/follow/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        alert(data.error);
+        return;
+      }
+      
+      if (data.is_following) {
+        button.textContent = 'Following';
+        button.classList.remove('btn-primary');
+        button.classList.add('btn-outline-primary');
+      } else {
+        button.textContent = 'Follow';
+        button.classList.remove('btn-outline-primary');
+        button.classList.add('btn-primary');
+      }
+      
+      // Update follower count if element exists
+      const followerCountElement = document.getElementById(`follower-count-${username}`);
+      if (followerCountElement) {
+        followerCountElement.textContent = data.follower_count;
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('An error occurred while updating follow status.');
     });
+  };
 </script>
 {% endblock %}

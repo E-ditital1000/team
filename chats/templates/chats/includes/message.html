@@ -1,0 +1,132 @@
+{% if messages %}
+<div class="toast-container position-fixed bottom-0 end-0 p-4" style="z-index: 1080">
+    {% for message in messages %}
+    <div class="toast fade show animate__animated animate__fadeInUp message-toast {{ message.tags }}-toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+        <div class="toast-header">
+            {% if message.tags == 'success' %}
+                <i class="fas fa-check-circle text-success me-2"></i>
+                <strong class="me-auto">Success</strong>
+            {% elif message.tags == 'error' %}
+                <i class="fas fa-exclamation-circle text-danger me-2"></i>
+                <strong class="me-auto">Error</strong>
+            {% elif message.tags == 'info' %}
+                <i class="fas fa-info-circle text-info me-2"></i>
+                <strong class="me-auto">Information</strong>
+            {% elif message.tags == 'warning' %}
+                <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+                <strong class="me-auto">Warning</strong>
+            {% else %}
+                <i class="fas fa-bell text-secondary me-2"></i>
+                <strong class="me-auto">Notification</strong>
+            {% endif %}
+            <small class="text-muted">just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            {{ message }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+.toast-container {
+    max-width: 400px;
+}
+
+.message-toast {
+    margin-bottom: 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 1;
+    overflow: hidden;
+    border: none;
+}
+
+.message-toast .toast-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.message-toast .toast-body {
+    padding: 1rem;
+    line-height: 1.5;
+}
+
+.success-toast {
+    background-color: #f0fff4;
+    border-left: 4px solid #28a745;
+}
+
+.error-toast {
+    background-color: #fff5f5;
+    border-left: 4px solid #dc3545;
+}
+
+.info-toast {
+    background-color: #e6f7ff;
+    border-left: 4px solid #17a2b8;
+}
+
+.warning-toast {
+    background-color: #fffbeb;
+    border-left: 4px solid #ffc107;
+}
+
+/* Animate.css classes required for animation */
+.animate__animated {
+    animation-duration: 0.5s;
+}
+
+.animate__fadeInUp {
+    animation-name: fadeInUp;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Auto-hide animation */
+.toast.hide {
+    animation: fadeOutDown 0.5s forwards;
+}
+
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all toasts
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    var toastList = toastElList.map(function(toastEl) {
+        // Create toast instance
+        var toast = new bootstrap.Toast(toastEl);
+        
+        // Auto-hide after delay
+        setTimeout(function() {
+            toastEl.classList.add('hide');
+            setTimeout(function() {
+                toast.hide();
+            }, 500); // Time for hide animation to complete
+        }, 5000); // Show for 5 seconds
+        
+        return toast;
+    });
+});
+</script>
+{% endif %}

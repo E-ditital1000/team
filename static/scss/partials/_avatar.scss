@@ -1,0 +1,70 @@
+///////////////////////////
+/// custom
+///////////////////////////
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  max-width: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background-image: linear-gradient(0deg, var(--dj-primary) 0%, #f4f4f4 100%);
+  &.avatar-text {
+    font-size: 23px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  img {
+    @include undraggable;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  &.avatar-md {
+    width: 40px !important;
+    height: 40px !important;
+    &.avatar-text {
+      font-size: 30px;
+    }
+  }
+  &.avatar-lg {
+    width: 80px;
+    height: 80px;
+  }
+  &.avatar-x-lg {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+.avatar-group {
+  display: flex;
+  /* direction: rtl; */
+  .avatar {
+    margin-left: -10px;
+    position: relative;
+    border: 2px solid var(--bs-gray-400);
+    transition: transform 0.28s;
+    &:hover {
+      transform: translateX(-5px);
+    }
+  }
+  .hidden-avatars {
+    font-size: small;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    background-color: #2c303a;
+    border: 2px solid #2c303a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    margin-left: 2px;
+  }
+}

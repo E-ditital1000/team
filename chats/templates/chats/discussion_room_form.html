@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{% if update %}Edit{% else %}Create{% endif %} Discussion Room | Chat
+{% endblock %}
+
+{% block extra_css %}
+{# Include the select2 CSS #}
+<link href="{% static 'django_select2/django_select2.css' %}" type="text/css" media="screen" rel="stylesheet">
+<style>
+  .select2-container {
+    width: 100% !important;
+  }
+  
+  .select2-selection--multiple {
+    border-radius: 0.25rem !important;
+    border-color: #ced4da !important;
+    min-height: 38px !important;
+  }
+  
+  .select2-selection--multiple .select2-selection__choice {
+    background-color: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 0.25rem !important;
+    padding: 2px 8px !important;
+    margin-top: 4px !important;
+  }
+  
+  .card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 0.5rem;
+  }
+  
+  .card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1.25rem;
+    border-top-left-radius: 0.5rem !important;
+    border-top-right-radius: 0.5rem !important;
+  }
+  
+  .btn-primary {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  
+  .form-control:focus {
+    box-shadow: none;
+    border-color: #80bdff;
+  }
+  
+  .asteriskField {
+    color: red;
+    margin-left: 2px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header d-flex align-items-center">
+          <h5 class="mb-0 fw-bold">
+            {% if update %}Edit{% else %}Create{% endif %} Discussion Room
+          </h5>
+          <div class="ms-auto">
+            <i class="zmdi zmdi-comments fs-4"></i>
+          </div>
+        </div>
+        <div class="card-body p-4">
+          <form method="POST" novalidate>
+            {% csrf_token %}
+            
+            <div class="mb-4">
+              <label for="{{ form.headline.id_for_label }}" class="form-label fw-medium">Topic/Headline <span class="text-danger">*</span></label>
+              {{ form.headline|as_crispy_field }}
+              <div class="form-text text-muted small">
+                Choose a clear, specific headline that captures the main topic of discussion
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label for="{{ form.description.id_for_label }}" class="form-label fw-medium">Description</label>
+              {{ form.description|as_crispy_field }}
+              <div class="form-text text-muted small">
+                Provide more details about what participants can expect in this discussion
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label for="{{ form.tags.id_for_label }}" class="form-label fw-medium">Tags</label>
+              {{ form.tags|as_crispy_field }}
+              <div class="form-text text-muted small">
+                Add relevant tags to help others discover your discussion. Type to search existing tags or create new ones.
+              </div>
+            </div>
+            
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+              <a href="{% url 'chats:discussions' %}" class="btn btn-outline-secondary">
+                Cancel
+              </a>
+              <button type="submit" class="btn btn-primary px-4">
+                {% if update %}
+                  <i class="zmdi zmdi-refresh-sync me-1"></i> Update Room
+                {% else %}
+                  <i class="zmdi zmdi-plus me-1"></i> Create Room
+                {% endif %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      {% if not update %}
+      <div class="card mt-4">
+        <div class="card-body p-4">
+          <h6 class="fw-bold mb-3">Tips for creating a great discussion room:</h6>
+          <ul class="mb-0">
+            <li class="mb-2">Choose a clear, specific topic to focus the conversation</li>
+            <li class="mb-2">Add a detailed description to set expectations</li>
+            <li class="mb-2">Use relevant tags to help people find your discussion</li>
+            <li>Consider starting with a question to encourage participation</li>
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block newsletter %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extra_js %}
+{# Include the select2 JS #}
+<script src="{% static 'django_select2/django_select2.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add character counter for headline
+    const headlineInput = document.getElementById('{{ form.headline.id_for_label }}');
+    const maxHeadlineLength = 220; // Based on your model's max_length
+    
+    if (headlineInput) {
+      // Create counter element
+      const counterDiv = document.createElement('div');
+      counterDiv.className = 'form-text text-end small';
+      counterDiv.id = 'headline-counter';
+      headlineInput.parentNode.appendChild(counterDiv);
+      
+      // Update counter function
+      const updateCounter = () => {
+        const remaining = maxHeadlineLength - headlineInput.value.length;
+        counterDiv.textContent = `${remaining} characters remaining`;
+        
+        if (remaining < 20) {
+          counterDiv.classList.add('text-danger');
+        } else {
+          counterDiv.classList.remove('text-danger');
+        }
+      };
+      
+      // Initial count
+      updateCounter();
+      
+      // Add event listener
+      headlineInput.addEventListener('input', updateCounter);
+    }
+    
+    // Focus on headline field when page loads
+    if (headlineInput && !{{ update|yesno:"true,false" }}) {
+      headlineInput.focus();
+    }
+  });
+</script>
+{% endblock %}

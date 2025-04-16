@@ -17,10 +17,11 @@ urlpatterns = [
     # Main applications
     path('', include('bloger.urls')),
     path('shop/', include('shop.urls', namespace='shop')),  # Shop app URLs
-    path('messaging/', include('messaging.urls', namespace='messaging')),  # Messaging app URLs
+    path('chats/', include('chats.urls', namespace='chats')),  # chats app URLs
     
     # CKEditor - ensure this is included
     path("ckeditor5/", include('django_ckeditor_5.urls')),
+    path('select2/', include('django_select2.urls')),  # Add this line
 ]
 
 # Handling static and media files

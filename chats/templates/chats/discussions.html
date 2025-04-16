@@ -1,0 +1,475 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% if crispy_forms_tags %}{% load crispy_forms_tags %}{% endif %}
+
+{% load django_htmx %}
+{% django_htmx_script %}
+
+{% block title %}Discussion Rooms | NextGen Chats{% endblock %}
+
+{% block extra_head %}
+<script src="https://unpkg.com/htmx.org@1.9.6"></script>
+<style>
+    /* Enhanced styling for discussion rooms */
+    .discussion-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        border-radius: 0.5rem !important;
+        overflow: hidden;
+    }
+    
+    .discussion-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .discussion-icon {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+    }
+    
+    .avatar-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--bs-primary);
+        color: white;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+    
+    .hover-lift {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .notify-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: var(--bs-danger);
+        color: white;
+        border-radius: 50%;
+        min-width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 5px;
+    }
+    
+    .dots-loader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .spinner__dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.3);
+        margin: 0 3px;
+        animation: pulse 1.5s infinite ease-in-out;
+    }
+    
+    .spinner__dot--one {
+        animation-delay: 0s;
+    }
+    
+    .spinner__dot--two {
+        animation-delay: 0.2s;
+    }
+    
+    .spinner__dot--three {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(0.8); opacity: 0.5; }
+        50% { transform: scale(1.2); opacity: 1; }
+        100% { transform: scale(0.8); opacity: 0.5; }
+    }
+    
+    .input-icon-left {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="m-0 text-uppercase fw-bold">NextGen <span class="text-primary">Chats</span></h2>
+                <div class="d-flex">
+                    <a href="{% url 'chats:threads' %}" class="btn btn-outline-primary me-2 {% if request.resolver_match.url_name == 'threads' %}active{% endif %}">
+                        <i class="fa fa-comment-alt me-2"></i> Private Chats
+                    </a>
+                    <a href="{% url 'chats:discussions' %}" class="btn btn-outline-primary {% if request.resolver_match.url_name == 'discussions' %}active{% endif %}">
+                        <i class="fa fa-users me-2"></i> Discussion Rooms
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-md-none plus-area">
+        <a role="button" class="btn btn-lg btn-primary shadow border rounded-circle" 
+           hx-get="{% url 'chats:discussion_create' %}"
+           hx-target="#hx-modal" 
+           hx-indicator="#indicator">
+            <i class="fa fa-plus"></i>
+        </a>
+        <a role="button" class="btn btn-lg btn-light shadow border rounded-circle ms-2" 
+           hx-get="{% url 'chats:user_rooms' %}?display=modal"
+           hx-target="#hx-modal" 
+           hx-indicator="#indicator">
+            <i class="fa fa-history"></i>
+            <span class="notify-badge" style="display: block;">
+                <span id="">34</span>
+                <span class="visually-hidden">unread notifications</span>
+            </span>
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 d-none d-md-block">
+            <div style="position: sticky; top: 70px;">
+                <div class="card shadow-sm p-3 mb-3">
+                    <a href="{{ request.user.get_absolute_url }}" class="d-flex align-items-top mb-3 text-decoration-none">
+                        <div class="avatar-text me-2">
+                            {{ request.user.username|first }}
+                        </div>
+                        <div class="text-dark">
+                            <h6 class="mb-0">{{ request.user.first_name }} {{ request.user.last_name }}</h6>
+                            <p class="mb-0 text-muted" style="font-size: 12px;">
+                                @{{ request.user.username }} - Last login: {{ request.user.last_login|date }}
+                            </p>
+                        </div>
+                    </a>
+                    <a role="button" class="btn btn-primary" 
+                       hx-get="{% url 'chats:discussion_create' %}"
+                       hx-target="#hx-modal" 
+                       hx-indicator="#indicator">
+                        <i class="fa fa-plus me-1"></i> Create a New Room
+                    </a>
+                </div>
+                
+                <div class="card shadow-sm p-3 mb-3">
+                    <h5 class="card-title mb-3">Recent Rooms</h5>
+                    <div class="recent-rooms-container" 
+                         hx-get="{% url 'chats:user_rooms' %}" 
+                         hx-trigger="load" 
+                         hx-target="this"
+                         id="user-rooms-list">
+                        <div class="text-center py-3">
+                            <span class="dots-loader">
+                                <i class="spinner__dot spinner__dot--one"></i>
+                                <i class="spinner__dot spinner__dot--two"></i>
+                                <i class="spinner__dot spinner__dot--three"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Optional: Popular Tags Section -->
+                <div class="card shadow-sm p-3">
+                    <h5 class="card-title mb-3">Popular Tags</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="#" class="badge bg-light text-dark text-decoration-none p-2">javascript</a>
+                        <a href="#" class="badge bg-light text-dark text-decoration-none p-2">python</a>
+                        <a href="#" class="badge bg-light text-dark text-decoration-none p-2">django</a>
+                        <a href="#" class="badge bg-light text-dark text-decoration-none p-2">react</a>
+                        <a href="#" class="badge bg-light text-dark text-decoration-none p-2">programming</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card shadow-sm p-3 mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="m-0">Discussion Rooms</h4>
+                    <div class="dropdown">
+                        <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" id="sortOption" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🔥 Trendings
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortOption">
+                            <li>
+                                <a class="sort-action dropdown-item" id="trendings" href="?sort=trendings"
+                                   hx-get="?sort=trendings" 
+                                   hx-target="#roomsContainer>.row" 
+                                   hx-push-url="true"
+                                   hx-indicator="#indicator">
+                                    🔥 Trendings
+                                </a>
+                            </li>
+                            <li>
+                                <a class="sort-action dropdown-item" id="newest" href="?sort=newest"
+                                   hx-get="?sort=newest" 
+                                   hx-target="#roomsContainer>.row" 
+                                   hx-push-url="true"
+                                   hx-indicator="#indicator">
+                                    ⏱ Newest
+                                </a>
+                            </li>
+                            <li>
+                                <a class="sort-action dropdown-item" id="oldest" href="?sort=oldest"
+                                   hx-get="?sort=oldest" 
+                                   hx-target="#roomsContainer>.row" 
+                                   hx-push-url="true"
+                                   hx-indicator="#indicator">
+                                    ⏳ Oldest
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Search box -->
+                <div class="position-relative mb-3">
+                    <input class="form-control ps-5" type="search" name="q" placeholder="Search rooms..."
+                           aria-label="Search" 
+                           hx-get="{% url 'chats:search_room' %}"
+                           hx-trigger="keyup changed delay:500ms" 
+                           hx-target="#roomsContainer"
+                           hx-indicator="#rooms-filter-indicator" 
+                           autocomplete="off">
+                    <i class="fa fa-search input-icon-left"></i>
+                </div>
+
+                <div class="htmx-indicator text-center py-2" id="rooms-filter-indicator">
+                    <span class="dots-loader">
+                        <i class="spinner__dot spinner__dot--one"></i>
+                        <i class="spinner__dot spinner__dot--two"></i>
+                        <i class="spinner__dot spinner__dot--three"></i>
+                    </span>
+                </div>
+
+                <div id="roomsContainer">
+                    <div class="row">
+                        {% for room in rooms %}
+                        <div class="col-md-6 col-lg-6 mb-4">
+                            <div class="card discussion-card shadow-sm h-100 border-0">
+                                <div class="card-header bg-light border-0 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="discussion-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                                            <strong>{{ room.headline|slice:":1" }}</strong>
+                                        </div>
+                                        <div>
+                                            <h5 class="card-title mb-0">{{ room.headline }}</h5>
+                                            <small class="text-muted">
+                                                Created by {{ room.owner.username }} - {{ room.created|date:"M d, Y" }}
+                                            </small>
+                                        </div>
+                                        {% if room.room.unread_count > 0 %}
+                                        <div class="ms-auto">
+                                            <span class="badge bg-danger">{{ room.room.unread_count }} new</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="card-body">
+                                    {% if room.description %}
+                                    <p class="card-text">{{ room.description|truncatewords:25 }}</p>
+                                    {% else %}
+                                    <p class="card-text text-muted">No description provided.</p>
+                                    {% endif %}
+                                    
+                                    {% if room.tags.all %}
+                                    <div class="mb-3">
+                                        {% for tag in room.tags.all %}
+                                        <span class="badge bg-light text-dark me-1">{{ tag.name }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="badge bg-primary text-white">
+                                                <i class="fa fa-users me-1"></i> {{ room.members.count }} members
+                                            </span>
+                                        </div>
+                                        <small class="text-muted">Last activity: {{ room.modified|date:"M d" }}</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-footer bg-white border-0">
+                                    <a href="{% url 'chats:discussion_detail' slug=room.slug %}" class="btn btn-outline-primary btn-sm w-100">
+                                        <i class="fa fa-comments me-1"></i> Join Discussion
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12 text-center py-5">
+                            <div class="mb-3">
+                                <i class="fa fa-comments fa-4x text-secondary"></i>
+                            </div>
+                            <h4>No Discussion Rooms Available</h4>
+                            <p class="text-muted mb-4">Be the first to create a discussion room</p>
+                            <button class="btn btn-primary" 
+                                    hx-get="{% url 'chats:discussion_create' %}" 
+                                    hx-target="#hx-modal"
+                                    hx-indicator="#indicator">
+                                <i class="fa fa-plus me-2"></i> Create New Room
+                            </button>
+                        </div>
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                        <div id="rooms-paginator" class="col-12">
+                            <a hx-get="{% url 'chats:discussions' %}?page={{ page_obj.next_page_number }}"
+                               hx-target="#rooms-paginator" 
+                               hx-trigger="click" 
+                               hx-swap="outerHTML" 
+                               role="button"
+                               id="load-more" 
+                               class="btn btn-outline-primary btn-sm w-100 mt-3">
+                                Load More <i class="fa fa-arrow-down ms-1"></i>
+                                <div class="htmx-indicator">
+                                    <span class="dots-loader">
+                                        <i class="spinner__dot spinner__dot--one"></i>
+                                        <i class="spinner__dot spinner__dot--two"></i>
+                                        <i class="spinner__dot spinner__dot--three"></i>
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal container -->
+<div id="hx-modal"></div>
+
+<!-- Indicators -->
+<div id="indicator" class="htmx-indicator loader-full">
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-75" style="z-index: 1060;">
+        <span class="dots-loader">
+            <i class="spinner__dot spinner__dot--one"></i>
+            <i class="spinner__dot spinner__dot--two"></i>
+            <i class="spinner__dot spinner__dot--three"></i>
+        </span>
+    </div>
+</div>
+
+<!-- HTMX initialization and debugging -->
+<script>
+    // Debugging
+    console.log('HTMX loaded:', typeof htmx !== 'undefined');
+    
+    // Modal handler for HTMX swaps
+    document.body.addEventListener('htmx:afterSwap', function(event) {
+        console.log('HTMX swap completed for:', event.detail.target.id);
+        
+        if (event.detail.target.id === 'hx-modal') {
+            console.log('Modal content loaded');
+            
+            // Wrap content in modal if not already a modal
+            var content = event.detail.target.innerHTML;
+            if (!content.includes('modal fade')) {
+                event.detail.target.innerHTML = `
+                    <div class="modal fade" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                ${content}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Initialize and show the modal
+            var modalElement = event.detail.target.querySelector('.modal');
+            if (modalElement) {
+                try {
+                    var modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                    console.log('Modal shown successfully');
+                } catch (e) {
+                    console.error('Failed to initialize modal:', e);
+                }
+            } else {
+                console.warn('No modal element found in response');
+            }
+        }
+    });
+    
+    // Log HTMX events for debugging
+    htmx.logger = function(elt, event, data) {
+        if (console && event !== 'htmx:afterProcessNode') {
+            console.log(event, elt, data);
+        }
+    };
+    
+    // Handle CSRF token for HTMX requests
+    document.body.addEventListener('htmx:configRequest', function(event) {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+    });
+</script>
+{% endblock %}
+
+{% block newsletter %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block script %}
+<script>
+    var sort = '{{ sort }}';
+
+    $(document).ready(function () {
+        $('.sort-action').on('click', function () {
+            sort = $(this).attr('id');
+            sortBtnAppearance();
+        });
+        
+        function sortBtnAppearance() {
+            $sortOption = $('#sortOption');
+            $('.sort-action').removeClass('active');
+            
+            if (sort == 'newest') {
+                $sortOption.html('⏱ Newest');
+                $('#newest').addClass('active');
+            }
+            else if (sort == 'oldest') {
+                $sortOption.html('⏳ Oldest');
+                $('#oldest').addClass('active');
+            }
+            else {
+                $sortOption.html('🔥 Trendings');
+                $('#trendings').addClass('active');
+            }
+        }
+        
+        sortBtnAppearance();
+        
+        // Initialize any tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %}

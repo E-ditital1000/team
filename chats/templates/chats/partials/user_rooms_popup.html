@@ -1,0 +1,21 @@
+{% load static %}
+
+<div id="modal-backdrop" class="modal-backdrop fade show" style="display:block;"></div>
+<div id="modal" class="modal fade show animated--grow-in" tabindex="-1" style="display:block;">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content radius-400 overflow-hidden border-0">
+
+			<div class="modal-header px-3 py-2 bg-fb-primary-200" style="border-color: var(--light-green);">
+				<h6 class="modal-title">Recent Rooms <span class="badge bg-secondary radius-400">
+						{{ rooms.count }}</span></h6>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+					onclick="closeModal()"></button>
+			</div>
+			<div class="modal-body">
+
+				{% include 'chats/partials/user_rooms_popup_body.html' %}
+
+			</div>
+		</div>
+	</div>
+</div>

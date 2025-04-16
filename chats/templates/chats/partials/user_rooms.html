@@ -1,0 +1,31 @@
+<div class="mb-2">
+    <a href="{{ room.get_absolute_url }}" class="discussion-item d-flex align-items-center bg-white border rounded p-3 text-decoration-none position-relative shadow-sm hover-lift">
+      <div class="discussion-icon me-3 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; flex-shrink: 0;">
+        <strong>{{ room.headline|slice:":1" }}</strong>
+      </div>
+      <div class="discussion-content">
+        <h6 class="mb-1 text-dark">{{ room.headline }}</h6>
+        <p class="small mb-0 text-muted">{{ room.description|truncatewords:8|default:"No description provided" }}</p>
+        <div class="mt-1">
+          <span class="badge bg-light text-dark me-2">
+            <i class="fa fa-user-friends me-1"></i> {{ room.members.count }}
+          </span>
+          {% if room.tags.all %}
+            <span class="badge bg-light text-dark">
+              <i class="fa fa-tag me-1"></i> {{ room.tags.count }}
+            </span>
+          {% endif %}
+        </div>
+      </div>
+      {% if room.room.unread_count > 0 %}
+      <div class="position-absolute top-0 end-0 mt-2 me-2">
+        <span class="notify-badge bg-primary text-white px-2 py-1 rounded-pill" style="font-size: 0.7rem;">
+          {{ room.room.unread_count }} new
+        </span>
+      </div>
+      {% endif %}
+      <div class="ms-auto text-end d-none d-sm-block" style="flex-shrink: 0;">
+        <small class="text-muted">{{ room.modified|date:"M d" }}</small>
+      </div>
+    </a>
+  </div>

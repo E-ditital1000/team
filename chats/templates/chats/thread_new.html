@@ -1,0 +1,175 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div id="modal-backdrop" class="modal-backdrop fade show" style="display:block;"></div>
+<div id="modal" class="modal fade show" tabindex="-1" style="display:block;" role="dialog" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
+            <div class="modal-header bg-primary text-white py-3">
+                <h5 class="modal-title">
+                    <i class="fa fa-comment me-2"></i>New Message
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal()"></button>
+            </div>
+            <div class="modal-body p-4">
+                {{ form.media.css }}
+                <form action="{% url 'chats:thread_new' %}" method="POST" id="new-message-form">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        {% if form.recipients.errors %}
+                            <div class="alert alert-danger p-2 mb-2">
+                                {{ form.recipients.errors }}
+                            </div>
+                        {% endif %}
+                        <label for="{{ form.recipients.id_for_label }}" class="form-label fw-bold">
+                            <i class="fa fa-user me-2"></i>Select Recipients
+                        </label>
+                        {{ form.recipients|as_crispy_field }}
+                        <div class="form-text text-muted small">
+                            Select one or more people to message
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        {% if form.message.errors %}
+                            <div class="alert alert-danger p-2 mb-2">
+                                {{ form.message.errors }}
+                            </div>
+                        {% endif %}
+                        <label for="{{ form.message.id_for_label }}" class="form-label fw-bold">
+                            <i class="fa fa-envelope me-2"></i>Your Message
+                        </label>
+                        {{ form.message|as_crispy_field }}
+                    </div>
+                    
+                    <input type="hidden" name="next" value="{{ next }}">
+                    
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-outline-secondary" onclick="closeModal()">
+                            <i class="fa fa-times me-1"></i>Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary px-4" id="send-message-btn">
+                            <i class="fa fa-paper-plane me-1"></i>Send Message
+                            <span class="spinner-border spinner-border-sm ms-1 d-none" id="send-spinner" role="status" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </form>
+                {{ form.media.js }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Focus on recipients field when modal opens
+    const recipientsField = document.querySelector('{{ form.recipients.id_for_label }}');
+    if (recipientsField) {
+        setTimeout(() => recipientsField.focus(), 100);
+    }
+    
+    // Show loading indicator on form submit
+    const messageForm = document.getElementById('new-message-form');
+    const sendButton = document.getElementById('send-message-btn');
+    const spinner = document.getElementById('send-spinner');
+    
+    if (messageForm && sendButton && spinner) {
+        messageForm.addEventListener('submit', function() {
+            // Validate form
+            const recipients = document.querySelector('{{ form.recipients.id_for_label }}');
+            const message = document.querySelector('{{ form.message.id_for_label }}');
+            
+            if (recipients && recipients.value.trim() === '') {
+                alert('Please select at least one recipient');
+                recipients.focus();
+                return false;
+            }
+            
+            if (message && message.value.trim() === '') {
+                alert('Please enter a message');
+                message.focus();
+                return false;
+            }
+            
+            // Show loading state
+            sendButton.disabled = true;
+            sendButton.classList.add('disabled');
+            spinner.classList.remove('d-none');
+            return true;
+        });
+    }
+});
+
+function closeModal() {
+    const modal = document.getElementById('modal');
+    const backdrop = document.getElementById('modal-backdrop');
+    
+    // Add fade-out animation
+    modal.classList.add('fade');
+    backdrop.classList.add('fade');
+    
+    // Remove modal after animation completes
+    setTimeout(function() {
+        if (modal && modal.parentNode) {
+            modal.parentNode.removeChild(modal);
+        }
+        if (backdrop && backdrop.parentNode) {
+            backdrop.parentNode.removeChild(backdrop);
+        }
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }, 150);
+    
+    // Remove our custom event handler if we added one
+    const htmxModalContainer = document.getElementById('hx-modal');
+    if (htmxModalContainer) {
+        htmxModalContainer.innerHTML = '';
+    }
+}
+</script>
+
+<style>
+/* Enhance modal animations */
+.modal.fade.show {
+    animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Style Select2 to match theme if you're using it */
+.select2-container--default .select2-selection--multiple {
+    border-color: #ced4da;
+    border-radius: 0.375rem;
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Message textarea enhancements */
+.textarea-container {
+    position: relative;
+}
+
+#{{ form.message.id_for_label }} {
+    resize: none;
+    height: 120px;
+    transition: height 0.2s ease;
+}
+
+#{{ form.message.id_for_label }}:focus {
+    height: 150px;
+}
+</style>

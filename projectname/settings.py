@@ -1,10 +1,5 @@
 from pathlib import Path
 import os
-import environ
-
-# Initialize environment variables
-env = environ.Env()
-environ.Env.read_env()  # This reads the .env file
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,18 +26,26 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles', 
     'bloger',
     'cloudinary',
+    'django_select2',
     'cloudinary_storage',
-    'shop.apps.ShopConfig',  # Add this line
-    'messaging.apps.MessagingConfig',
+    'shop.apps.ShopConfig',
+    'chats.apps.ChatsConfig',
     'django_ckeditor_5',
-  
+     'crispy_forms',
+    'channels',  # Add Channels
+    'django_htmx',  # You already have the middleware, adding the app for consistency
 ]
+
+# Add to the bottom of settings.py
+CRISPY_TEMPLATE_PACK = 'bootstrap4'  # or 'bootstrap5' if using Bootstrap 5
+# In settings.py
+SELECT2_CACHE_BACKEND = 'default'
 
 # Cloudinary configuration
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dhjk7yqhd',
-    'API_KEY': '631711346737842',
-    'API_SECRET': 'GPNuxhykDt1UMo0q4aVHlmVgs1k',
+    'CLOUD_NAME': 'dxfnt46gv',
+    'API_KEY': '797951745846398',
+    'API_SECRET': 'J1Yfn5bk8Nt9oG5k2jguZx-pD6U',
     'UPLOAD_OPTIONS': {
         'resource_type': 'auto',
         'invalidate': True,
@@ -87,6 +90,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_htmx.middleware.HtmxMiddleware", 
 ]
 
 ROOT_URLCONF = 'projectname.urls'
@@ -118,25 +122,14 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': 'atAUXOCydBRYRvgEfiBWuKXxkVeAuVtd',
-        'HOST': 'autorack.proxy.rlwy.net',
-        'PORT': '32405',
+        'PASSWORD': 'ZHCtWrMEaeBOQxvWaYprwUOuwYdIcgHp',
+        'HOST': 'caboose.proxy.rlwy.net',
+        'PORT': '34589',
     }
 }
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': env('DATABASE_ENGINE', default='django.db.backends.sqlite3'),
-        'NAME': str(env('DATABASE_NAME', default=BASE_DIR / 'db.sqlite3')),  # Convert to string
-        'USER': env('DATABASE_USER', default=''),
-        'PASSWORD': env('DATABASE_PASSWORD', default=''),
-        'HOST': env('DATABASE_HOST', default=''),
-        'PORT': env('DATABASE_PORT', default=''),
-    }
-}
-
-# Comment out the SQLite configuration
+#Comment out the SQLite configuration
 #DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
@@ -322,6 +315,34 @@ LOGGING = {
             'propagate': True,
         },
     },
+}
+
+
+# Configure Channel Layers
+CHANNEL_LAYERS = {
+    'default': {
+        # For development, use the in-memory channel layer
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        
+        # For production, use Redis (requires channels_redis package)
+        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        # 'CONFIG': {
+        #     "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379/0')],
+        # },
+    }
+}
+
+# WebSocket authentication settings
+WEBSOCKET_TIMEOUT = 3600  # 1 hour in seconds
+WEBSOCKET_ACCEPT_ALL = True  # Accept all WebSocket connections (authentication is handled by middleware)
+
+# ASGI configuration
+ASGI_APPLICATION = 'projectname.asgi.application'
+
+# HTMX Configuration (already included middleware)
+HTMX_CLASSES = {
+    'hx-indicator': 'htmx-indicator',
+    'hx-swap-oob': 'htmx-swap-oob',
 }
 
 # Additional settings

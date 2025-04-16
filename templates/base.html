@@ -7,291 +7,748 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="SMART MEDIA - Your source for the latest news and updates" />
+  <meta name="description" content="NextGen Creators - Connecting Liberia's tech and business communities to spark innovation, collaboration, and growth" />
   <meta name="author" content="E-DIGITAL NETWORK" />
-  <title>{% block title %}NextGen Creators{% endblock %}</title>
+  <meta name="theme-color" content="#1a1a1a" />
+  <title>{% block title %}NextGen Creators{% endblock %} | Liberia's Innovation Network</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="{% static 'images/favicons/favicon.png' %}" sizes="32x32" type="image/png">
+  <link rel="icon" href="{% static 'images/favicons/favicon.png' %}" sizes="16x16" type="image/png">
+  <link rel="shortcut icon" href="{% static 'images/favicons/favicon.png' %}" type="image/x-icon">
+ 
   
   <!-- Google Web Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">  
-
-  <!-- Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">  
+  
+  <!-- CSS Libraries -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/all.min.css" rel="stylesheet">
-
-  <!-- Libraries Stylesheet -->
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap-5.1.3/css/bootstrap.min.css' %}">
   <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+  <link href="{% static 'lib/owlcarousel/assets/owl.theme.default.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'vendor/material-design/css/material-design-iconic-font.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+  <link rel="stylesheet" href="{% static 'css/main.min.css' %}">
+ 
   
-
-  <!-- Customized Bootstrap Stylesheet -->
-  <link href="{% static 'css/style.css' %}" rel="stylesheet">
-  
+  <!-- CSS Animations and Custom Styles  <link href="{% static 'css/style.css' %}" rel="stylesheet">-->
   <style>
+    :root {
+      /* Yellow and Black Theme */
+      --primary-color: #ffc107; /* Yellow */
+      --primary-dark: #ffa000;
+      --primary-light: #fff350;
+      --secondary-color: #212121; /* Black */
+      --secondary-light: #484848;
+      --secondary-dark: #000000;
+      --accent-color: #ff9800; /* Orange for accent */
+      
+      /* Other colors */
+      --success-color: #4caf50;
+      --danger-color: #f44336;
+      --warning-color: #ff9800;
+      --info-color: #2196f3;
+      --light-color: #f8f9fa;
+      --dark-color: #212121;
+      
+      /* Background and text */
+      --body-bg: #f5f5f5;
+      --text-color: #333333;
+      --text-light: #757575;
+      --text-dark: #212121;
+      
+      /* Shadows and transitions */
+      --card-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      --transition: all 0.3s ease;
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+      --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+      
+      /* Grayscale */
+      --gray-100: #f8f9fa;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-400: #ced4da;
+      --gray-500: #adb5bd;
+      --gray-600: #6c757d;
+      --gray-700: #495057;
+      --gray-800: #343a40;
+      --gray-900: #212529;
+    }
+
+    body {
+      background-color: var(--body-bg);
+      font-family: 'Roboto', sans-serif;
+      color: var(--text-color);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
+    
+    a {
+      color: var(--primary-dark);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    a:hover {
+      color: var(--primary-color);
+    }
+    
+    /* Animation classes */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+    
+    .slide-up {
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    .scale-in {
+      animation: scaleIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    /* Navbar styling - black with yellow accents */
+    .navbar {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .bg-dark {
+      background-color: var(--secondary-color) !important;
+    }
+    
+    .navbar-dark .navbar-nav .nav-link {
+      color: rgba(255,255,255,0.8);
+    }
+    
+    .navbar-dark .navbar-nav .nav-link:hover, 
+    .navbar-dark .navbar-nav .nav-link:focus {
+      color: var(--primary-color);
+    }
+    
+    .navbar-dark .navbar-nav .nav-link.active {
+      color: var(--primary-color);
+    }
+    
+    .navbar-brand {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+    }
+    
+    .navbar-nav .nav-link {
+      position: relative;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      transition: var(--transition);
+    }
+    
+    .navbar-nav .nav-link.active::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 3px;
+      background-color: var(--primary-color);
+      border-radius: 10px;
+    }
+    
+    .navbar-nav .nav-link:hover:not(.active)::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 15px;
+      height: 3px;
+      background-color: var(--primary-color);
+      border-radius: 10px;
+      transition: var(--transition);
+    }
+    
+    /* Text colors - yellow and black */
+    .text-primary {
+      color: var(--primary-color) !important;
+    }
+    
+    .text-secondary {
+      color: var(--secondary-color) !important;
+    }
+    
+    /* Background colors */
+    .bg-primary {
+      background-color: var(--primary-color) !important;
+      color: var(--secondary-dark) !important;
+    }
+    
+    .bg-secondary {
+      background-color: var(--secondary-color) !important;
+      color: white !important;
+    }
+    
+    /* Card styling */
+    .card {
+      border: none;
+      border-radius: 8px;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      transform: translateY(-5px);
+    }
+    
+    .card-header {
+      border-bottom: none;
+      padding: 1.25rem 1.5rem;
+      background-color: transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .card-header.bg-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)) !important;
+      color: var(--secondary-dark) !important;
+    }
+    
+    .card-header.bg-dark, .card-header.bg-secondary {
+      background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark)) !important;
+      color: white !important;
+    }
+    
+    /* Button styling - yellow and black */
+    .btn {
+      font-weight: 500;
+      border-radius: 5px;
+      padding: 0.5rem 1.25rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary {
+      background: var(--primary-color);
+      border: none;
+      color: var(--secondary-dark);
+      box-shadow: 0 4px 6px rgba(255, 193, 7, 0.2);
+    }
+    
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: var(--secondary-color);
+      border: none;
+      color: white;
+      box-shadow: 0 4px 6px rgba(33, 33, 33, 0.2);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--secondary-light);
+      box-shadow: 0 5px 15px rgba(33, 33, 33, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .btn-outline-primary {
+      border-color: var(--primary-color);
+      color: var(--secondary-dark);
+    }
+    
+    .btn-outline-primary:hover {
+      background-color: var(--primary-color);
+      color: var(--secondary-dark);
+    }
+    
+    .btn-outline-secondary {
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+    }
+    
+    .btn-outline-secondary:hover {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    
+    /* Badge styles */
+    .badge.bg-primary {
+      background-color: var(--primary-color) !important;
+      color: var(--secondary-dark) !important;
+    }
+    
+    .badge.bg-secondary {
+      background-color: var(--secondary-color) !important;
+      color: white !important;
+    }
+    
+    /* Utility classes */
+    .overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px;
+      background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+    }
+    
+    .badge {
+      padding: 0.4em 0.6em;
+      font-weight: 500;
+    }
+    
     /* Featured Products Widget Styles */
     .featured-products-list {
-        display: flex;
-        flex-direction: column;
+      display: flex;
+      flex-direction: column;
     }
 
     .featured-product-item {
-        display: flex;
-        padding: 1rem;
-        border-bottom: 1px solid rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: inherit;
+      display: flex;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
     }
 
     .featured-product-item:last-child {
-        border-bottom: none;
+      border-bottom: none;
     }
 
     .featured-product-item:hover {
-        background-color: rgba(0,0,0,0.02);
-        text-decoration: none;
-        transform: translateX(5px);
+      background-color: rgba(255, 193, 7, 0.1);
+      text-decoration: none;
+      transform: translateX(5px);
     }
 
     .featured-product-thumb {
-        position: relative;
-        width: 80px;
-        height: 80px;
-        margin-right: 1rem;
-        flex-shrink: 0;
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin-right: 1rem;
+      flex-shrink: 0;
     }
 
     .featured-product-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     .featured-product-info {
-        flex-grow: 1;
-        min-width: 0;
+      flex-grow: 1;
+      min-width: 0;
     }
 
     .product-title {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-        color: var(--secondary-color);
-        font-weight: 600;
-        line-height: 1.2;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: var(--secondary-color);
+      font-weight: 600;
+      line-height: 1.2;
     }
 
     .product-price {
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .current-price {
-        font-weight: 700;
-        color: var(--primary-color);
-        font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 1rem;
     }
 
     .original-price {
-        text-decoration: line-through;
-        color: #6c757d;
-        font-size: 0.85rem;
+      text-decoration: line-through;
+      color: #6c757d;
+      font-size: 0.85rem;
     }
 
     .discount-badge {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        z-index: 1;
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      z-index: 1;
     }
 
     .discount-badge .badge {
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .product-meta {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-
-    .category-badge {
-        font-size: 0.75rem;
-        padding: 0.2rem 0.5rem;
-        background-color: #e9ecef;
-        border-radius: 12px;
-        color: #6c757d;
-    }
-
-    .stock-badge {
-        font-size: 0.75rem;
-        padding: 0.2rem 0.5rem;
-        border-radius: 12px;
-    }
-
-    .stock-badge.in-stock {
-        background-color: #d4edda;
-        color: #155724;
-    }
-
-    .stock-badge.out-stock {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-
-    /* Profile Styles */
-    .profile-header {
-        position: relative;
-        margin-top: -100px;
-        padding: 2rem;
-        background: white;
-        border-radius: 12px;
-        box-shadow: var(--shadow-lg);
-        margin-bottom: 2rem;
-        border: 1px solid var(--gray-200);
-    }
-
-    .profile-picture-wrapper {
-        position: absolute;
-        top: -90px;
-        left: 2rem;
-    }
-
-    .profile-picture {
-        width: 180px;
-        height: 180px;
-        border-radius: 50%;
-        border: 4px solid white;
-        object-fit: cover;
-        box-shadow: var(--shadow-md);
-    }
-
+    /* Profile Status */
     .online-status {
-        position: absolute;
-        bottom: 12px;
-        right: 12px;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background-color: #22c55e; /* Green color for online status */
-        border: 3px solid white;
-        box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
-        animation: pulse 2s infinite;
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: #22c55e; /* Green color for online status */
+      border: 3px solid white;
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+      animation: pulse 2s infinite;
     }
 
     .offline-status {
-        position: absolute;
-        bottom: 12px;
-        right: 12px;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background-color: var(--gray-400);
-        border: 3px solid white;
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: var(--gray-400);
+      border: 3px solid white;
     }
 
     .status-text {
-        position: absolute;
-        bottom: -2px;
-        right: 32px;
-        font-size: 0.875rem;
-        color: var(--gray-600);
-        background-color: white;
-        padding: 2px 8px;
-        border-radius: 12px;
-        box-shadow: var(--shadow-sm);
-        opacity: 0;
-        transform: translateY(4px);
-        transition: all 0.2s ease;
+      position: absolute;
+      bottom: -2px;
+      right: 32px;
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      background-color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all 0.2s ease;
     }
 
     .profile-picture-wrapper:hover .status-text {
-        opacity: 1;
-        transform: translateY(0);
+      opacity: 1;
+      transform: translateY(0);
     }
 
     @keyframes pulse {
-        0% {
-            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
-        }
-        70% {
-            box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
-        }
+      0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+      }
     }
 
     /* Cookie Banner */
     #cookie-banner {
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        max-width: 500px;
-        background-color: #000000ae;
-        border: 1px solid #ffb300;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        padding: 20px;
-        z-index: 1000;
-        text-align: center;
-        font-family: Arial, sans-serif;
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 500px;
+      background-color: var(--secondary-color);
+      border: 1px solid var(--primary-color);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      z-index: 1000;
+      text-align: center;
+      backdrop-filter: blur(5px);
     }
 
     #cookie-banner p {
-        margin: 0;
-        padding: 0;
-        color: #ffffff;
-        font-size: 14px;
+      margin: 0;
+      padding: 0;
+      color: #ffffff;
+      font-size: 14px;
+      line-height: 1.6;
     }
 
     #cookie-banner .btn-container {
-        margin-top: 15px;
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
     }
 
     #accept-cookies {
-        padding: 10px 20px;
-        background-color: #ffa600;
-        color: rgb(255, 255, 255);
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
+      padding: 10px 20px;
+      background-color: var(--primary-color);
+      color: var(--secondary-dark);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: var(--transition);
     }
 
     #accept-cookies:hover {
-        background-color: whitesmoke;
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    #decline-cookies {
+      padding: 10px 20px;
+      background-color: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+    
+    #decline-cookies:hover {
+      background-color: rgba(255,255,255,0.1);
     }
 
-    @media (max-width: 768px) {
-        #cookie-banner {
-            width: 90%;
-            bottom: 10px;
-            padding: 15px;
-        }
-        #accept-cookies {
-            width: 100%;
-            padding: 10px;
-        }
-        
-        .featured-product-thumb {
-            width: 60px;
-            height: 60px;
-        }
-        
-        .product-title {
-            font-size: 0.85rem;
-        }
-        
-        .current-price {
-            font-size: 0.9rem;
-        }
+    /* Footer styling */
+    .footer {
+      background-color: var(--secondary-color);
+      color: #f8f9fa;
+    }
+    
+    .footer h5 {
+      position: relative;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    .footer h5::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 40px;
+      height: 3px;
+      border-radius: 10px;
+      background: var(--primary-color);
+    }
+    
+    .footer a {
+      color: rgba(255,255,255,0.7);
+      transition: var(--transition);
+    }
+    
+    .footer a:hover {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+    
+    .footer .social-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.1);
+      color: #fff;
+      margin-right: 8px;
+      transition: var(--transition);
+    }
+    
+    .footer .social-links a:hover {
+      background-color: var(--primary-color);
+      color: var(--secondary-dark);
+      transform: translateY(-3px);
+    }
+    
+    .footer .contact-info p {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .footer .contact-info i {
+      width: 24px;
+      margin-right: 10px;
+      color: var(--primary-color);
+    }
+    
+    /* Back to top button */
+    .back-to-top {
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-color);
+      color: var(--secondary-dark);
+      box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+      z-index: 99;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+    
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .back-to-top:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+    }
+    
+    /* Toast notifications */
+    .toast {
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .toast-header {
+      padding: 0.75rem 1rem;
+      border-bottom: none;
+    }
+    
+    /* Carousel customization */
+    .owl-nav button {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-color) !important;
+      color: var(--secondary-dark) !important;
+      border-radius: 50% !important;
+      font-size: 22px !important;
+      transition: var(--transition);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .owl-nav button:hover {
+      background: var(--primary-dark) !important;
+      transform: translateY(-2px);
+    }
+    
+    .owl-dots .owl-dot span {
+      background: #ddd !important;
+    }
+    
+    .owl-dots .owl-dot.active span {
+      background: var(--primary-color) !important;
+    }
+    
+    /* Hero section customization */
+    .hero-section {
+      background: var(--secondary-color);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, transparent 100%);
+      z-index: 1;
+    }
+    
+    .hero-section .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .hero-section h1 {
+      color: white;
+    }
+    
+    .hero-section h1 span {
+      color: var(--primary-color);
+    }
+    
+    /* Custom hover effects */
+    .hover-bg-light:hover {
+      background-color: rgba(255, 193, 7, 0.1);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 991.98px) {
+      .navbar-brand {
+        font-size: 1.3rem;
+      }
+      
+      .card {
+        margin-bottom: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 767.98px) {
+      .navbar-nav .nav-link.active::after,
+      .navbar-nav .nav-link:hover:not(.active)::after {
+        display: none;
+      }
+      
+      #cookie-banner {
+        width: 90%;
+        bottom: 10px;
+        padding: 15px;
+      }
+      
+      #accept-cookies, #decline-cookies {
+        padding: 8px 15px;
+      }
+      
+      .back-to-top {
+        right: 20px;
+        bottom: 20px;
+        width: 40px;
+        height: 40px;
+      }
+      
+      .featured-product-thumb {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .product-title {
+        font-size: 0.85rem;
+      }
+      
+      .current-price {
+        font-size: 0.9rem;
+      }
     }
   </style>
   
@@ -299,625 +756,591 @@
 </head>
 
 <body>
-  <!-- Topbar Start -->
-  <div class="container-fluid d-none d-lg-block">
-    <div class="row align-items-center bg-dark px-lg-5">
-      <div class="col-lg-9">
-        <nav class="navbar navbar-expand-sm bg-dark p-0">
-          <ul class="navbar-nav ml-n2">
-            <li class="nav-item border-right border-secondary">
-              <a class="nav-link text-body small" href="#">Monday - Saturday | 8am - 12pm</a>
-            </li>
-            {% if user.is_authenticated and user.is_superuser %}
-            <li class="nav-item border-right border-secondary">
-              <a class="nav-link text-body small" href="{% url 'set_cookie' %}">Cookie Set</a>
-            </li>
-            <li class="nav-item border-right border-secondary">
-              <a class="nav-link text-body small" href="{% url 'get_cookie' %}">Cookie Get</a>
-            </li>
+  <!-- Topbar -->
+  <div class="container-fluid bg-secondary d-none d-lg-block">
+    <div class="container">
+      <div class="row py-2 align-items-center">
+        <div class="col-lg-6">
+          <div class="d-flex text-white-50 small">
+            <div class="me-4"><i class="far fa-clock me-1"></i> Monday - Saturday | 8am - 12pm</div>
+            <div><i class="far fa-envelope me-1"></i> edigitalnetwork842@gmail.com</div>
+          </div>
+        </div>
+        <div class="col-lg-6 text-end">
+          <div class="d-flex justify-content-end">
+            {% if user.is_authenticated %}
+              <div class="dropdown">
+                <a class="text-white-50 small dropdown-toggle me-3" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="far fa-user-circle me-1"></i> {{ user.username }}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                  <li><a class="dropdown-item" href="{% url 'profile_detail' username=user.username %}"><i class="fas fa-user me-2 text-primary"></i> My Profile</a></li>
+                  <li><a class="dropdown-item" href="{% url 'profile_edit' %}"><i class="fas fa-cog me-2 text-primary"></i> Settings</a></li>
+                  {% if user.is_superuser %}
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="/admin/"><i class="fas fa-shield-alt me-2 text-primary"></i> Admin</a></li>
+                  {% endif %}
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2 text-primary"></i> Logout</a></li>
+                </ul>
+              </div>
+            {% else %}
+              <a href="{% url 'login' %}" class="text-white-50 small me-3"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
+              <a href="{% url 'register' %}" class="text-white-50 small me-3"><i class="fas fa-user-plus me-1"></i> Register</a>
             {% endif %}
-            <li class="nav-item border-right border-secondary">
-              <a class="nav-link text-body small" href="#">Contact</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-body small" href="#">Login</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div class="col-lg-3 text-right d-none d-md-block">
-        <nav class="navbar navbar-expand-sm bg-dark p-0">
-          <ul class="navbar-nav ml-auto mr-n2">
-            <li class="nav-item">
-              <a class="nav-link text-body" href="#"><small class="fab fa-twitter"></small></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-body" href="#"><small class="fab fa-facebook-f"></small></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-body" href="#"><small class="fab fa-linkedin-in"></small></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-body" href="#"><small class="fab fa-instagram"></small></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-body" href="#"><small class="fab fa-google-plus-g"></small></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link text-body" href="#"><small class="fab fa-youtube"></small></a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-    <div class="row align-items-center bg-white py-3 px-lg-5">
-      <div class="col-lg-4">
-        <a href="{% url 'index' %}" class="navbar-brand p-0 d-none d-lg-block">
-          <h1 class="m-0 display-4 text-uppercase text-primary">NextGen<span class="text-secondary font-weight-normal">Creators</span></h1>
-        </a>
-      </div>
-      <div class="col-lg-8 text-center text-lg-right">
-        <a href="https://jobnet360.com"><img class="img-fluid" src="#" alt=""></a>
+            <div class="social-links d-flex">
+              <a href="#" class="text-white-50 me-2"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="text-white-50 me-2"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="text-white-50 me-2"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="text-white-50"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <!-- Topbar End -->
 
-  <!-- Navbar Start -->
-  <div class="container-fluid p-0">
-    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-2 py-lg-0 px-lg-5">
-      <a href="{% url 'index' %}" class="navbar-brand d-block d-lg-none">
-        <h2 class="m-0 display-4 text-uppercase text-primary">NextGen <span class="text-white font-weight-normal">Creators</span></h2>
-      </a>
-      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-between px-0 px-lg-3" id="navbarCollapse">
-        <div class="navbar-nav mr-auto py-0">
-          <a href="{% url 'index' %}" class="nav-item nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
-          <a href="{% url 'about' %}" class="nav-item nav-link {% if 'about' in request.path %}active{% endif %}">About</a>
-
-          {% if user.is_authenticated %}
-            <a href="{% url 'create_blog_post' %}" class="nav-item nav-link {% if 'create' in request.path %}active{% endif %}">Post</a>
-            <a href="{% url 'draft_posts' %}" class="nav-item nav-link {% if 'draft' in request.path %}active{% endif %}">Draft Posts</a>
-            <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
-            <div class="nav-item dropdown">
-              <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Shop</a>
-              <div class="dropdown-menu rounded-0 m-0">
-                <a href="{% url 'shop:product_list' %}" class="dropdown-item">All Products</a>
-                <!-- Add more dropdown items if needed -->
-              </div>
+  <!-- Header -->
+  <header class="bg-white">
+    <div class="container py-3">
+      <div class="row align-items-center">
+        <div class="col-lg-4 col-md-6 mb-3 mb-md-0">
+          <a href="{% url 'index' %}" class="text-decoration-none">
+            <div class="d-flex align-items-center">
+              <img src="{% static 'images/favicons/favicon.png' %}" alt="NextGen Creators Logo" class="me-3" style="height: 50px;">
+              <h1 class="m-0 display-5 text-uppercase">
+               <!-- <span class="text-primary fw-bold">NextGen</span>
+                <span class="text-secondary fw-normal">Creators</span>-->
+              </h1>
             </div>
-          {% else %}
-            <a href="{% url 'login' %}" class="nav-item nav-link {% if 'login' in request.path %}active{% endif %}">Login or Signup</a>
-            <a href="{% url 'shop:product_list' %}" class="nav-item nav-link {% if 'shop' in request.path %}active{% endif %}">Shop</a>
-            <a href="#" class="nav-item nav-link">Contact</a>
-          {% endif %}
+          </a>
         </div>
-        <div class="input-group ml-auto d-none d-lg-flex" style="width: 100%; max-width: 300px;">
-          <form action="{% url 'search_results' %}" method="GET" class="d-flex w-100">
-            <input type="text" name="query" class="form-control border-0" placeholder="Search..." value="{{ request.GET.query|default:'' }}">
-            <div class="input-group-append">
-              <button type="submit" class="input-group-text bg-primary text-dark border-0 px-3"><i class="fa fa-search"></i></button>
+        <div class="col-lg-5 col-md-6 d-none d-md-block">
+          <form id="search-form-main" method="GET" action="{% url 'search_results' %}">
+            <div class="input-group">
+              <input class="form-control border-primary" type="text" name="query" 
+                    placeholder="{% trans 'Search for articles, products...' %}"
+                    aria-label="{% trans 'Search' %}" 
+                    value="{{ request.GET.query|default:'' }}">
+              <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
             </div>
           </form>
         </div>
-      </div>
-    </nav>
-  </div>
-  <!-- Navbar End -->
-
-   <!-- Main News Slider Start -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-7 px-0">
-            <div class="owl-carousel main-carousel position-relative">
-                {% for post in posts %}
-                <div class="position-relative overflow-hidden" style="height: 500px;">
-                    {% if post.image %}
-                    <img class="img-fluid h-100" src="{{ post.image.url }}" style="object-fit: cover;">
-                    {% endif %}
-                    <div class="overlay">
-                      {% if user.is_authenticated %}
-                    <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="{% url 'blog_detail' post.slug %}">{{ post.title|truncatewords:10 }}</a>
-                  {% else %}
-                  <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="#">{{ post.title|truncatewords:10 }}</a>
-                  {% endif %}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <div class="col-lg-5 px-0">
-            <div class="row mx-0">
-                {% for post in posts|slice:":4" %}
-                <div class="col-md-6 px-0">
-                    <div class="position-relative overflow-hidden" style="height: 250px;">
-                        {% if post.image %}
-                        <img class="img-fluid w-100 h-100" src="{{ post.image.url }}" style="object-fit: cover;">
-                        {% endif %}
-                        <div class="overlay">
-                          {% if user.is_authenticated %}
-                            <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="{% url 'blog_detail' post.slug %}">{{ post.title }}</a>
-                            {% else%}
-                            <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="#">{{ post.title }}</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
-  
-  {% block header_content %}{% endblock %}
-  
-  <!-- Content Block -->
-  <div class="container-fluid mt-4">
-    <div class="row">
-      <div class="col-lg-8">
-        {% block content %}{% endblock %}
-      </div>
-      <div class="col-lg-4">
-        {% if user.is_authenticated %}
-        <!-- User Profile Card -->
-        <div class="card mb-4 shadow-sm">
-          <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">{% trans "Your Profile" %}</h5>
-          </div>
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                {% if user.profile.profile_picture %}
-                <img src="{{ user.profile.profile_picture.url }}" class="img-fluid rounded-circle" alt="Profile Picture" style="width: 80px; height: 80px; object-fit: cover;">
-                {% else %}
-                <img src="{% static 'defaults/default_profile.png' %}" class="img-fluid rounded-circle" alt="Default Profile Picture" style="width: 80px; height: 80px; object-fit: cover;">
-                {% endif %}
-                
-                {% if user.is_active %}
-                <div class="online-status"></div>
-                <span class="status-text">Online</span>
-                {% else %}
-                <div class="offline-status"></div>
-                <span class="status-text">Last seen {{ user.last_active|timesince }} ago</span>
-                {% endif %}
-              </div>
-              <div class="col">
-                <h5 class="card-title mb-1">{{ user.get_full_name|default:user.username }}</h5>
-                {% if user.profile.career %}
-                <p class="card-text text-muted mb-2">{{ user.profile.career }}</p>
-                {% endif %}
-                {% if user.profile.bio %}
-                <p class="card-text mb-3">{{ user.profile.bio|truncatewords:20 }}</p>
-                {% endif %}
-                {% if user.profile.skills %}
-                <div class="mb-3">
-                  {% for skill in user.profile.skills %}
-                  <span class="badge bg-primary me-1">{{ skill }}</span>
-                  {% endfor %}
-                </div>
-                {% endif %}
-                <div class="d-flex gap-2">
-                  <a href="{% url 'profile_edit' %}" class="btn btn-primary btn-sm">
-                    <i class="fas fa-edit"></i> {% trans "Edit Profile" %}
-                  </a>
-                  {% if user.profile.linkedin %}
-                  <a href="{{ user.profile.linkedin }}" class="btn btn-outline-primary btn-sm" target="_blank">
-                    <i class="fab fa-linkedin"></i>
-                  </a>
-                  {% endif %}
-                  <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-user"></i> {% trans "View Profile" %}
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- User's Followers Widget -->
-        <div class="card mb-4 border rounded shadow-sm">
-          <div class="card-header bg-light d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Your Followers</h5>
-            <a href="{% url 'profile_detail' username=user.username %}" class="small">View All</a>
-          </div>
-          <div class="card-body p-0">
-            {% if user.profile.followers.all %}
-            <ul class="list-group list-group-flush">
-              {% for follower in user.profile.followers.all|slice:":5" %}
-              <li class="list-group-item d-flex align-items-center px-3 py-2">
-                <div class="position-relative">
-                  {% if follower.profile.profile_picture %}
-                  <img src="{{ follower.profile.profile_picture.url }}" class="rounded-circle mr-3" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ follower.username }}">
-                  {% else %}
-                  <img src="{% static 'img/user.png' %}" class="rounded-circle mr-3" style="width: 40px; height: 40px; object-fit: cover;" alt="Default Profile Picture">
-                  {% endif %}
-                  {% if follower.is_active %}
-                  <div class="position-absolute" style="bottom: 0; right: 0; width: 10px; height: 10px; background-color: #20c997; border-radius: 50%; border: 2px solid white;"></div>
-                  {% endif %}
-                </div>
-                <div class="ml-2">
-                  <a href="{% url 'profile_detail' username=follower.username %}" class="text-dark font-weight-bold text-decoration-none">{{ follower.get_full_name|default:follower.username }}</a>
-                  <p class="small text-muted mb-0">{{ follower.profile.career|default:"" }}</p>
-                </div>
-                <div class="ml-auto">
-                  {% if user.profile.user_follows.filter.following__user == follower %}
-                  <button class="btn btn-sm btn-outline-primary" onclick="toggleFollow(this)" data-username="{{ follower.username }}">Following</button>
-                  {% else %}
-                  <button class="btn btn-sm btn-primary" onclick="toggleFollow(this)" data-username="{{ follower.username }}">Follow</button>
-                  {% endif %}
-                </div>
-              </li>
-              {% endfor %}
-            </ul>
-            {% else %}
-            <div class="text-center py-4">
-              <i class="fas fa-user-friends fa-3x text-secondary mb-3"></i>
-              <p class="mb-0">You don't have any followers yet</p>
-            </div>
-            {% endif %}
-          </div>
-        </div>
-        {% endif %}<!-- CLOSING TAG FOR USER IS AUTHENTICATED SECTION -->
-        
-        <!-- Search Widget -->
-        <div class="card mb-4 shadow-sm">
-          <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">{% trans "Search" %}</h5>
-          </div>
-          <div class="card-body">
-            <form id="search-form" method="GET" action="{% url 'search_results' %}">
-              <div class="input-group">
-                <input class="form-control" type="text" name="query" 
-                      placeholder="{% trans 'Enter search term...' %}"
-                      aria-label="{% trans 'Enter search term...' %}" 
-                      value="{{ request.GET.query|default:'' }}">
-                <button class="btn btn-primary" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-        
-        <!-- Categories Widget -->
-        <div class="card mb-4 shadow-sm">
-          <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">{% trans "Categories" %}</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              {% get_categories as categories %}
-              {% for category in categories %}
-              <div class="col-6 mb-2">
-                <a href="{% url 'category_detail' slug=category.slug %}" 
-                    class="text-decoration-none">
-                  {{ category.name }}
-                  <span class="badge bg-primary float-end">
-                    {{ category.post_set.count }}
-                  </span>
-                </a>
-              </div>
-              {% empty %}
-              <div class="col-12">
-                <p class="text-muted mb-0">{% trans "No categories available" %}</p>
-              </div>
-              {% endfor %}
-            </div>
-          </div>
-        </div>
-
-        <!-- Popular Posts Widget -->
-        <div class="card mb-4 shadow-sm">
-          <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">{% trans "Popular Posts" %}</h5>
-          </div>
-          <div class="card-body">
-            {% get_popular_posts as popular_posts %}
-            <div class="list-group list-group-flush">
-              {% for post in popular_posts|slice:":5" %}
-              <a href="{% url 'post_detail' post.slug %}" 
-                  class="list-group-item list-group-item-action d-flex align-items-start">
-                {% if post.image %}
-                <img class="img-fluid rounded-circle me-3" src="{{ post.image.url }}" 
-                      style="width: 40px; height: 40px; object-fit: cover;" 
-                      alt="{{ post.title }}">
-                {% else %}
-                <img class="img-fluid rounded-circle me-3" src="{% static 'img/default-post.jpg' %}" 
-                      style="width: 40px; height: 40px; object-fit: cover;" 
-                      alt="Default popular post image">
-                {% endif %}
-                <div class="w-100">
-                  <h6 class="mb-1">{{ post.title|truncatechars:50 }}</h6>
-                  <small class="text-muted">{{ post.created_on|timesince }}</small>
-                  {% if post.category %}
-                  <small class="text-muted">
-                    <span class="badge bg-secondary me-1">{{ post.category.name }}</span>
-                  </small>
-                  {% endif %}
-                </div>
+        <div class="col-lg-3 d-none d-lg-block text-end">
+          <div class="d-flex justify-content-end align-items-center">
+            {% if user.is_authenticated %}
+              <a href="{% url 'shop:cart' %}" class="position-relative me-4">
+                <i class="fas fa-shopping-cart fa-2x text-primary"></i>
+                <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
+                  {{ cart_items_count|default:"0" }}
+                </span>
               </a>
-              {% empty %}
-              <p class="text-muted mb-0">{% trans "No posts available" %}</p>
-              {% endfor %}
-            </div>
+            <!--  <a href="{% url 'chats:discussions' %}" class="position-relative me-4">
+                <i class="fas fa-comments fa-2x text-primary"></i>
+                <span id="unread-messages-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary" style="display: {% if unread_messages_count %}block{% else %}none{% endif %};">
+                  {{ unread_messages_count|default:"0" }}
+                </span>
+              </a>-->
+            {% endif %}
+            <a href="{% url 'create_blog_post' %}" class="btn btn-outline-primary d-none d-lg-inline-block">
+              <i class="fas fa-pencil-alt me-1"></i> Create Post
+            </a>
           </div>
         </div>
-        
-        {% block sidebar %}{% endblock %}
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- Footer Start -->
-  <div class="container-fluid bg-dark pt-5 px-sm-3 px-md-5 mt-5">
-    <div class="row py-4">
-      <div class="col-lg-3 col-md-6 mb-5">
-        <h5 class="mb-4 text-white text-uppercase font-weight-bold">Get In Touch</h5>
-        <p class="font-weight-medium"><i class="fa fa-map-marker-alt mr-2"></i>Barnesville, Montserrado County</p>
-        <p class="font-weight-medium"><i class="fa fa-phone-alt mr-2"></i>+231-778187295</p>
-        <p class="font-weight-medium"><i class="fa fa-envelope mr-2"></i>edigitalnetwork842@gmail.com</p>
-        <h6 class="mt-4 mb-3 text-white text-uppercase font-weight-bold">Follow Us</h6>
-        <div class="d-flex justify-content-start">
-          <a class="btn btn-lg btn-secondary btn-lg-square mr-2" href="#"><i class="fab fa-twitter"></i></a>
-          <a class="btn btn-lg btn-secondary btn-lg-square mr-2" href="#"><i class="fab fa-facebook-f"></i></a>
-          <a class="btn btn-lg btn-secondary btn-lg-square mr-2" href="#"><i class="fab fa-linkedin-in"></i></a>
-          <a class="btn btn-lg btn-secondary btn-lg-square mr-2" href="#"><i class="fab fa-instagram"></i></a>
-          <a class="btn btn-lg btn-secondary btn-lg-square" href="#"><i class="fab fa-youtube"></i></a>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 mb-5">
-        <h5 class="mb-4 text-white text-uppercase font-weight-bold">Popular News</h5>
-        {% for post in recent_posts %}
-          <div class="mb-3">
-            <div class="mb-2">
-              <a class="text-body" href="{% url 'blog_detail' post.slug %}"><small>{{ post.created_on|date:"M d, Y" }}</small></a>
-            </div>
-            <a class="small text-body text-uppercase font-weight-medium" href="{% url 'blog_detail' post.slug %}">{{ post.title|truncatechars:50 }}</a>
+  <!-- Main Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-secondary sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-lg-none" href="{% url 'index' %}">
+        <span class="text-primary">NextGen</span>Creators
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'index' %}">
+              <i class="fas fa-home me-1"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'about' in request.path %}active{% endif %}" href="{% url 'about' %}">
+              <i class="fas fa-info-circle me-1"></i> About
+            </a>
+          </li>
+          
+          {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link {% if 'create' in request.path %}active{% endif %}" href="{% url 'create_blog_post' %}">
+                <i class="fas fa-pencil-alt me-1"></i> Create Post
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if 'draft' in request.path %}active{% endif %}" href="{% url 'draft_posts' %}">
+                <i class="fas fa-file me-1"></i> My Drafts
+              </a>
+            </li>
+            
+            <!-- Add Chat Link 
+            <li class="nav-item">
+              <a href="{% url 'chats:discussions' %}" class="nav-link {% if 'chats' in request.path %}active{% endif %}">
+                <i class="fas fa-comments me-1"></i> Chats
+                <span id="mobile-unread-messages-count" class="badge bg-primary rounded-pill" style="display: {% if unread_messages_count %}inline{% else %}none{% endif %};">
+                  {{ unread_messages_count|default:"0" }}
+                </span>
+              </a>
+            </li>-->
+          {% endif %}
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {% if 'shop' in request.path %}active{% endif %}" href="#" id="shopDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-shopping-bag me-1"></i> Shop
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="shopDropdown">
+              <li><a class="dropdown-item" href="{% url 'shop:product_list' %}">All Products</a></li>
+              {% get_categories as shop_categories %}
+              {% for category in shop_categories|slice:":5" %}
+                <li><a class="dropdown-item" href="{% url 'shop:category_products' category.slug %}">{{ category.name }}</a></li>
+              {% endfor %}
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'shop:cart' %}">
+                <i class="fas fa-shopping-cart me-2 text-primary"></i> My Cart
+              </a></li>
+              {% if user.is_authenticated %}
+              <li><a class="dropdown-item" href="{% url 'shop:order_list' %}">
+                <i class="fas fa-box me-2 text-primary"></i> My Orders
+              </a></li>
+              {% endif %}
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#contact">
+              <i class="fas fa-envelope me-1"></i> Contact
+            </a>
+          </li>
+          {% if user.is_authenticated %}
+            <li class="nav-item d-lg-none">
+              <a class="nav-link" href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt me-1"></i> Logout
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item d-lg-none">
+              <a class="nav-link" href="{% url 'login' %}">
+                <i class="fas fa-sign-in-alt me-1"></i> Login
+              </a>
+            </li>
+            <li class="nav-item d-lg-none">
+              <a class="nav-link" href="{% url 'register' %}">
+                <i class="fas fa-user-plus me-1"></i> Register
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+        
+        <!-- Mobile-only search form -->
+        <form class="d-md-none mt-3" id="search-form-mobile" method="GET" action="{% url 'search_results' %}">
+          <div class="input-group">
+            <input type="text" class="form-control" name="query" placeholder="Search...">
+            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
           </div>
-        {% empty %}
-          <p>No recent posts available.</p>
-        {% endfor %}
+        </form>
       </div>
-      
-      <div class="col-lg-3 col-md-6 mb-5">
-        <h5 class="mb-4 text-white text-uppercase font-weight-bold">Categories</h5>
-        <div class="m-n1">
-          {% get_categories as categories %}
-          {% for category in categories %}
-            <a href="{% url 'category_detail' category.slug %}" class="btn btn-sm btn-secondary m-1">{{ category.name }}</a>
-          {% empty %}
-            <p>No categories found.</p>
+    </div>
+  </nav>
+
+  <!-- HTMX Modal Container -->
+  <div id="hx-modal"></div>
+
+  <!-- CSRF Token for AJAX calls -->
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+  <!-- Main News Slider Start -->
+  <div class="container-fluid px-0">
+    <div class="row mx-0">
+      <div class="col-lg-7 px-0">
+        <div class="owl-carousel main-carousel position-relative">
+          {% for post in posts %}
+          <div class="position-relative overflow-hidden" style="height: 500px;">
+            {% if post.image %}
+            <img class="img-fluid h-100" src="{{ post.image.url }}" style="object-fit: cover;">
+            {% endif %}
+            <div class="overlay">
+              {% if user.is_authenticated %}
+                <a class="h5 m-0 text-white text-uppercase fw-bold" href="{% url 'blog_detail' post.slug %}">
+                  {{ post.title|truncatewords:10 }}
+                </a>
+              {% else %}
+                <a class="h5 m-0 text-white text-uppercase fw-bold" href="#">
+                  {{ post.title|truncatewords:10 }}
+                </a>
+              {% endif %}
+              <div class="mt-2 text-white-50 small">
+                <span class="me-2"><i class="far fa-calendar me-1"></i> {{ post.created_on|date:"M d, Y" }}</span>
+                <span><i class="far fa-user me-1"></i> {{ post.writer.username }}</span>
+              </div>
+            </div>
+          </div>
           {% endfor %}
         </div>
       </div>
-      
-      <div class="col-lg-3 col-md-6 mb-5">
-        <h5 class="mb-4 text-white text-uppercase font-weight-bold">Quick Links</h5>
-        <div class="m-n1">
-          <a href="{% url 'index' %}" class="btn btn-sm btn-secondary m-1">Home</a>
-          <a href="{% url 'about' %}" class="btn btn-sm btn-secondary m-1">About</a>
-          <a href="{% url 'shop:product_list' %}" class="btn btn-sm btn-secondary m-1">Shop</a>
-          {% if user.is_authenticated %}
-            <a href="{% url 'create_blog_post' %}" class="btn btn-sm btn-secondary m-1">Create Post</a>
-            <a href="{% url 'profile' %}" class="btn btn-sm btn-secondary m-1">Profile</a>
-          {% else %}
-            <a href="{% url 'login' %}" class="btn btn-sm btn-secondary m-1">Login</a>
-            <a href="{% url 'register' %}" class="btn btn-sm btn-secondary m-1">Register</a>
-          {% endif %}
+      <div class="col-lg-5 px-0">
+        <div class="row mx-0">
+          {% for post in posts|slice:":4" %}
+          <div class="col-md-6 px-0">
+            <div class="position-relative overflow-hidden" style="height: 250px;">
+              {% if post.image %}
+              <img class="img-fluid w-100 h-100" src="{{ post.image.url }}" style="object-fit: cover;">
+              {% endif %}
+              <div class="overlay">
+                {% if user.is_authenticated %}
+                  <a class="h6 m-0 text-white text-uppercase fw-bold" href="{% url 'blog_detail' post.slug %}">
+                    {{ post.title }}
+                  </a>
+                {% else %}
+                  <a class="h6 m-0 text-white text-uppercase fw-bold" href="#">
+                    {{ post.title }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
         </div>
       </div>
     </div>
   </div>
-  <div class="container-fluid py-4 px-sm-3 px-md-5" style="background: #111111;">
-    <p class="m-0 text-center">&copy; <a href="#">NextGen Creators</a>. All Rights Reserved. 
-    Powered by <a href="https://www.edigitalnetwork.tech">E-DIGITAL NETWORK</a></p>
-  </div>
-  <!-- Footer End -->
+  
+  {% block header_content %}{% endblock %}
+  
+  <!-- Content Wrapper -->
+  <main>
+    <!-- Main Content Area -->
+    <div class="container mt-4">
+      <!-- Alerts/Messages -->
+      {% if messages %}
+        <div class="messages mb-4">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- Main Content Block -->
+          {% block content %}{% endblock %}
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+          {% if user.is_authenticated %}
+          <!-- User Profile Card -->
+          <div class="card mb-4 scale-in">
+            <div class="card-header bg-primary text-dark">
+              <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i> {% trans "Your Profile" %}</h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-0 align-items-center">
+                <div class="col-auto position-relative">
+                  {% if user.profile.profile_picture %}
+                  <img src="{{ user.profile.profile_picture.url }}" class="rounded-circle" alt="Profile Picture" style="width: 80px; height: 80px; object-fit: cover;">
+                  {% else %}
+                  <img src="{% static 'images/default.jpg' %}" class="rounded-circle" alt="Default Profile Picture" style="width: 80px; height: 80px; object-fit: cover;">
+                  {% endif %}
+                  
+                  {% if user.is_active %}
+                  <div class="online-status"></div>
+                  <span class="status-text">Online</span>
+                  {% else %}
+                  <div class="offline-status"></div>
+                  <span class="status-text">Last seen {{ user.last_active|timesince }} ago</span>
+                  {% endif %}
+                </div>
+                <div class="col ps-3">
+                  <h5 class="fw-bold mb-1">{{ user.get_full_name|default:user.username }}</h5>
+                  {% if user.profile.career %}
+                  <p class="text-muted small mb-2">{{ user.profile.career }}</p>
+                  {% endif %}
+                  
+                  <div class="d-flex mt-2">
+                    <div class="me-3 text-center">
+                      <span class="d-block fw-bold">{{ user.blog_posts.count }}</span>
+                      <small class="text-muted">Posts</small>
+                    </div>
+                    <div class="me-3 text-center">
+                      <span class="d-block fw-bold">{{ user.profile.follower_count }}</span>
+                      <small class="text-muted">Followers</small>
+                    </div>
+                    <div class="text-center">
+                      <span class="d-block fw-bold">{{ user.following.count }}</span>
+                      <small class="text-muted">Following</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-3 d-flex gap-2">
+                <a href="{% url 'profile_edit' %}" class="btn btn-sm btn-primary flex-grow-1">
+                  <i class="fas fa-edit me-1"></i> {% trans "Edit Profile" %}
+                </a>
+                <a href="{% url 'profile_detail' username=user.username %}" class="btn btn-sm btn-outline-secondary flex-grow-1">
+                  <i class="fas fa-user me-1"></i> {% trans "View Profile" %}
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- User's Followers Widget -->
+          <div class="card mb-4 slide-up">
+            <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+              <h5 class="mb-0"><i class="fas fa-users me-2"></i> Your Followers</h5>
+              <a href="{% url 'profile_detail' username=user.username %}" class="small text-primary">View All</a>
+            </div>
+            <div class="card-body p-0">
+              {% if user.profile.followers.all %}
+              <ul class="list-group list-group-flush">
+                {% for follower in user.profile.followers.all|slice:":5" %}
+                <li class="list-group-item d-flex align-items-center py-3">
+                  <div class="position-relative">
+                    {% if follower.profile.profile_picture %}
+                    <img src="{{ follower.profile.profile_picture.url }}" class="rounded-circle me-3" style="width: 40px; height: 40px; object-fit: cover;" alt="{{ follower.username }}">
+                    {% else %}
+                    <img src="{% static 'img/user.png' %}" class="rounded-circle me-3" style="width: 40px; height: 40px; object-fit: cover;" alt="Default Profile Picture">
+                    {% endif %}
+                    {% if follower.is_active %}
+                    <div class="position-absolute" style="bottom: 0; right: 0; width: 10px; height: 10px; background-color: #20c997; border-radius: 50%; border: 2px solid white;"></div>
+                    {% endif %}
+                  </div>
+                  <div>
+                    <a href="{% url 'profile_detail' username=follower.username %}" class="text-dark fw-bold text-decoration-none">{{ follower.get_full_name|default:follower.username }}</a>
+                    <p class="small text-muted mb-0">{{ follower.profile.career|default:"" }}</p>
+                  </div>
+                  <div class="ms-auto">
+                    {% if user.profile.user_follows.filter.following__user == follower %}
+                    <button class="btn btn-sm btn-outline-primary" onclick="toggleFollow(this)" data-username="{{ follower.username }}">Following</button>
+                    {% else %}
+                    <button class="btn btn-sm btn-primary" onclick="toggleFollow(this)" data-username="{{ follower.username }}">Follow</button>
+                    {% endif %}
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+              {% else %}
+              <div class="text-center py-4">
+                <i class="fas fa-user-friends fa-3x text-secondary mb-3"></i>
+                <p class="mb-0">You don't have any followers yet</p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}<!-- END USER AUTHENTICATED SECTION -->
+          
+          <!-- Search Widget -->
+          <div class="card mb-4 fade-in">
+            <div class="card-header bg-primary text-dark">
+              <h5 class="mb-0"><i class="fas fa-search me-2"></i> {% trans "Search" %}</h5>
+            </div>
+            <div class="card-body">
+              <form id="search-form" method="GET" action="{% url 'search_results' %}">
+                <div class="input-group">
+                  <input class="form-control" type="text" name="query" 
+                        placeholder="{% trans 'Enter search term...' %}"
+                        aria-label="{% trans 'Enter search term...' %}" 
+                        value="{{ request.GET.query|default:'' }}">
+                  <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          
+          <!-- Categories Widget -->
+          <div class="card mb-4 slide-up">
+            <div class="card-header bg-primary text-dark">
+              <h5 class="mb-0"><i class="fas fa-tags me-2"></i> {% trans "Categories" %}</h5>
+            </div>
+            <div class="card-body">
+              <div class="row g-2">
+                {% get_categories as categories %}
+                {% for category in categories %}
+                <div class="col-6 mb-2">
+                  <a href="{% url 'category_detail' slug=category.slug %}" 
+                      class="d-flex justify-content-between align-items-center text-decoration-none p-2 rounded hover-bg-light">
+                    <span class="text-truncate">{{ category.name }}</span>
+                    <span class="badge bg-primary text-dark rounded-pill">
+                      {{ category.post_count }}
+                    </span>
+                  </a>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                  <p class="text-muted mb-0 text-center">{% trans "No categories available" %}</p>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
 
-  <!-- Back to Top -->
-  <a href="#" class="btn btn-primary btn-square back-to-top"><i class="fa fa-arrow-up"></i></a>
+          <!-- Popular Posts Widget -->
+          <div class="card mb-4 scale-in">
+            <div class="card-header bg-primary text-dark">
+              <h5 class="mb-0"><i class="fas fa-fire me-2"></i> {% trans "Popular Posts" %}</h5>
+            </div>
+            <div class="card-body p-0">
+              {% get_popular_posts as popular_posts %}
+              <div class="list-group list-group-flush">
+                {% for post in popular_posts|slice:":5" %}
+                <a href="{% url 'post_detail' post.slug %}" 
+                    class="list-group-item list-group-item-action d-flex align-items-center p-3">
+                  {% if post.image %}
+                  <img class="rounded me-3" src="{{ post.image.url }}" 
+                        style="width: 50px; height: 50px; object-fit: cover;" 
+                        alt="{{ post.title }}">
+                  {% else %}
+                  <img class="rounded me-3" src="{% static 'img/default-post.jpg' %}" 
+                        style="width: 50px; height: 50px; object-fit: cover;" 
+                        alt="Default popular post image">
+                  {% endif %}
+                  <div>
+                    <h6 class="mb-1 text-truncate" style="max-width: 200px;">{{ post.title }}</h6>
+                    <div class="d-flex align-items-center small text-muted">
+                      <span><i class="far fa-clock me-1"></i> {{ post.created_on|timesince }}</span>
+                      <span class="ms-2"><i class="far fa-eye me-1"></i> {{ post.views }}</span>
+                      {% if post.category %}
+                      <span class="badge bg-secondary ms-2">{{ post.category.name }}</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </a>
+                {% empty %}
+                <div class="text-center py-4">
+                  <i class="fas fa-newspaper fa-3x text-secondary mb-3"></i>
+                  <p class="mb-0">{% trans "No posts available" %}</p>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          
+          {% block sidebar %}{% endblock %}
+        </div>
+      </div>
+    </div>
+  </main>
 
+  <!-- Footer -->
+  <footer class="footer mt-5 pt-5 pb-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+          <h5 class="text-uppercase">About Us</h5>
+          <p class="text-muted">NextGen Creators is Liberia's most dynamic tech & innovation network, connecting talent with opportunities and empowering digital leaders.</p>
+          <div class="social-links mt-4">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+          <h5 class="text-uppercase">Contact Info</h5>
+          <div class="contact-info">
+            <p><i class="fas fa-map-marker-alt"></i> Barnesville, Montserrado County</p>
+            <p><i class="fas fa-phone-alt"></i> +231-770326363</p>
+            <p><i class="fas fa-envelope"></i> nextgencreators00@gmail.com</p>
+            <p><i class="fas fa-clock"></i> Monday - Saturday: 8am - 12pm</p>
+          </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Quick Links</h5>
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2"><a href="{% url 'index' %}"><i class="fas fa-angle-right me-2"></i> Home</a></li>
+            <li class="mb-2"><a href="{% url 'about' %}"><i class="fas fa-angle-right me-2"></i> About Us</a></li>
+            <li class="mb-2"><a href="{% url 'shop:product_list' %}"><i class="fas fa-angle-right me-2"></i> Shop</a></li>
+            {% if user.is_authenticated %}
+              <li class="mb-2"><a href="{% url 'create_blog_post' %}"><i class="fas fa-angle-right me-2"></i> Create Post</a></li>
+              <li class="mb-2"><a href="{% url 'profile' %}"><i class="fas fa-angle-right me-2"></i> Profile</a></li>
+            {% else %}
+              <li class="mb-2"><a href="{% url 'login' %}"><i class="fas fa-angle-right me-2"></i> Login</a></li>
+              <li class="mb-2"><a href="{% url 'register' %}"><i class="fas fa-angle-right me-2"></i> Register</a></li>
+            {% endif %}
+            <li class="mb-2"><a href="#contact"><i class="fas fa-angle-right me-2"></i> Contact Us</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+          <h5 class="text-uppercase">Recent Posts</h5>
+          <ul class="list-unstyled">
+            {% for post in recent_posts|slice:":3" %}
+            <li class="mb-3">
+              <a href="{% url 'blog_detail' post.slug %}" class="d-flex align-items-center text-decoration-none">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="rounded me-2" alt="{{ post.title }}" style="width: 40px; height: 40px; object-fit: cover;">
+                {% else %}
+                <div class="bg-secondary rounded me-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                  <i class="fas fa-newspaper text-white"></i>
+                </div>
+                {% endif %}
+                <div>
+                  <span class="d-block text-truncate text-white-50" style="max-width: 150px;">{{ post.title }}</span>
+                  <small class="text-muted">{{ post.created_on|date:"M d, Y" }}</small>
+                </div>
+              </a>
+            </li>
+            {% empty %}
+            <li>No recent posts available.</li>
+            {% endfor %}
+          </ul>
+          <a href="{% url 'index' %}" class="btn btn-outline-primary btn-sm mt-2">View All Posts</a>
+        </div>
+      </div>
+      
+      <hr class="mt-4 mb-3 border-secondary">
+      
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0 text-muted">&copy; {% now "Y" %} <a href="#" class="text-primary">NextGen Creators</a>. All Rights Reserved.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <p class="mb-0 text-muted">Powered by <a href="https://www.edigitalnetwork.tech" class="text-primary">E-DIGITAL NETWORK</a></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <a href="#" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
+  
   <!-- Cookie Consent Banner -->
   <div id="cookie-banner">
     <p>We use cookies to analyze website traffic and optimize your website experience. By accepting our use of cookies, your data will be aggregated with all other user data.</p>
     <div class="btn-container">
       <button id="accept-cookies">Accept</button>
+      <button id="decline-cookies">Decline</button>
     </div>
   </div>
 
-  <!-- JavaScript Libraries -->
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="{% static 'lib/easing/easing.min.js' %}"></script>
-  <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
-  
-  <!-- Template Javascript -->
-  <script src="{% static 'js/main.js' %}"></script>
-  
-  <script>
-    // Owl Carousel initialization
-    $(document).ready(function(){
-      $(".owl-carousel").owlCarousel({
-        loop: true,
-        margin: 10,
-        nav: true,
-        responsive: {
-          0: { items: 1 },
-          600: { items: 1 },
-          1000: { items: 1 }
-        }
-      });
-    });
-
-    // Reply functionality
-    document.querySelectorAll('.reply-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.getElementById('parent_id').value = this.getAttribute('data-id');
-        window.scrollTo(0, document.body.scrollHeight);
-      });
-    });
-
-    // Cookie banner functionality
-    document.addEventListener("DOMContentLoaded", function() {
-      var cookieBanner = document.getElementById("cookie-banner");
-      var acceptButton = document.getElementById("accept-cookies");
-
-      if (!getCookie("cookieConsent")) {
-        cookieBanner.style.display = "block";
-      }
-
-      acceptButton.addEventListener("click", function() {
-        setCookie("cookieConsent", "true", 365);
-        cookieBanner.style.display = "none";
-      });
-
-      function setCookie(name, value, days) {
-        var expires = "";
-        if (days) {
-          var date = new Date();
-          date.setTime(date.getTime() + (days*24*60*60*1000));
-          expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-      }
-
-      function getCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0;i < ca.length;i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
-      }
-    });
-
-    // Shopping cart functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      // Get CSRF token from the page if available
-      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-      
-      function updateCart(productId, quantity) {
-        const formData = new FormData();
-        formData.append('product_id', productId);
-        formData.append('quantity', quantity);
-        
-        fetch('/shop/api/cart/update/', {
-          method: 'POST',
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRFToken': csrfToken,
-          },
-          body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.status === 'success') {
-            // Update cart UI
-            const cartTotalItems = document.getElementById('cart-total-items');
-            const cartTotalPrice = document.getElementById('cart-total-price');
-            
-            if (cartTotalItems) cartTotalItems.textContent = data.total_items;
-            if (cartTotalPrice) cartTotalPrice.textContent = `${data.total_price}`;
-            
-            // Show success message if toast element exists
-            const successToast = document.getElementById('successToast');
-            if (successToast) {
-              const toast = new bootstrap.Toast(successToast);
-              toast.show();
-            }
-          } else {
-            // Show error message
-            const errorMessage = document.getElementById('errorMessage');
-            if (errorMessage) errorMessage.textContent = data.message;
-            
-            const errorToast = document.getElementById('errorToast');
-            if (errorToast) {
-              const toast = new bootstrap.Toast(errorToast);
-              toast.show();
-            }
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-      }
-      
-      // Add to cart button handler
-      document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-          e.preventDefault();
-          const productId = this.dataset.productId;
-          const quantityInput = document.querySelector(`#quantity-${productId}`);
-          const quantity = quantityInput ? quantityInput.value : 1;
-          updateCart(productId, quantity);
-        });
-      });
-      
-      // Quantity input handler
-      document.querySelectorAll('.quantity-input').forEach(input => {
-        input.addEventListener('change', function() {
-          const productId = this.dataset.productId;
-          updateCart(productId, this.value);
-        });
-      });
-      
-      // Toggle follow functionality
-      window.toggleFollow = function(button) {
-        const username = button.dataset.username;
-        
-        fetch(`/profile/${username}/follow/`, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': csrfToken,
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-          },
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            alert(data.error);
-            return;
-          }
-          
-          if (data.is_following) {
-            button.textContent = 'Following';
-            button.classList.remove('btn-primary');
-            button.classList.add('btn-outline-primary');
-          } else {
-            button.textContent = 'Follow';
-            button.classList.remove('btn-outline-primary');
-            button.classList.add('btn-primary');
-          }
-          
-          // Update follower count if element exists
-          const followerCountElement = document.getElementById(`follower-count-${username}`);
-          if (followerCountElement) {
-            followerCountElement.textContent = data.follower_count;
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          alert('An error occurred while updating follow status.');
-        });
-      };
-    });
-
-    {% block extra_js %}{% endblock %}
-  </script>
-
-<div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
-    <div id="errorToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+  <!-- Toast Containers -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+    <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
       <div class="toast-header bg-danger text-white">
-        <strong class="mr-auto"><i class="fas fa-exclamation-circle mr-1"></i> Error</strong>
-        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <strong class="me-auto">Error</strong>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body" id="errorToastBody">
         An error occurred. Please try again.
@@ -925,19 +1348,408 @@
     </div>
   </div>
   
-  <!-- Success Toast -->
-  <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
-    <div id="successToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000">
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+    <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
       <div class="toast-header bg-success text-white">
-        <strong class="mr-auto"><i class="fas fa-check-circle mr-1"></i> Success</strong>
-        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <i class="fas fa-check-circle me-2"></i>
+        <strong class="me-auto">Success</strong>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body" id="successToastBody">
         Action completed successfully!
       </div>
     </div>
   </div>
+
+ <!-- JavaScript Libraries -->
+ <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+ <script src="{% static 'vendor/jquery-3.6.0/jquery-3.6.0.min.js' %}"></script>
+ <script src="{% static 'vendor/bootstrap-5.1.3/js/bootstrap.bundle.min.js' %}"></script>
+ <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+ <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+ <script src="{% static 'js/reconnecting-websocket.js' %}"></script>
+ <script src="{% static 'js/main.js' %}"></script>
+ 
+ <script>
+   document.addEventListener('DOMContentLoaded', function() {
+     // Initialize carousels
+     if (typeof $.fn.owlCarousel !== 'undefined') {
+       $(".owl-carousel").owlCarousel({
+         loop: true,
+         margin: 10,
+         nav: true,
+         navText: [
+           '<i class="fas fa-chevron-left"></i>',
+           '<i class="fas fa-chevron-right"></i>'
+         ],
+         responsive: {
+           0: { items: 1 },
+           576: { items: 1 },
+           768: { items: 1 }
+         },
+         autoplay: true,
+         autoplayTimeout: 5000,
+         autoplayHoverPause: true
+       });
+     }
+     
+     // Back to top button
+     const backToTopButton = document.getElementById('backToTop');
+     if (backToTopButton) {
+       window.addEventListener('scroll', function() {
+         if (window.pageYOffset > 300) {
+           backToTopButton.classList.add('visible');
+         } else {
+           backToTopButton.classList.remove('visible');
+         }
+       });
+       
+       backToTopButton.addEventListener('click', function(e) {
+         e.preventDefault();
+         window.scrollTo({top: 0, behavior: 'smooth'});
+       });
+     }
+     
+     // Cookie banner functionality
+     const cookieBanner = document.getElementById("cookie-banner");
+     const acceptButton = document.getElementById("accept-cookies");
+     const declineButton = document.getElementById("decline-cookies");
+     
+     if (cookieBanner) {
+       if (!getCookie("cookieConsent")) {
+         setTimeout(() => {
+           cookieBanner.style.display = "block";
+         }, 2000);
+       }
+       
+       if (acceptButton) {
+         acceptButton.addEventListener("click", function() {
+           setCookie("cookieConsent", "accepted", 365);
+           cookieBanner.style.display = "none";
+         });
+       }
+       
+       if (declineButton) {
+         declineButton.addEventListener("click", function() {
+           setCookie("cookieConsent", "declined", 30);
+           cookieBanner.style.display = "none";
+         });
+       }
+     }
+     
+     // Comment reply functionality
+     document.querySelectorAll('.reply-btn').forEach(btn => {
+       btn.addEventListener('click', function() {
+         const commentId = this.getAttribute('data-id');
+         const parentInput = document.getElementById('parent_id');
+         if (parentInput) parentInput.value = commentId;
+         
+         // Scroll to comment form
+         const commentForm = document.querySelector('.comment-form');
+         if (commentForm) {
+           commentForm.scrollIntoView({behavior: "smooth"});
+           
+           // Add visual indication
+           commentForm.classList.add('bg-light');
+           setTimeout(() => {
+             commentForm.classList.remove('bg-light');
+           }, 1500);
+         }
+       });
+     });
+     
+     // HTMX Modal Handler
+     document.body.addEventListener('htmx:afterSwap', function(event) {
+       if (event.detail.target.id === 'hx-modal') {
+         const modalElement = event.detail.target.querySelector('.modal');
+         if (modalElement) {
+           const modal = new bootstrap.Modal(modalElement);
+           modal.show();
+         }
+       }
+     });
+     
+     // Shopping cart functionality
+     setupShoppingCart();
+     
+     // Like button functionality
+     setupLikeButtons();
+     
+     // Copy link functionality
+     setupCopyLinks();
+     
+     // Update unread messages count
+     updateUnreadMessageCount();
+     
+     // Initialize tooltips
+     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+     tooltipTriggerList.map(function(tooltipTriggerEl) {
+       return new bootstrap.Tooltip(tooltipTriggerEl);
+     });
+   });
+   
+   // Cookie functions
+   function setCookie(name, value, days) {
+     var expires = "";
+     if (days) {
+       var date = new Date();
+       date.setTime(date.getTime() + (days*24*60*60*1000));
+       expires = "; expires=" + date.toUTCString();
+     }
+     document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax";
+   }
+   
+   function getCookie(name) {
+     var nameEQ = name + "=";
+     var ca = document.cookie.split(';');
+     for(var i=0;i < ca.length;i++) {
+       var c = ca[i];
+       while (c.charAt(0)==' ') c = c.substring(1,c.length);
+       if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+     }
+     return null;
+   }
+   
+   // Shopping cart functionality
+   function setupShoppingCart() {
+     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+     
+     addToCartButtons.forEach(button => {
+       button.addEventListener('click', function(e) {
+         e.preventDefault();
+         const productId = this.dataset.productId;
+         const quantityInput = document.querySelector(`#quantity-${productId}`);
+         const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+         
+         updateCart(productId, quantity, csrfToken);
+       });
+     });
+     
+     function updateCart(productId, quantity, csrfToken) {
+       const formData = new FormData();
+       formData.append('product_id', productId);
+       formData.append('quantity', quantity);
+       
+       fetch('/shop/api/cart/update/', {
+         method: 'POST',
+         headers: {
+           'X-Requested-With': 'XMLHttpRequest',
+           'X-CSRFToken': csrfToken
+         },
+         body: formData
+       })
+       .then(response => response.json())
+       .then(data => {
+         if (data.status === 'success') {
+           // Update cart count
+           const cartCount = document.getElementById('cart-count');
+           if (cartCount) {
+             cartCount.textContent = data.total_items;
+             cartCount.style.display = data.total_items > 0 ? 'block' : 'none';
+           }
+           
+           // Show success toast
+           showToast('success', 'Product added to cart successfully!');
+         } else {
+           showToast('error', data.message || 'Error adding product to cart');
+         }
+       })
+       .catch(error => {
+         console.error('Error:', error);
+         showToast('error', 'An unexpected error occurred');
+       });
+     }
+   }
+   
+   // Follow functionality
+   function toggleFollow(button) {
+     const username = button.dataset.username;
+     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+     
+     if (!csrfToken) {
+       window.location.href = '/login/?next=' + window.location.pathname;
+       return;
+     }
+     
+     const originalText = button.textContent;
+     button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+     button.disabled = true;
+     
+     fetch(`/profile/${username}/follow/`, {
+       method: 'POST',
+       headers: {
+         'X-CSRFToken': csrfToken,
+         'Content-Type': 'application/json',
+         'X-Requested-With': 'XMLHttpRequest'
+       }
+     })
+     .then(response => response.json())
+     .then(data => {
+       if (data.error) {
+         showToast('error', data.error);
+         button.textContent = originalText;
+         return;
+       }
+       
+       if (data.is_following) {
+         button.textContent = 'Following';
+         button.classList.remove('btn-primary');
+         button.classList.add('btn-outline-primary');
+       } else {
+         button.textContent = 'Follow';
+         button.classList.remove('btn-outline-primary');
+         button.classList.add('btn-primary');
+       }
+       
+       // Update follower count if element exists
+       const followerCountElement = document.getElementById(`follower-count-${username}`);
+       if (followerCountElement) {
+         followerCountElement.textContent = data.follower_count;
+       }
+     })
+     .catch(error => {
+       console.error('Error:', error);
+       showToast('error', 'An error occurred while updating follow status');
+       button.textContent = originalText;
+     })
+     .finally(() => {
+       button.disabled = false;
+     });
+   }
+   
+   // Like functionality
+   function setupLikeButtons() {
+     document.querySelectorAll('.like-btn').forEach(button => {
+       button.addEventListener('click', function() {
+         const postId = this.getAttribute('data-post-id');
+         likePost(this, postId);
+       });
+     });
+   }
+   
+   function likePost(button, postId) {
+     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+     
+     if (!csrfToken) {
+       window.location.href = '/login/?next=' + window.location.pathname;
+       return;
+     }
+     
+     const originalHTML = button.innerHTML;
+     button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+     button.disabled = true;
+     
+     fetch('/like-post/', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/x-www-form-urlencoded',
+         'X-CSRFToken': csrfToken,
+         'X-Requested-With': 'XMLHttpRequest'
+       },
+       body: `post_id=${postId}`
+     })
+     .then(response => {
+       if (response.ok) {
+         return response.json();
+       }
+       throw new Error('Network response was not ok.');
+     })
+     .then(data => {
+       if (data.error) {
+         throw new Error(data.error);
+       }
+       
+       // Update like button appearance
+       const heartIcon = data.liked ? 'fas fa-heart' : 'far fa-heart';
+       button.innerHTML = `<i class="${heartIcon} me-1"></i> <span class="like-count">${data.total_likes}</span>`;
+       
+       // Update button class
+       if (data.liked) {
+         button.classList.remove('btn-outline-primary');
+         button.classList.add('btn-primary');
+       } else {
+         button.classList.remove('btn-primary');
+         button.classList.add('btn-outline-primary');
+       }
+     })
+     .catch(error => {
+       console.error('Error:', error);
+       button.innerHTML = originalHTML;
+       showToast('error', error.message || 'Failed to process your request');
+     })
+     .finally(() => {
+       button.disabled = false;
+     });
+   }
+   
+   // Copy link functionality
+   function setupCopyLinks() {
+     document.querySelectorAll('.copy-link').forEach(link => {
+       link.addEventListener('click', function() {
+         const url = this.getAttribute('data-url');
+         navigator.clipboard.writeText(url)
+           .then(() => {
+             showToast('success', 'Link copied to clipboard!');
+           })
+           .catch(err => {
+             console.error('Could not copy text: ', err);
+             showToast('error', 'Failed to copy link');
+           });
+       });
+     });
+   }
+   
+   // Show toast notification
+   function showToast(type, message) {
+     const toast = document.getElementById(`${type}Toast`);
+     const toastBody = document.getElementById(`${type}ToastBody`);
+     
+     if (toast && toastBody) {
+       toastBody.textContent = message;
+       const bsToast = new bootstrap.Toast(toast);
+       bsToast.show();
+     } else {
+       // Fallback if toast elements don't exist
+       if (type === 'error') {
+         console.error(message);
+       } else {
+         console.log(message);
+       }
+     }
+   }
+   
+   // Update unread messages count
+   function updateUnreadMessageCount() {
+     const badge = document.getElementById('unread-messages-count');
+     const mobileBadge = document.getElementById('mobile-unread-messages-count');
+     if (!badge && !mobileBadge) return;
+     
+     fetch('{% url "chats:total_unread_messages" %}')
+       .then(response => response.json())
+       .then(data => {
+         if (data.total_unread_counter > 0) {
+           if (badge) {
+             badge.textContent = data.total_unread_counter;
+             badge.style.display = 'inline';
+           }
+           if (mobileBadge) {
+             mobileBadge.textContent = data.total_unread_counter;
+             mobileBadge.style.display = 'inline';
+           }
+         } else {
+           if (badge) badge.style.display = 'none';
+           if (mobileBadge) mobileBadge.style.display = 'none';
+         }
+       })
+       .catch(error => {
+         console.error('Error fetching unread messages:', error);
+       });
+     
+     // Update every 30 seconds
+     setTimeout(updateUnreadMessageCount, 30000);
+   }
+ </script>
+
 </body>
 </html>

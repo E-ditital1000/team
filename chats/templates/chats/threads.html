@@ -1,0 +1,575 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load chats_extras %}
+
+{% block title %}Messages - Chat Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Core layout styles */
+  body {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* Enhanced chat containers */
+  .chat-container {
+    height: 83vh;
+    max-height: 83vh;
+    border-radius: 16px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0,0,0,0.1);
+    position: relative;
+  }
+  
+  /* Sidebar styling */
+  .chat-nav {
+    height: 83vh;
+    max-height: 83vh;
+    border-radius: 16px;
+    position: relative;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+  
+  /* Sidebar header */
+  .chat-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* Search functionality */
+  .search-box {
+    padding: 10px 16px;
+    position: relative;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 10px 16px 10px 40px;
+    border-radius: 24px;
+    border: 1px solid #e0e0e0;
+    background-color: white;
+    transition: all 0.3s;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #adb5bd;
+  }
+  
+  /* Conversations list */
+  .conversations-container {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.2) transparent;
+  }
+  
+  .conversations-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .conversations-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 3px;
+  }
+  
+  .conversation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Chat item styling */
+  .chat-link {
+    display: flex;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin: 4px 8px;
+    transition: all 0.3s ease;
+    text-decoration: none !important;
+    color: inherit !important;
+    position: relative;
+  }
+  
+  .chat-link:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+  }
+  
+  .chat-link.active {
+    background-color: rgba(13,110,253,0.1);
+    border-left: 3px solid #0d6efd;
+  }
+  
+  /* Avatar styling */
+  .avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  
+  .avatar-md {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+  
+  .avatar-text {
+    background-color: #f0f0f0;
+    color: #495057;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  /* Message preview */
+  .message-preview {
+    flex: 1;
+    margin-left: 12px;
+    min-width: 0; /* Enables truncation */
+  }
+  
+  .chat-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .chat-snippet {
+    font-size: 13px;
+    color: #6c757d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 16px; /* Space for unread badge */
+  }
+  
+  /* Unread indicator */
+  .unread-badge {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #0d6efd;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 0 6px;
+  }
+  
+  /* Empty state */
+  .empty-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    text-align: center;
+  }
+  
+  .empty-icon {
+    font-size: 64px;
+    color: #adb5bd;
+    margin-bottom: 16px;
+  }
+  
+  /* Loading indicator */
+  .loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 8px;
+  }
+  
+  /* Gradient fade at bottom of list */
+  .fade-bottom {
+    position: sticky;
+    bottom: 0;
+    height: 40px;
+    background-image: linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0));
+    pointer-events: none;
+  }
+  
+  /* Welcome screen */
+  .welcome-screen {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 32px;
+  }
+  
+  /* Mobile navigation */
+  .mobile-nav {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: none;
+  }
+  
+  .mobile-nav-button {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 320px;
+    background-color: white;
+    z-index: 1050;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    overflow-y: auto;
+  }
+  
+  .mobile-menu.show {
+    transform: translateX(0);
+  }
+  
+  .mobile-menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1049;
+    display: none;
+  }
+  
+  .mobile-menu-header {
+    padding: 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 991.98px) {
+    .mobile-nav {
+      display: block;
+    }
+    
+    .chat-container {
+      height: calc(100vh - 72px);
+      max-height: calc(100vh - 72px);
+      margin-top: 0;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<script src="{% static 'js/chat.js' %}"></script>
+
+<div class="container py-3">
+  <div class="row">
+    <!-- Left Sidebar - Desktop Only -->
+    <div class="col-lg-4 d-none d-lg-block">
+      <div class="chat-nav">
+        <!-- Header with title and new message button -->
+        <div class="chat-header">
+          <h5 class="mb-0">Messages</h5>
+          <a role="button" class="btn btn-primary btn-sm"
+             hx-get="{% url 'chats:thread_new' %}?next={{ request.path }}" 
+             hx-target="#hx-modal"
+             hx-indicator="#header-indicator">
+            <i class="fa fa-plus me-1"></i> New Message
+            <div id="header-indicator" class="htmx-indicator">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </div>
+          </a>
+        </div>
+        
+        <!-- Search Box -->
+        <div class="search-box">
+          <i class="fa fa-search search-icon"></i>
+          <input type="text" class="search-input" id="conversation-search" placeholder="Search conversations...">
+        </div>
+        
+        <!-- Conversations List -->
+        <div class="conversations-container">
+          <ul class="conversation-list" id="conversation-list">
+            {% for room in rooms %}
+              {% get_partner request.user room as partner %}
+              <li class="conversation-item">
+                <a role="button" class="chat-link{% if room.id == thread.id %} active{% endif %}"
+                   hx-get="{% url 'chats:thread' room.id %}?pid={{ partner.id }}" 
+                   hx-target="#chat-area"
+                   hx-indicator="#room-indicator" 
+                   hx-push-url="true">
+                  <div class="avatar avatar-md avatar-text">
+                    {{ partner.username|first }}
+                  </div>
+                  <div class="message-preview">
+                    <h6 class="chat-name">{{ partner.get_full_name|title|default:partner.username }}</h6>
+                    <div class="chat-snippet">
+                      {% if room.room.latest_message.author == request.user %}
+                        <span class="text-primary">You:</span>
+                      {% endif %}
+                      {{ room.room.latest_message.content|default:"No messages yet" }}
+                    </div>
+                  </div>
+                  {% if room.room.unread_count > 0 %}
+                    <div class="unread-badge">{{ room.room.unread_count }}</div>
+                  {% endif %}
+                </a>
+              </li>
+            {% empty %}
+              <div class="empty-state">
+                <i class="fa fa-comments empty-icon"></i>
+                <h5 class="mb-3">No messages yet</h5>
+                <p class="text-muted mb-4">Start a conversation with someone</p>
+                <a role="button" class="btn btn-primary"
+                   hx-get="{% url 'chats:thread_new' %}?next={{ request.path }}" 
+                   hx-target="#hx-modal">
+                  <i class="fa fa-paper-plane me-2"></i> New Message
+                </a>
+              </div>
+            {% endfor %}
+          </ul>
+          <div class="fade-bottom"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Chat Area -->
+    <div class="col-lg-8">
+      <div class="chat-container">
+        <!-- Loading indicator -->
+        <div id="room-indicator" class="htmx-indicator loading-indicator">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        
+        <!-- Chat content area -->
+        <div id="chat-area" class="d-flex flex-column h-100">
+          <!-- Empty state -->
+          <div class="welcome-screen">
+            <i class="fa fa-comment-dots fa-4x text-primary mb-4"></i>
+            <h4>Welcome to Messages</h4>
+            <p class="text-muted mb-4">Select a conversation to start chatting</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Navigation -->
+<div class="mobile-nav d-lg-none">
+  <button type="button" class="mobile-nav-button" id="mobile-menu-toggle">
+    <i class="fa fa-comments fa-lg"></i>
+  </button>
+</div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu-backdrop" id="mobile-menu-backdrop"></div>
+<div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu-header">
+    <h5 class="mb-0">Messages</h5>
+    <button type="button" class="btn-close" id="mobile-menu-close"></button>
+  </div>
+  
+  <div class="search-box">
+    <i class="fa fa-search search-icon"></i>
+    <input type="text" class="search-input" id="mobile-search" placeholder="Search conversations...">
+  </div>
+  
+  <ul class="conversation-list">
+    {% for room in rooms %}
+      {% get_partner request.user room as partner %}
+      <li class="conversation-item">
+        <a role="button" class="chat-link{% if room.id == thread.id %} active{% endif %}"
+           hx-get="{% url 'chats:thread' room.id %}?pid={{ partner.id }}" 
+           hx-target="#chat-area"
+           hx-indicator="#room-indicator" 
+           hx-push-url="true"
+           onclick="closeMobileMenu()">
+          <div class="avatar avatar-md avatar-text">
+            {{ partner.username|first }}
+          </div>
+          <div class="message-preview">
+            <h6 class="chat-name">{{ partner.get_full_name|title|default:partner.username }}</h6>
+            <div class="chat-snippet">
+              {% if room.room.latest_message.author == request.user %}
+                <span class="text-primary">You:</span>
+              {% endif %}
+              {{ room.room.latest_message.content|default:"No messages yet" }}
+            </div>
+          </div>
+          {% if room.room.unread_count > 0 %}
+            <div class="unread-badge">{{ room.room.unread_count }}</div>
+          {% endif %}
+        </a>
+      </li>
+    {% empty %}
+      <div class="empty-state">
+        <i class="fa fa-comments empty-icon"></i>
+        <h5 class="mb-3">No messages yet</h5>
+        <p class="text-muted mb-4">Start a conversation with someone</p>
+        <a role="button" class="btn btn-primary"
+           hx-get="{% url 'chats:thread_new' %}?next={{ request.path }}" 
+           hx-target="#hx-modal"
+           onclick="closeMobileMenu()">
+          <i class="fa fa-paper-plane me-2"></i> New Message
+        </a>
+      </div>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
+
+{% block newsletter %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Make chat links active when clicked
+    const chatLinks = document.querySelectorAll('.chat-link');
+    chatLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        // Remove active class from all links
+        chatLinks.forEach(item => item.classList.remove('active'));
+        // Add active class to clicked link
+        this.classList.add('active');
+      });
+    });
+    
+    // Search functionality
+    function setupSearch(inputElement, listSelector) {
+      const searchInput = document.getElementById(inputElement);
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          const searchTerm = this.value.toLowerCase();
+          const items = document.querySelectorAll(`${listSelector} .conversation-item`);
+          
+          items.forEach(item => {
+            const name = item.querySelector('.chat-name').textContent.toLowerCase();
+            const message = item.querySelector('.chat-snippet').textContent.toLowerCase();
+            
+            if (name.includes(searchTerm) || message.includes(searchTerm)) {
+              item.style.display = 'block';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      }
+    }
+    
+    // Setup search for desktop and mobile
+    setupSearch('conversation-search', '#conversation-list');
+    setupSearch('mobile-search', '.mobile-menu');
+    
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    
+    if (mobileMenuToggle && mobileMenu && mobileMenuBackdrop && mobileMenuClose) {
+      mobileMenuToggle.addEventListener('click', function() {
+        mobileMenu.classList.add('show');
+        mobileMenuBackdrop.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+      });
+      
+      function closeMobileMenu() {
+        mobileMenu.classList.remove('show');
+        mobileMenuBackdrop.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+      
+      mobileMenuClose.addEventListener('click', closeMobileMenu);
+      mobileMenuBackdrop.addEventListener('click', closeMobileMenu);
+      
+      // Make closeMobileMenu available globally
+      window.closeMobileMenu = closeMobileMenu;
+    }
+    
+    // Periodically check for new messages (every 30 seconds)
+    function checkForNewMessages() {
+      fetch('{% url "chats:total_unread_messages" %}')
+        .then(response => response.json())
+        .then(data => {
+          // Update total count if needed
+          if (data.total_unread_counter > 0) {
+            // You could show a notification or update a badge here
+            console.log('You have ' + data.total_unread_counter + ' unread messages');
+          }
+        })
+        .catch(error => console.error('Error checking messages:', error));
+    }
+    
+    // Initial check and start interval
+    checkForNewMessages();
+    setInterval(checkForNewMessages, 30000);
+  });
+</script>
+{% endblock %}

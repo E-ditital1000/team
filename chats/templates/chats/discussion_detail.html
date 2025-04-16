@@ -1,0 +1,938 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ room.headline }} | NextGen Creators Chat{% endblock %}
+
+{% block og %}
+<!-- Open Graph tags to customize link previews -->
+<meta property="og:url" content="{{ request.build_absolute_uri }}" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="{{ room.headline }}" />
+<meta property="og:description" content="{{ room.description }}" />
+<meta property="og:image" content="{{ room.owner.avatar.url }}" />
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  
+  /* Enhanced Chat UI Styling */
+  .chat-container {
+    max-height: 70vh;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    background-color: #fff;
+  }
+  
+  #chat-log {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+    overflow-y: auto;
+    flex: 1;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    padding: 1rem;
+  }
+  
+  #chat-log::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  #chat-log::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 3px;
+  }
+  
+  #load-more {
+    background-color: #f8f9fa;
+    border: none;
+    color: #6c757d;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    margin: 0.5rem auto;
+    display: none;
+  }
+  
+  #load-more:hover {
+    background-color: #e9ecef;
+  }
+  
+  #chat-log li {
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .message {
+    display: inline-block;
+    position: relative;
+    max-width: 80%;
+    word-break: break-word;
+  }
+  
+  .message.sent {
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 18px 18px 0 18px;
+    padding: 10px 15px;
+    margin-left: auto;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  
+  .message.reply {
+    background-color: #f1f1f1;
+    border-radius: 18px 18px 18px 0;
+    padding: 10px 15px;
+    margin-right: auto;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  
+  .message.reply::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 15px;
+    top: -7px;
+    width: 14px;
+    height: 14px;
+    background-color: #f1f1f1;
+    transform: rotate(45deg);
+    border-left: 1px solid #e0e0e0;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  .chat-footer {
+    border-top: 1px solid #eaeaea;
+    padding: 1rem;
+    background: white;
+    border-radius: 0 0 10px 10px;
+  }
+  
+  .btn-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  #chat-message-input {
+    border-radius: 20px;
+    resize: none;
+    overflow: hidden;
+    transition: height 0.2s ease;
+  }
+  
+  .emoji-picker {
+    position: absolute;
+    bottom: 70px;
+    left: 20px;
+    width: 300px;
+    height: 250px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    padding: 1rem;
+    z-index: 100;
+    display: none;
+    overflow-y: auto;
+  }
+  
+  .emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .emoji-item {
+    font-size: 1.5rem;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  
+  .emoji-item:hover {
+    transform: scale(1.2);
+  }
+  
+  .tag-pill {
+    display: inline-block;
+    background-color: #e2f0ff;
+    color: #0d6efd;
+    border-radius: 16px;
+    padding: 0.25rem 0.75rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+  }
+  
+  .typing-indicator {
+    display: none;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
+  
+  .typing-dots {
+    display: inline-flex;
+    margin-left: 0.5rem;
+  }
+  
+  .typing-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #6c757d;
+    margin-right: 3px;
+    animation: typingAnimation 1.4s infinite ease-in-out;
+  }
+  
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes typingAnimation {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+  }
+  
+  .topic-area {
+    border-bottom: 1px solid #eaeaea;
+  }
+  
+  .empty-chat-message {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+  }
+  
+  .message-menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  
+  li:hover .message-menu {
+    opacity: 1;
+  }
+  
+  .members-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .member-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .social-share {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    transition: all 0.3s;
+  }
+  
+  .social-share:hover {
+    transform: translateY(-3px);
+  }
+  
+  .social-share.fst-facebook:hover {
+    background-color: #3b5998;
+    color: white;
+  }
+  
+  .social-share.fst-twitter:hover {
+    background-color: #1da1f2;
+    color: white;
+  }
+  
+  .trending-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .trending-item {
+    padding: 0.75rem;
+    border-radius: 8px;
+    background-color: white;
+    margin-bottom: 0.75rem;
+    transition: all 0.3s;
+  }
+  
+  .trending-item:hover {
+    transform: translateX(5px);
+    background-color: #f8f9fa;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<script src="{% static 'js/chat.js' %}"></script>
+
+<!-- Discussion Modal for Mobile -->
+<div class="d-lg-none modal fade" id="topicModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="topicModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content radius-400">
+      <div class="modal-header border-0">
+        <h6 class="modal-title bg-dark text-light px-2 rounded-pill" id="topicModalLabel">Topic</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center mb-3">
+        <span class="bold-400">{{ room.headline }}:</span> <span class="small">{{ room.description }}</span>
+        <div class="d-flex flex-wrap justify-content-center mt-2">
+          {% for tag in room.tags.all %}
+          <span class="tag-pill">{{ tag }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Sticky Header -->
+<div class="container-fluid d-lg-none py-2 topic-area bg-light shadow sticky-top sticky-under-navbar sticky-under-navbar-0">
+  <div class="row">
+    <div class="col-10">
+      <div class="bg-white cursor-pointer px-2 mb-1 rounded" data-bs-toggle="modal" data-bs-target="#topicModal">
+        <div class="small text-truncate">
+          <span class="bg-dark small text-light px-1 rounded-pill">Topic</span>
+          <b>{{ room.headline }}:</b> {{ room.description }}
+        </div>
+      </div>
+      <div class="d-flex align-items-center small">
+        <span class="me-2">SHARE</span>
+        <a href="https://www.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u={{ request.build_absolute_uri }}&display=popup&ref=plugin&src=share_button"
+          target="_blank" class="me-2 social-share fst-facebook"><i class="fab fa-facebook"></i></a>
+        <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text=What's your thought? {% for tag in room.tags.all %} #{{ tag }} {% endfor %} @dj-chat"
+          target="_blank" class="me-2 social-share fst-facebook"><i class="fab fa-telegram"></i></a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?mini=true&url={{ request.build_absolute_uri }}"
+          target="_blank" class="me-2 social-share fst-facebook"><i class="fab fa-linkedin"></i></a>
+        <a href="https://twitter.com/intent/tweet?text={{ room.headline }}: {{ room.description }} {{ request.build_absolute_uri }} {% for tag in room.tags.all %} #{{ tag }} {% endfor %} via @adilmohak"
+          target="_blank" class="me-2 social-share fst-twitter"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+    <div class="col-2 d-flex align-items-start">
+      <a href="#" hx-get="{% url 'chats:invite_people' %}?room={{ room.id }}" hx-target="#hx-modal"
+        class="btn btn-sm btn-primary">
+        <i class="fa fa-user-plus"></i>
+      </a>
+      {% if room.owner == request.user %}
+      <div class="dropdown ms-2">
+        <button class="btn btn-sm" type="button" id="configDiscussion" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          <i class="fa fa-ellipsis-v"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="configDiscussion">
+          <li><a class="dropdown-item" href="{% url 'chats:discussion_update' room.slug %}">Edit</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="#" id="clear-history-btn">Clear History</a></li>
+        </ul>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<section class="chat-section py-4">
+  <div class="container">
+    <div class="row">
+      <!-- Left Sidebar (Desktop) -->
+      <div class="col-lg-3 d-none d-lg-block me-auto mt-3">
+        <!-- Discussion Info Card -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-primary text-white d-flex align-items-center">
+            <h5 class="mb-0">✔ Discussion Topic</h5>
+            {% if room.owner == request.user %}
+            <div class="dropdown ms-auto">
+              <button class="btn btn-sm text-white" type="button" id="configDiscussion" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="fa fa-ellipsis-v"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="configDiscussion">
+                <li><a class="dropdown-item" href="{% url 'chats:discussion_update' room.slug %}"
+                    hx-get="{% url 'chats:discussion_update' room.slug %}" hx-indicator="#indicator"
+                    hx-target="#hx-modal">Edit</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#" id="clear-history-desktop">Clear History</a></li>
+              </ul>
+            </div>
+            {% endif %}
+          </div>
+          <div class="card-body">
+            <p><span class="bold-400">{{ room.headline }}:</span> <span class="small">{{ room.description }}</span></p>
+            <div class="d-flex flex-wrap">
+              {% for tag in room.tags.all %}
+              <span class="tag-pill">{{ tag }}</span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Share Options -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Share Discussion</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-center mb-3">
+              <span class="me-2">SHARE</span>
+              <a href="https://www.facebook.com/sharer/sharer.php?kid_directed_site=0&sdk=joey&u={{ request.build_absolute_uri }}&display=popup&ref=plugin&src=share_button"
+                target="_blank" class="me-2 social-share fst-facebook"><i class="fab fa-facebook"></i></a>
+              <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text=What's your thought? {% for tag in room.tags.all %} #{{ tag }} {% endfor %} @dj-chat"
+                target="_blank" class="me-2 social-share fst-facebook"><i class="fab fa-telegram"></i></a>
+              <a href="https://www.linkedin.com/sharing/share-offsite/?mini=true&url={{ request.build_absolute_uri }}"
+                target="_blank" class="me-2 social-share fst-facebook"><i class="fab fa-linkedin"></i></a>
+              <a href="https://twitter.com/intent/tweet?text={{ room.headline }}: {{ room.description }} {{ request.build_absolute_uri }} {% for tag in room.tags.all %} #{{ tag }} {% endfor %} via @adilmohak"
+                target="_blank" class="me-2 social-share fst-twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+            
+            <div class="d-flex justify-content-center">
+              <a href="#" hx-get="{% url 'chats:invite_people' %}?room={{ room.id }}" hx-target="#hx-modal"
+                hx-indicator="#indicator" class="btn btn-primary">
+                <i class="fa fa-user-plus me-2"></i> Invite People
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Trending Discussions -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">🔥 Trending Discussions</h5>
+          </div>
+          <div class="card-body p-0" hx-get="{% url 'chats:trendings' %}?exclude={{ room.id }}" hx-trigger="load">
+            <div class="text-center dots-loader p-4">
+              <i class="spinner__dot spinner__dot--one"></i>
+              <i class="spinner__dot spinner__dot--two"></i>
+              <i class="spinner__dot spinner__dot--three"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Chat Area -->
+      <div class="col-lg-6 me-auto mt-3 px-lg-4">
+        <div class="chat-container shadow-sm border">
+          <!-- Load More Button -->
+          <div class="text-center py-2 border-bottom">
+            <button type="button" id="load-more" class="btn btn-sm btn-light" data-page="">
+              Load older messages
+            </button>
+          </div>
+          
+          <!-- Messages Container -->
+          <ul id="chat-log" class="p-3"></ul>
+          
+          <!-- Typing Indicator -->
+          <div class="typing-indicator border-top">
+            <span id="typing-user">Someone</span> is typing
+            <div class="typing-dots">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
+          
+          <!-- Chat Input -->
+          <div class="chat-footer d-flex align-items-start">
+            <div class="mt-2">
+              <button type="button" class="btn btn-light me-3 btn-circle" id="emoji-btn">
+                <i class="fa fa-smile"></i>
+              </button>
+            </div>
+            <textarea name="content" id="chat-message-input" class="form-control" rows="1"
+              placeholder="Write a message..." autofocus></textarea>
+            <div class="mt-2">
+              <button type="button" class="btn btn-primary btn-circle ms-3" id="chat-message-submit" disabled>
+                <i class="fa fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Emoji Picker (Hidden by Default) -->
+          <div class="emoji-picker" id="emoji-picker">
+            <h6 class="mb-2">Choose an emoji</h6>
+            <div class="emoji-grid">
+              <div class="emoji-item" data-emoji="😀">😀</div>
+              <div class="emoji-item" data-emoji="😁">😁</div>
+              <div class="emoji-item" data-emoji="😂">😂</div>
+              <div class="emoji-item" data-emoji="🤣">🤣</div>
+              <div class="emoji-item" data-emoji="😃">😃</div>
+              <div class="emoji-item" data-emoji="😄">😄</div>
+              <div class="emoji-item" data-emoji="😅">😅</div>
+              <div class="emoji-item" data-emoji="😆">😆</div>
+              <div class="emoji-item" data-emoji="😉">😉</div>
+              <div class="emoji-item" data-emoji="😊">😊</div>
+              <div class="emoji-item" data-emoji="😋">😋</div>
+              <div class="emoji-item" data-emoji="😎">😎</div>
+              <div class="emoji-item" data-emoji="😍">😍</div>
+              <div class="emoji-item" data-emoji="😘">😘</div>
+              <div class="emoji-item" data-emoji="🥰">🥰</div>
+              <div class="emoji-item" data-emoji="😗">😗</div>
+              <div class="emoji-item" data-emoji="😙">😙</div>
+              <div class="emoji-item" data-emoji="🤔">🤔</div>
+              <div class="emoji-item" data-emoji="🤗">🤗</div>
+              <div class="emoji-item" data-emoji="👍">👍</div>
+              <div class="emoji-item" data-emoji="👏">👏</div>
+              <div class="emoji-item" data-emoji="👌">👌</div>
+              <div class="emoji-item" data-emoji="❤️">❤️</div>
+              <div class="emoji-item" data-emoji="🔥">🔥</div>
+              <div class="emoji-item" data-emoji="👋">👋</div>
+              <div class="emoji-item" data-emoji="🎉">🎉</div>
+              <div class="emoji-item" data-emoji="🤝">🤝</div>
+              <div class="emoji-item" data-emoji="👀">👀</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Sidebar (Desktop) -->
+      <div class="col-lg-3 d-none d-lg-block mt-3">
+        <!-- Did You Know Card -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">🤔 Did You Know?</h5>
+          </div>
+          <div class="card-body">
+            <h6>There are over 129 million books in existence</h6>
+            <small>
+              According to Google, 129,864,880 million books had been published as of 2010. That number is
+              obviously a lot higher now. So when you say out loud "Ugh, can't find a good book to read," know
+              that you have a lot to choose from.
+            </small>
+          </div>
+        </div>
+        
+        <!-- Active Members -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">👥 Active Members</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="text-center p-3">
+              <div class="mb-3">
+                <span class="badge bg-success rounded-pill">
+                  <span id="online-count">0</span> online
+                </span>
+              </div>
+              <div class="members-list">
+                {% for member in room.members.all|slice:":5" %}
+                <div class="d-flex align-items-center p-2 border-bottom">
+                  <div class="me-2">
+                    <div class="avatar avatar-sm rounded-circle" style="width: 32px; height: 32px; background-color: #e9ecef; display: flex; align-items: center; justify-content: center;">
+                      <span>{{ member.username|slice:":1" }}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span class="small">{{ member.username }}</span>
+                    {% if member == room.owner %}
+                    <span class="badge bg-warning text-dark ms-1">Owner</span>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+                
+                {% if room.members.count > 5 %}
+                <div class="text-center p-2">
+                  <button class="btn btn-sm btn-outline-primary" id="view-all-members">
+                    View all {{ room.members.count }} members
+                  </button>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Fun Facts -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">💡 Fun Facts</h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+              <div class="list-group-item">
+                <small>The most expensive book ever purchased was sold for $30.8 million...</small>
+              </div>
+              <div class="list-group-item">
+                <small>There's a word for loving the smell of old books: bibliosmia.</small>
+              </div>
+              <div class="list-group-item">
+                <small>The world's largest book measures 5 ft by 8.06 ft when open and weighs 133 pounds!</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Configuration values
+  const roomName = {{ room_name_json }};
+  const username = {{ username }};
+  const roomId = {{ room.room.id }};
+  let isTyping = false;
+  let typingTimeout;
+  let messageCount = 0;
+  let page = 1;
+  
+  console.log("Room name", roomName, "Username", username, "Room id", roomId);
+  
+  // Initialize chat with the chat.js utility
+  $().chat(roomName, username, roomId, null, true);
+  
+  // DOM Elements
+  const chatInput = document.getElementById('chat-message-input');
+  const chatSubmit = document.getElementById('chat-message-submit');
+  const loadMoreBtn = document.getElementById('load-more');
+  const typingIndicator = document.querySelector('.typing-indicator');
+  const emojiBtn = document.getElementById('emoji-btn');
+  const emojiPicker = document.getElementById('emoji-picker');
+  const clearHistoryBtn = document.getElementById('clear-history-btn');
+  const clearHistoryDesktop = document.getElementById('clear-history-desktop');
+  
+  // WebSocket connection
+  const chatSocket = new ReconnectingWebSocket(
+    (window.location.protocol === 'https:' ? 'wss' : 'ws') + '://'
+    + window.location.host
+    + '/ws/chats/'
+    + roomName
+    + '/'
+  );
+  
+  // Chat message submission
+  chatSubmit.addEventListener('click', function() {
+    sendMessage();
+  });
+  
+  // Send message on Enter key
+  chatInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+  
+  // Function to send messages
+  function sendMessage() {
+    const message = chatInput.value.trim();
+    if (message === '') {
+      return;
+    }
+    
+    // Send message via WebSocket
+    chatSocket.send(JSON.stringify({
+      'roomId': roomId,
+      'command': 'new_message',
+      'message': message,
+      'from': username
+    }));
+    
+    // Clear input after sending
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    
+    // Disable send button after sending
+    chatSubmit.disabled = true;
+    
+    // Clear typing indicator state
+    clearTimeout(typingTimeout);
+    isTyping = false;
+  }
+  
+  // Enable emoji picker
+  if (emojiBtn) {
+    emojiBtn.addEventListener('click', function() {
+      emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
+    });
+    
+    // Add emoji to input when clicked
+    document.querySelectorAll('.emoji-item').forEach(item => {
+      item.addEventListener('click', function() {
+        const emoji = this.getAttribute('data-emoji');
+        chatInput.value += emoji;
+        // Auto-grow the textarea
+        chatInput.style.height = 'auto';
+        chatInput.style.height = chatInput.scrollHeight + 'px';
+        // Enable the send button
+        chatSubmit.disabled = false;
+        // Hide the emoji picker
+        emojiPicker.style.display = 'none';
+      });
+    });
+    
+    // Close emoji picker when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!emojiBtn.contains(e.target) && !emojiPicker.contains(e.target)) {
+        emojiPicker.style.display = 'none';
+      }
+    });
+  }
+  
+  // Enable the send button only when there's text in the input
+  chatInput.addEventListener('input', function() {
+    // Auto-grow textarea
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+    
+    // Enable/disable send button based on content
+    chatSubmit.disabled = this.value.trim() === '';
+    
+    // Send typing status to other users
+    if (this.value.trim() !== '') {
+      if (!isTyping) {
+        // This would be implemented in your WebSocket handler
+        chatSocket.send(JSON.stringify({
+          'roomId': roomId,
+          'command': 'typing',
+          'user': username
+        }));
+        
+        isTyping = true;
+        
+        // Reset typing status after 3 seconds
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+          isTyping = false;
+        }, 3000);
+      }
+    }
+  });
+  
+  // Clear history button handlers
+  if (clearHistoryBtn) {
+    clearHistoryBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      confirmClearHistory();
+    });
+  }
+
+  if (clearHistoryDesktop) {
+    clearHistoryDesktop.addEventListener('click', function(e) {
+      e.preventDefault();
+      confirmClearHistory();
+    });
+  }
+
+  function confirmClearHistory() {
+    if (confirm('Are you sure you want to clear all chat history? This cannot be undone.')) {
+      fetch('{% url "chats:clear_history" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCSRFToken()
+        },
+        body: `room_id=${roomId}&discussion_slug={{ room.slug }}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          alert(data.message);
+          // Refresh chat
+          chatSocket.send(JSON.stringify({
+            'roomId': roomId,
+            'command': 'fetch_messages',
+            'page': 1,
+            'username': username
+          }));
+        }
+      })
+      .catch(error => console.error('Error clearing history:', error));
+    }
+  }
+
+  // Copy message text to clipboard
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('copy-message') || e.target.parentElement.classList.contains('copy-message')) {
+      e.preventDefault();
+      const messageEl = e.target.closest('.message-container').querySelector('.message');
+      const text = messageEl.innerText;
+      
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          // Show a small tooltip or notification that text was copied
+          const notification = document.createElement('div');
+          notification.textContent = 'Copied to clipboard!';
+          notification.style.position = 'fixed';
+          notification.style.top = '20px';
+          notification.style.left = '50%';
+          notification.style.transform = 'translateX(-50%)';
+          notification.style.padding = '10px 15px';
+          notification.style.backgroundColor = 'rgba(0,0,0,0.7)';
+          notification.style.color = 'white';
+          notification.style.borderRadius = '5px';
+          notification.style.zIndex = '9999';
+          
+          document.body.appendChild(notification);
+          
+          setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.5s';
+            setTimeout(() => {
+              document.body.removeChild(notification);
+            }, 500);
+          }, 2000);
+        })
+        .catch(err => console.error('Failed to copy text: ', err));
+    }
+  });
+
+  // Delete message handler (requires backend implementation)
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('delete-message') || e.target.parentElement.classList.contains('delete-message')) {
+      e.preventDefault();
+      const messageContainer = e.target.closest('li');
+      const messageId = messageContainer.getAttribute('data-message-id');
+      
+      if (confirm('Are you sure you want to delete this message?')) {
+        fetch(`{% url "chats:message_delete" 0 %}`.replace('0', messageId), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCSRFToken()
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.deleted) {
+            messageContainer.remove();
+          } else {
+            alert('Could not delete message');
+          }
+        })
+        .catch(error => console.error('Error deleting message:', error));
+      }
+    }
+  });
+
+  // Handle mobile view
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initial state of send button
+    chatSubmit.disabled = chatInput.value.trim() === '';
+    
+    // Show topic modal on mobile
+    if (window.innerWidth <= 992) {
+      const topicModal = document.getElementById('topicModal');
+      if (topicModal) {
+        const topicModalInstance = new bootstrap.Modal(topicModal);
+        topicModalInstance.show();
+      }
+    }
+    
+    // Update online members count periodically
+    updateOnlineCount();
+    setInterval(updateOnlineCount, 30000); // Update every 30 seconds
+  });
+
+  // Function to update online members count
+  function updateOnlineCount() {
+    // This would typically come from the WebSocket
+    // For now, let's simulate it with a random number between 1 and the number of members
+    const memberCount = {{ room.members.count }};
+    const onlineCount = Math.max(1, Math.floor(Math.random() * memberCount));
+    const onlineCountElement = document.getElementById('online-count');
+    if (onlineCountElement) {
+      onlineCountElement.textContent = onlineCount;
+    }
+  }
+
+  // Helper function to get CSRF token
+  function getCSRFToken() {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith('csrftoken=')) {
+        return cookie.substring('csrftoken='.length);
+      }
+    }
+    // If no CSRF token found in cookies, check for a meta tag
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    if (csrfToken) {
+      return csrfToken.getAttribute('content');
+    }
+    return '';
+  }
+
+  // View all members button
+  const viewAllMembersBtn = document.getElementById('view-all-members');
+  if (viewAllMembersBtn) {
+    viewAllMembersBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const modalHtml = `
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">All Members ({{ room.members.count }})</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="list-group">
+                {% for member in room.members.all %}
+                <div class="list-group-item d-flex align-items-center">
+                  <div class="avatar avatar-sm me-2 bg-light rounded-circle d-flex align-items-center justify-content-center">
+                    <span class="small">{{ member.username|slice:":1" }}</span>
+                  </div>
+                  <span>{{ member.username }}</span>
+                  {% if member == room.owner %}
+                  <span class="badge bg-warning text-dark rounded-pill ms-auto">Owner</span>
+                  {% endif %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      const modalEl = document.createElement('div');
+      modalEl.className = 'modal fade';
+      modalEl.id = 'allMembersModal';
+      modalEl.innerHTML = modalHtml;
+      document.body.appendChild(modalEl);
+      
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+      
+      modalEl.addEventListener('hidden.bs.modal', function() {
+        document.body.removeChild(modalEl);
+      });
+    });
+  }
+</script>
+{% endblock %}

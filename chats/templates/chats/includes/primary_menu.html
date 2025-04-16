@@ -1,0 +1,107 @@
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-0 d-flex" style="flex-wrap: nowrap !important;"
+	id="navbar_top">
+	<div class="container">
+		<a class="navbar-brand me-4" href="/">
+			<img src="{% static 'images/brand/favicon-txt.svg' %}" width="120px" alt="Dj-chat">
+		</a>
+		{% load static %}
+		{% load i18n %}
+		
+		{% url 'chats:discussions' as dis %}
+		{% url 'chats:threads' as thr %}
+		<!-- nav menu right -->
+		<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+			{% if request.user.is_authenticated %}
+			<!-- Discussion panel -->
+			<li class="nav-item me-2">
+				<a class="nav-link btn-nav position-relative {% if request.path == dis %} active-link {% endif %}"
+					href="{{ dis }}">
+					<i class="zmdi zmdi-comments fw-900"></i>
+					<!-- <i class="zmdi zmdi-comment-text-alt"></i> -->
+					<span class="notify-badge">
+						<span id="total-unread-discussion-notifications-counter"></span>
+						<span class="visually-hidden">unread discussions</span>
+					</span>
+				</a>
+			</li>
+			<!-- Message panel -->
+			<li class="nav-item dropdown scroller me-2">
+				<a hx-get="{{ thr }}" hx-target="#threads-list"
+					class="btn-nav nav-link position-relative {% if request.path == thr %} active-link {% endif %}"
+					href="#" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+					data-bs-auto-close="outside">
+					<i class="zmdi zmdi-email fw-900"></i>
+					<span class="notify-badge">
+						<span id="total-unread-msgs"></span>
+						<span class="visually-hidden">unread messages</span>
+					</span>
+				</a>
+				<!-- Dropdown - Messages -->
+				<ul class="dropdown-list dropdown-menu dropdown-menu-sm-popup animated--grow-in origin-left"
+					aria-labelledby="messagesDropdown">
+					<div class="d-flex align-items-center px-2">
+						<h6 class="small my-3 text-center text-gray-500">
+							{% translate 'Messages' %}
+						</h6>
+						<a role="button" class="btn btn-sm btn-outline-primary ms-auto"
+							hx-get="{% url 'chats:thread_new' %}?next={{ request.path }}" hx-target="#hx-modal">
+							+ New message
+							<div class="text-center htmx-indicator">
+								<span class="dots-loader">
+									<i class="spinner__dot spinner__dot--one"></i>
+									<i class="spinner__dot spinner__dot--two"></i>
+									<i class="spinner__dot spinner__dot--three"></i>
+								</span>
+							</div>
+						</a>
+					</div>
+					<div id="threads-list">
+						<div class="text-center">
+							<span class="dots-loader">
+								<i class="spinner__dot spinner__dot--one"></i>
+								<i class="spinner__dot spinner__dot--two"></i>
+								<i class="spinner__dot spinner__dot--three"></i>
+							</span>
+						</div>
+					</div>
+					<div class="border-top pt-2 mt-2 mx-2">
+						<a href="{% url 'chats:threads' %}" class="text-center">All messages</a>
+					</div>
+				</ul>
+			</li>
+			<!-- User panel -->
+			<li class="nav-item dropdown scroller">
+				<a href="#user-panel" id="userPanel" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+					data-bs-auto-close="outside">
+					<div class="avatar avatar-text">
+						{{ request.user.username|first }}
+					</div>
+				</a>
+				<ul class="dropdown-menu animated--grow-in origin-left" aria-labelledby="userPanel"
+					style="width: 240px;">
+
+					<!-- {% if not perms.books.special_status %}
+							<li class="text-center"><a href="#" class="my-2 text-warning">Go pro now.</a></li>
+						{% endif %} -->
+					<li><a class="dropdown-item" href="#"><i class="zmdi zmdi-account me-2"></i> Profile</a></li>
+					<li><a class="dropdown-item" href="#">
+							<i class="zmdi zmdi-settings me-2"></i> Setting</a>
+					</li>
+					{% if request.user.is_superuser %}
+					<li><a class="dropdown-item" href="/admin/" target="_blank">
+							<i class="zmdi zmdi-view-dashboard me-2"></i> Administration</a>
+					</li>
+					{% endif %}
+
+					<div class="divider my-2"></div>
+
+				
+				</ul>
+			</li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>

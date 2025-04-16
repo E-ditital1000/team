@@ -1,0 +1,804 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ room.headline }} |chat{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Enhanced Chat UI Styling */
+  .chat-container {
+    height: calc(100vh - 180px);
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+  }
+  
+  .chat-messages::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .chat-messages::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 3px;
+  }
+  
+  #chat-log {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  #chat-log li {
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .message {
+    display: inline-block;
+    position: relative;
+    max-width: 80%;
+    word-break: break-word;
+  }
+  
+  .message.sent {
+    background-color: #007bff;
+    color: white;
+    border-radius: 18px 18px 0 18px;
+    padding: 10px 15px;
+    margin-left: auto;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  
+  .message.sent .message-time {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.7rem;
+    margin-top: 4px;
+    text-align: right;
+  }
+  
+  .message.received {
+    background-color: #f1f1f1;
+    border-radius: 18px 18px 18px 0;
+    padding: 10px 15px;
+    margin-right: auto;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  
+  .message.received .message-time {
+    color: #888;
+    font-size: 0.7rem;
+    margin-top: 4px;
+  }
+  
+  .chat-footer {
+    border-top: 1px solid #eaeaea;
+    padding: 1rem;
+    background: white;
+    border-radius: 0 0 10px 10px;
+  }
+  
+  .chat-input-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  #chat-message-input {
+    border-radius: 24px;
+    padding: 10px 15px;
+    resize: none;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s;
+    overflow: hidden;
+  }
+  
+  #chat-message-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    border-color: #80bdff;
+  }
+  
+  .btn-send {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+  }
+  
+  .sidebar-card {
+    margin-bottom: 1.5rem;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+  }
+  
+  .sidebar-card:hover {
+    transform: translateY(-3px);
+  }
+  
+  .sidebar-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eaeaea;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+  }
+  
+  .sidebar-body {
+    padding: 1rem;
+  }
+  
+  .members-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .member-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .member-item:last-child {
+    border-bottom: none;
+  }
+  
+  .typing-indicator {
+    display: none;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #666;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+  }
+  
+  .typing-indicator span {
+    display: inline-block;
+    margin-right: 0.25rem;
+  }
+  
+  .typing-animation {
+    display: inline-flex;
+  }
+  
+  .typing-dot {
+    width: 4px;
+    height: 4px;
+    margin: 0 1px;
+    background-color: #888;
+    border-radius: 50%;
+    animation: typingAnimation 1.4s infinite;
+  }
+  
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes typingAnimation {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-4px); }
+  }
+  
+  .room-info-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eaeaea;
+    padding: 1rem;
+    background: white;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .empty-chat-message {
+    text-align: center;
+    padding: 2rem;
+    color: #777;
+  }
+  
+  .emoji-picker {
+    position: absolute;
+    bottom: 70px;
+    right: 20px;
+    display: none;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    z-index: 100;
+  }
+  
+  .trending-topic {
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .trending-topic::before {
+    content: "🔥";
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  
+  .tag-pill {
+    display: inline-block;
+    background: #e9ecef;
+    color: #495057;
+    padding: 0.25rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.75rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="chat-section py-4">
+  <div class="container">
+    <div class="row">
+      <!-- Left Sidebar -->
+      <div class="col-lg-3 mb-4">
+        <!-- Discussion Info -->
+        <div class="sidebar-card">
+          <div class="sidebar-header d-flex align-items-center">
+            <i class="fa fa-comments me-2"></i>
+            <span>Discussion Info</span>
+          </div>
+          <div class="sidebar-body">
+            <h5>{{ room.headline }}</h5>
+            <p class="text-muted small mb-3">{{ room.description }}</p>
+            
+            {% if room.tags.all %}
+            <div class="mb-2">
+              {% for tag in room.tags.all %}
+                <span class="tag-pill">{{ tag.name }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="d-flex align-items-center text-muted small mb-2">
+              <i class="fa fa-calendar-alt me-2"></i>
+              <span>Created {{ room.created|date:"M d, Y" }}</span>
+            </div>
+            <div class="d-flex align-items-center text-muted small">
+              <i class="fa fa-user me-2"></i>
+              <span>By {{ room.owner.username }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Members -->
+        <div class="sidebar-card">
+          <div class="sidebar-header d-flex align-items-center">
+            <i class="fa fa-users me-2"></i>
+            <span>Members</span>
+            <span class="badge bg-primary rounded-pill ms-auto">{{ room.members.count }}</span>
+          </div>
+          <div class="sidebar-body p-0">
+            <div class="list-group list-group-flush members-list">
+              {% for member in room.members.all %}
+              <div class="list-group-item d-flex align-items-center p-2">
+                <div class="avatar avatar-sm me-2 bg-light rounded-circle d-flex align-items-center justify-content-center">
+                  <span class="small">{{ member.username|slice:":1" }}</span>
+                </div>
+                <span class="small">{{ member.username }}</span>
+                {% if member == room.owner %}
+                <span class="badge bg-warning text-dark rounded-pill ms-auto">Owner</span>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Actions -->
+        <div class="sidebar-card">
+          <div class="sidebar-header">
+            <i class="fa fa-cog me-2"></i>
+            <span>Actions</span>
+          </div>
+          <div class="sidebar-body">
+            <div class="d-grid gap-2">
+              <button class="btn btn-sm btn-outline-primary" id="invite-btn">
+                <i class="fa fa-user-plus me-2"></i> Invite People
+              </button>
+              
+              {% if request.user == room.owner %}
+              <a href="{% url 'chats:discussion_update' room.slug %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fa fa-edit me-2"></i> Edit Discussion
+              </a>
+              {% endif %}
+              
+              <button class="btn btn-sm btn-outline-danger" id="clear-history-btn">
+                <i class="fa fa-trash me-2"></i> Clear History
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main Chat Area -->
+      <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm chat-container">
+          <!-- Room Header -->
+          <div class="room-info-header">
+            <div>
+              <h5 class="mb-0">{{ room.headline }}</h5>
+              <div class="text-muted small">
+                <span id="online-count">0</span> online • <span id="message-count">0</span> messages
+              </div>
+            </div>
+            <div>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-light" type="button" id="chatOptionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-ellipsis-v"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="chatOptionsDropdown">
+                  <li><a class="dropdown-item" href="#" id="refresh-chat"><i class="fa fa-sync-alt me-2"></i> Refresh</a></li>
+                  <li><a class="dropdown-item" href="#" id="scroll-bottom"><i class="fa fa-arrow-down me-2"></i> Scroll to Bottom</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item text-danger" href="#" id="report-btn"><i class="fa fa-flag me-2"></i> Report Issue</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Chat Messages Area -->
+          <div class="chat-messages" id="messages-container">
+            <ul id="chat-log"></ul>
+            <div class="typing-indicator">
+              <span>Someone is typing</span>
+              <div class="typing-animation">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Chat Input Area -->
+          <div class="chat-footer">
+            <div class="chat-input-container">
+              <button type="button" class="btn btn-light me-2" id="emoji-btn">
+                <i class="fa fa-smile"></i>
+              </button>
+              <textarea id="chat-message-input" class="form-control" placeholder="Type your message..." rows="1"></textarea>
+              <button type="button" class="btn btn-primary btn-send" id="chat-message-submit">
+                <i class="fa fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Emoji Picker (Hidden by Default) -->
+          <div class="emoji-picker" id="emoji-picker">
+            <!-- Emoji picker content would go here -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Sidebar -->
+      <div class="col-lg-3">
+        <!-- Trending Topics -->
+        <div class="sidebar-card">
+          <div class="sidebar-header d-flex align-items-center">
+            <i class="fa fa-fire me-2"></i>
+            <span>Trending Topics</span>
+          </div>
+          <div class="sidebar-body">
+            <div class="trending-topic">
+              <p class="small mb-1">The most expensive book ever purchased was sold for $30.8 million...</p>
+            </div>
+            <div class="trending-topic">
+              <p class="small mb-1">There's a word for loving the smell of old books: bibliosmia</p>
+            </div>
+            <div class="trending-topic">
+              <p class="small mb-0">The first book ever written on a typewriter was "The Adventures of Tom Sawyer"</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Did You Know -->
+        <div class="sidebar-card">
+          <div class="sidebar-header d-flex align-items-center">
+            <i class="fa fa-lightbulb me-2"></i>
+            <span>Did You Know?</span>
+          </div>
+          <div class="sidebar-body">
+            <h6>There are over 129 million books in existence</h6>
+            <p class="small mb-0">According to Google, 129,864,880 million books had been published as of 2010. That number is obviously much higher now. So when you say "I can't find anything to read," remember you have a lot to choose from!</p>
+          </div>
+        </div>
+        
+        <!-- Related Discussions -->
+        <div class="sidebar-card">
+          <div class="sidebar-header d-flex align-items-center">
+            <i class="fa fa-link me-2"></i>
+            <span>Related Discussions</span>
+          </div>
+          <div class="sidebar-body p-0">
+            <div class="list-group list-group-flush">
+              <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                  <h6 class="mb-1">Book Recommendations</h6>
+                </div>
+                <p class="mb-1 small text-truncate">What are you reading this month?</p>
+                <small class="text-muted">23 members</small>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                  <h6 class="mb-1">Writing Tips</h6>
+                </div>
+                <p class="mb-1 small text-truncate">Share your best writing advice!</p>
+                <small class="text-muted">42 members</small>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block newsletter %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block script %}
+<script>
+  const roomName = {{ room_name_json }};
+  const username = {{ username }};
+  const roomId = {{ room.id }};
+  let isTyping = false;
+  let typingTimeout;
+  let messageCount = 0;
+  let page = 1;
+  let hasNextPage = false;
+  
+  // Initialize WebSocket connection with reconnection capability
+  const chatSocket = new ReconnectingWebSocket(
+    (window.location.protocol === 'https:' ? 'wss' : 'ws') + '://'
+    + window.location.host
+    + '/ws/chats/'
+    + roomName
+    + '/'
+  );
+  
+  // DOM Elements
+  const chatInput = document.querySelector('#chat-message-input');
+  const chatSubmit = document.querySelector('#chat-message-submit');
+  const chatLog = document.querySelector('#chat-log');
+  const messagesContainer = document.querySelector('#messages-container');
+  const emojiBtn = document.querySelector('#emoji-btn');
+  const emojiPicker = document.querySelector('#emoji-picker');
+  const refreshBtn = document.querySelector('#refresh-chat');
+  const scrollBottomBtn = document.querySelector('#scroll-bottom');
+  const clearHistoryBtn = document.querySelector('#clear-history-btn');
+  const inviteBtn = document.querySelector('#invite-btn');
+  const typingIndicator = document.querySelector('.typing-indicator');
+  const messageCountElement = document.querySelector('#message-count');
+  const onlineCountElement = document.querySelector('#online-count');
+  
+  // WebSocket event handlers
+  chatSocket.onopen = function(e) {
+    console.log('WebSocket connection established');
+    fetchMessages();
+  };
+  
+  chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    
+    if (data['command'] === 'messages') {
+      // Handle fetched messages
+      if (data['messages'].length === 0 && page === 1) {
+        // No messages in room
+        showEmptyChatMessage();
+        return;
+      }
+      
+      // Handle paginated messages
+      if (page === 1) {
+        // First page, clear any existing messages
+        chatLog.innerHTML = '';
+      }
+      
+      // Add messages to chat log
+      for (let i = data['messages'].length - 1; i >= 0; i--) {
+        createMessage(data['messages'][i]);
+      }
+      
+      // Update message count
+      messageCount = data['total_messages'] || data['messages'].length;
+      messageCountElement.textContent = messageCount;
+      
+      // Check if there are more pages
+      hasNextPage = data['next_page'] !== null;
+      if (hasNextPage) {
+        page = data['next_page'];
+      }
+      
+      // Check if room history was cleared
+      if (data['history_cleared']) {
+        showHistoryClearedMessage();
+      }
+      
+      // Scroll to bottom on first load
+      if (data['auto_scroll']) {
+        scrollToBottom();
+      }
+    } 
+    else if (data['command'] === 'new_message') {
+      // Handle new message
+      createMessage(data['message']);
+      messageCount++;
+      messageCountElement.textContent = messageCount;
+      scrollToBottom();
+    }
+    else if (data['command'] === 'typing') {
+      // Handle typing indicator
+      if (data['user'] !== username) {
+        showTypingIndicator(data['user']);
+      }
+    }
+    else if (data['command'] === 'online_users') {
+      // Update online users count
+      onlineCountElement.textContent = data['count'];
+    }
+  };
+  
+  chatSocket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+  };
+  
+  // Helper functions
+  function createMessage(message) {
+    const li = document.createElement('li');
+    const isCurrentUser = message.author === username;
+    
+    if (isCurrentUser) {
+      li.innerHTML = `
+        <div class="d-flex flex-column align-items-end">
+          <div class="message sent">
+            ${message.content}
+          </div>
+          <div class="message-time text-muted small mt-1">
+            ${formatTime(message.created)}
+          </div>
+        </div>
+      `;
+    } else {
+      li.innerHTML = `
+        <div class="d-flex mb-2">
+          <div class="avatar avatar-sm me-2 bg-light rounded-circle d-flex align-items-center justify-content-center">
+            <span class="small">${message.author.slice(0,1)}</span>
+          </div>
+          <div>
+            <div class="d-flex align-items-center">
+              <span class="fw-bold small">${message.author}</span>
+              <span class="text-muted ms-2 small">${formatTime(message.created)}</span>
+            </div>
+            <div class="message received">
+              ${message.content}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    chatLog.appendChild(li);
+  }
+  
+  function formatTime(dateTimeStr) {
+    const date = new Date(dateTimeStr);
+    const now = new Date();
+    
+    // If today, just show time
+    if (date.toDateString() === now.toDateString()) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } 
+    // If this year, show month and day
+    else if (date.getFullYear() === now.getFullYear()) {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + 
+             date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } 
+    // Otherwise show full date
+    else {
+      return date.toLocaleDateString() + ' ' + 
+             date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+  }
+  
+  function showEmptyChatMessage() {
+    chatLog.innerHTML = `
+      <div class="empty-chat-message">
+        <div class="mb-3">
+          <i class="fa fa-comments fa-3x text-muted"></i>
+        </div>
+        <h5>No messages yet</h5>
+        <p class="text-muted">Be the first to start the conversation!</p>
+      </div>
+    `;
+  }
+  
+  function showHistoryClearedMessage() {
+    chatLog.innerHTML = `
+      <div class="alert alert-info text-center">
+        <i class="fa fa-info-circle me-2"></i>
+        Chat history has been cleared
+      </div>
+    `;
+  }
+  
+  function scrollToBottom() {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+  
+  function fetchMessages() {
+    chatSocket.send(JSON.stringify({
+      'roomId': roomId,
+      'command': 'fetch_messages',
+      'page': page,
+      'username': username
+    }));
+  }
+  
+  function sendMessage() {
+    const message = chatInput.value.trim();
+    if (message === '') {
+      return;
+    }
+    
+    chatSocket.send(JSON.stringify({
+      'roomId': roomId,
+      'command': 'new_message',
+      'message': message,
+      'from': username
+    }));
+    
+    chatInput.value = '';
+    chatInput.focus();
+    
+    // Clear typing indicator state
+    clearTimeout(typingTimeout);
+    isTyping = false;
+  }
+  
+  function showTypingIndicator(user) {
+    typingIndicator.querySelector('span').textContent = `${user} is typing`;
+    typingIndicator.style.display = 'flex';
+    
+    // Hide after 3 seconds of inactivity
+    setTimeout(() => {
+      typingIndicator.style.display = 'none';
+    }, 3000);
+  }
+  
+  function sendTypingIndicator() {
+    if (!isTyping) {
+      chatSocket.send(JSON.stringify({
+        'roomId': roomId,
+        'command': 'typing',
+        'user': username
+      }));
+      
+      isTyping = true;
+      clearTimeout(typingTimeout);
+      
+      // Reset typing status after 3 seconds
+      typingTimeout = setTimeout(() => {
+        isTyping = false;
+      }, 3000);
+    }
+  }
+  
+  // Event listeners
+  chatInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    } else {
+      sendTypingIndicator();
+    }
+  });
+  
+  chatSubmit.addEventListener('click', sendMessage);
+  
+  messagesContainer.addEventListener('scroll', function() {
+    // Load more messages when scrolling to top
+    if (messagesContainer.scrollTop === 0 && hasNextPage) {
+      fetchMessages();
+    }
+  });
+  
+  emojiBtn.addEventListener('click', function() {
+    emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
+  });
+  
+  refreshBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    page = 1;
+    fetchMessages();
+  });
+  
+  scrollBottomBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    scrollToBottom();
+  });
+  
+  clearHistoryBtn.addEventListener('click', function() {
+    if (confirm('Are you sure you want to clear all chat history? This cannot be undone.')) {
+      // Send request to clear history
+      fetch('{% url "chats:clear_history" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': getCSRFToken()
+        },
+        body: `room_id=${roomId}&discussion_slug={{ room.slug }}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          alert(data.message);
+          page = 1;
+          fetchMessages();
+        }
+      })
+      .catch(error => console.error('Error clearing history:', error));
+    }
+  });
+  
+  inviteBtn.addEventListener('click', function() {
+    window.location.href = `{% url 'chats:invite_people' %}?room={{ room.id }}`;
+  });
+  
+  // Helper function to get CSRF token
+  function getCSRFToken() {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith('csrftoken=')) {
+        return cookie.substring('csrftoken='.length, cookie.length);
+      }
+    }
+    return '';
+  }
+  
+  // Auto-grow textarea as user types
+  chatInput.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+  });
+  
+  // Initialize
+  document.addEventListener('DOMContentLoaded', function() {
+    chatInput.focus();
+    
+    // Handle document clicks for emoji picker
+    document.addEventListener('click', function(e) {
+      if (!emojiBtn.contains(e.target) && !emojiPicker.contains(e.target)) {
+        emojiPicker.style.display = 'none';
+      }
+    });
+  });
+</script>
+{% endblock %}

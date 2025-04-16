@@ -1,0 +1,166 @@
+{% for room in discussions %}
+<a href="{{ room.get_absolute_url }}" class="discussion-card-link">
+    <div class="discussion-card">
+        <div class="discussion-icon">
+            <span>{{ room.headline|slice:":1"|upper }}</span>
+        </div>
+        <div class="discussion-content">
+            <h3 class="discussion-title">{{ room.headline }}</h3>
+            <p class="discussion-description">{{ room.description|truncatechars:65 }}</p>
+            <div class="discussion-meta">
+                <span class="discussion-members">
+                    <i class="fa fa-users"></i> {{ room.members.count|default:"0" }} members
+                </span>
+                <span class="discussion-date">
+                    <i class="fa fa-clock"></i> {{ room.created|date:"M d, Y" }}
+                </span>
+                {% if room.tags.all %}
+                <span class="discussion-tags">
+                    <i class="fa fa-tag"></i> {{ room.tags.count }} tags
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        {% if room.room.unread_count > 0 %}
+        <div class="unread-badge">{{ room.room.unread_count }}</div>
+        {% endif %}
+    </div>
+</a>
+{% empty %}
+<div class="empty-discussions">
+    <div class="empty-icon"><i class="fa fa-comments"></i></div>
+    <h3>No discussions found</h3>
+    <p>Be the first to start a new discussion</p>
+    <a href="{% url 'chats:discussion_create' %}" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Create Discussion
+    </a>
+</div>
+{% endfor %}
+
+<style>
+.discussion-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease-in-out;
+    margin-bottom: 1rem;
+}
+
+.discussion-card-link:hover {
+    transform: translateY(-3px);
+    text-decoration: none;
+    color: inherit;
+}
+
+.discussion-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-left: 3px solid #0d6efd;
+    transition: box-shadow 0.2s;
+}
+
+.discussion-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.discussion-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.discussion-content {
+    flex: 1;
+    min-width: 0; /* Enables text truncation */
+}
+
+.discussion-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.discussion-description {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.discussion-meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+.discussion-meta span {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.discussion-meta i {
+    margin-right: 0.25rem;
+}
+
+.unread-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.empty-discussions {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    margin: 1rem 0;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    color: #adb5bd;
+    margin-bottom: 1rem;
+}
+
+.empty-discussions h3 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.empty-discussions p {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+</style>

@@ -1,0 +1,117 @@
+.dropdown-menu {
+  border-color: #fff;
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+  img {
+    @include undraggable;
+  }
+  li {
+    margin-top: 5px;
+    &:first-child {
+      margin-top: 0px;
+    }
+  }
+  .dropdown-item {
+    border-radius: 10px;
+    transition: background-color 0.3s;
+  }
+  li {
+    &:last-child a {
+      border-bottom: none !important;
+    }
+    a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      p {
+        margin: 0px;
+      }
+    }
+  }
+}
+
+.dropdown-item.unread {
+  position: relative;
+  background-color: #f0efff;
+  &::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    background-color: var(--bs-primary);
+    z-index: 999;
+    right: 18px;
+    top: 50%;
+    transform: translate(100%, -50%);
+  }
+  &:focus {
+    background-color: #f0efff;
+  }
+  &.active,
+  &:active {
+    background-color: #0d6efd;
+  }
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  color: #3a3b45;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+
+// override the bootstrap style
+.list-group-item-action.active,
+.dropdown-item:focus,
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: var(--dj-primary-200);
+  border-color: var(--dj-primary);
+  color: #3a3b45;
+}
+
+.navbar .dropdown-list {
+  .dropdown-item {
+    white-space: normal;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f1f5ff;
+    line-height: 1.3rem;
+  }
+}
+.dropdown-list,
+.dropdown-menu {
+  max-height: 540px;
+  overflow-y: auto;
+}
+@media (min-width: 576px) {
+  .navbar .dropdown-list {
+    width: 20rem !important;
+  }
+}
+
+.dropdown-list .dropdown-item {
+  margin-bottom: 4px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .dropdown-menu.dropdown-menu-sm-popup {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    overflow-y: auto !important;
+    box-shadow: 0 0 155px 55px rgba(0, 0, 0, 0.5) !important;
+  }
+}

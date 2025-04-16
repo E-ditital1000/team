@@ -1,0 +1,70 @@
+<div class="chat-wrapper scroller bg-white w-100 justify-content-between d-flex flex-column position-relative">
+
+	<div id="room-indicator" class="htmx-indicator"></div>
+
+	<div class="chat-head px-3 py-2 bg-light-green d-flex justify-content-between align-items-center">
+		<div class="d-flex align-items-center text-dark me-3">
+			<div class="avatar avatar-text">
+				{{ partner.username|first }}
+			</div>
+			<div class="ms-2 small mb-0 p-0 text-truncate">{{ partner.get_full_name|title }}</div>
+		</div>
+
+		<!-- room actions -->
+		<div class="ms-auto dropdown">
+			<button class="btn btn-sm btn-circle btn-outline-dark" type="button" id="chatMenu" data-bs-toggle="dropdown"
+				data-bs-auto-close="outside" aria-expanded="false">
+				<i class="fa fa-ellipsis"></i>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="chatMenu">
+				<li>
+					<form action="{% url 'chats:room_mutate' %}?pid={{ partner.id }}" method="POST">
+						{% csrf_token %}
+						<input type="hidden" name="room_id" value="{{ room.id }}">
+						<button hx-post="{% url 'chats:room_mutate' %}?pid={{ partner.id }}" hx-target="this"
+							type="submit" class="dropdown-item small py-2">
+							{% if room.muted %} Unmute {% else %} Mute notifications {% endif %}</button>
+					</form>
+				</li>
+				<li>
+					<button type="submit" class="dropdown-item small text-danger py-2"
+						hx-get="{% url 'chats:clear_history' %}?room_id={{ room.id }}&partner_id={{ partner.id }}"
+						hx-target="#hx-modal" hx-indicator="#room-indicator">Clear history</button>
+				</li>
+				<li>
+					<button class="delete-chat dropdown-item small text-danger py-2" hx-target="#hx-modal"
+						hx-get="{% url 'chats:room_delete' room.id %}" hx-indicator="#room-indicator">Delete
+						Chat</button>
+				</li>
+			</ul>
+		</div>
+
+	</div>
+	<div class="chat-body px-3 pb-2 pt-3">
+		<ul id="chat-log" class="mt-auto p-0"></ul>
+	</div>
+	<div class="chat-footer d-flex align-items-center py-2 px-3 border-top">
+		<div>
+			<button type="button" class="btn btn-light btn-circle me-3">
+				<i class="fa fa-face-angry"></i>
+			</button>
+		</div>
+		<textarea name="message" id="chat-message-input" class="form-control" placeholder="Write a message..."
+			rows="1"></textarea>
+		<div>
+			<button type="button" class="btn btn-sm bg-gray-400 ms-3" id="chat-message-submit" disabled>
+				<i class="zmdi zmdi-mail-send fa-1-5x"></i>
+			</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	roomName = {{ room_name_json }};
+	username = {{ username }};
+	roomId = {{ room.id }};
+	// next = '{{ next_page }}';
+	msg_counter_url = "{% url 'chats:total_unread_messages' %}";
+
+	$().chat(roomName, username, roomId, msg_counter_url);
+</script>

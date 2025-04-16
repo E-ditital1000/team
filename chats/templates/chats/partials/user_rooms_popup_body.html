@@ -1,0 +1,27 @@
+{% load static %}
+
+{% for room in rooms %}
+{% include 'chats/partials/user_room.html' %}
+{% empty %}
+<div class="d-flex flex-column justify-content-center align-items-center">
+	<img src="{% static 'images/empty-folder.png' %}" width="70px">
+	<h6 class="text-muted text-center mt-2">Nothing to show here.</h6>
+</div>
+{% endfor %}
+
+{% if page_obj.has_next %}
+<div id="user-room-modal-paginator">
+	<a hx-get="{% url 'chats:user_rooms' %}?page={{ page_obj.next_page_number }}&display=modal&paginat=true"
+		hx-target="#user-room-modal-paginator" hx-trigger="click" hx-swap="outerHTML" role="button" id="load-more"
+		class="btn btn-sm border w-100">
+		Load More <i class="fa fa-circle-arrow-down"></i>
+		<div class="htmx-indicator">
+			<span class="dots-loader">
+				<i class="spinner__dot spinner__dot--one"></i>
+				<i class="spinner__dot spinner__dot--two"></i>
+				<i class="spinner__dot spinner__dot--three"></i>
+			</span>
+		</div>
+	</a>
+</div>
+{% endif %}
