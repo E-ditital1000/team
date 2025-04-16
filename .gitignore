@@ -1,3 +1,5 @@
 .env
 django_error.log
 
+staticfiles/staticfiles.json
+staticfiles.json
