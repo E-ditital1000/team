@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-$v79hsag()wa5o#x#^yahn2exx)#18cd7q!f^4rd4^647(^k4j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == ''
 
-ALLOWED_HOSTS = ['smartmedia-t9s2.onrender.com', '.now.sh', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['nextgen-creators.onrender.com', '.now.sh', '127.0.0.1', 'localhost']
 
 # Application definition
 INSTALLED_APPS = [
